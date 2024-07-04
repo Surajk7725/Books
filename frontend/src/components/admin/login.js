@@ -5,7 +5,7 @@ export default function Login() {
   const navigate = useNavigate();
   
     const handleLogin = () => {
-        navigate('/home');
+        navigate('/adminhome');
     };
 
   return (
@@ -14,12 +14,12 @@ export default function Login() {
     <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">Login</h1>
     <form>
       <div class="mb-4">
-        <label class="block text-gray-700 font-bold mb-2" for="text">User Name</label>
+        <label class="block text-gray-700 font-bold mb-2" for="email">Email</label>
         <input
           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          id="username"
-          type="text"
-          placeholder="Enter your username"
+          id="email"
+          type="email"
+          placeholder="Enter your email"
         />
       </div>
       <div class="mb-6">
@@ -45,7 +45,7 @@ export default function Login() {
           Login
         </button>
       </div>
-      <span class="block mt-2 text-sm text-gray-600 text-center">Not Registered? <a onClick={() => navigate('/signup')} class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800 cursor-pointer">Create an Account</a></span>
+      <span class="block mt-2 text-sm text-gray-600 text-center">Not Registered? <a onClick={() => navigate('/admin-signup')} class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800 cursor-pointer">Create an Account</a></span>
     </form>
   </div>
 </div>
