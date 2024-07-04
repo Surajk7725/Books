@@ -6,6 +6,7 @@ import SignUp from './components/signup';
 import Forgot from './components/forgot';
 import Update from './components/updatePassword';
 
+
 function App() {
   return (
     <Router>
