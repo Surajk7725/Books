@@ -6,6 +6,8 @@ import SignUp from './components/signup';
 import Forgot from './components/forgot';
 import Update from './components/updatePassword';
 import Home from './components/user/home';
+import Help from './components/user/help';
+import Contactus from './components/contact';
 
 
 function App() {
@@ -18,6 +20,8 @@ function App() {
         <Route path="/forgot" element={<Forgot />} />
         <Route path="/update-password" element={<Update />} />
         <Route path="/home" element={<Home />} />
+        <Route path="/help-center" element={<Help />} />
+        <Route path="/contactus" element={<Contactus />} />
       </Routes>
     </Router>
   );
