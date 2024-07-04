@@ -7,6 +7,9 @@ import Forgot from './components/forgot';
 import Update from './components/updatePassword';
 import Home from './components/user/home';
 import Settings from './components/user/settings';
+import Help from './components/user/help';
+import Contactus from './components/contact';
+
 
 function App() {
   return (
@@ -19,6 +22,8 @@ function App() {
         <Route path="/update-password" element={<Update />} />
         <Route path="/home" element={<Home />} />
         <Route path="/settings" element={<Settings />} />
+        <Route path="/help-center" element={<Help />} />
+        <Route path="/contactus" element={<Contactus />} />
       </Routes>
     </Router>
   );
