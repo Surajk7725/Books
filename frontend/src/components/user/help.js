@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import NavBar from '../navbar';
+
 
 const FAQPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -8,6 +10,8 @@ const FAQPage = () => {
   };
 
   return (
+    <div>
+    <NavBar/>
     <div className="bg-white py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h1 className="text-3xl font-bold text-gray-900 text-center mb-6">What can we help you with?</h1>
@@ -60,6 +64,7 @@ const FAQPage = () => {
           </button>
         </div>
       </div>
+    </div>
     </div>
   );
 };
