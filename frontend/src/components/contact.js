@@ -72,7 +72,7 @@ const ContactUs = () => {
           </div>
           
           {/* Right Side: Send us a message */}
-          <div className="bg-white shadow-lg rounded-lg p-4 lg:p-6">
+          <div className="bg-white h-max shadow-lg mt-8 rounded-lg p-4 lg:p-6">
             <h2 className="text-2xl font-extrabold text-gray-900 text-center">Send us a message</h2>
             <form className="mt-8 grid grid-cols-1 gap-y-6">
               <div>
