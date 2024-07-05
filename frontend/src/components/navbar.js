@@ -6,7 +6,7 @@ export default function NavBar() {
 
     return (
         <div className="bg-transparent-800 text-black rounded-lg shadow-md">
-            <nav className="flex justify-between items-center py-4 px-6">
+            <nav className=" w-full flex justify-between items-center py-4 px-6 pl-4 pr-12 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent">
                 <div className="text-2xl font-bold">
                     <Link to="/home" className="hover:text-gray-300">Tome</Link>
                 </div>
@@ -14,7 +14,7 @@ export default function NavBar() {
                     <Link to="#" className="text-white-700 hover:text-gray-300 transition duration-300 ease-in-out">Display Books</Link>
                     <Link to="#" className="text-white-700 hover:text-gray-300 transition duration-300 ease-in-out">Queries</Link>
                     <Link to="#" className="text-white-700 hover:text-gray-300 transition duration-300 ease-in-out">Write A Note</Link>
-                    <Link to="/contact" className="text-white-700 hover:text-gray-300 transition duration-300 ease-in-out">Contact Us</Link>
+                    <Link to="/contactus" className="text-white-700 hover:text-gray-300 transition duration-300 ease-in-out">Contact Us</Link>
                 </div>
 
                 <div className="relative">
@@ -43,15 +43,15 @@ export default function NavBar() {
                         <a href="/wishlist" className="block px-4 py-2 hover:bg-gray-100">My Wishlist</a>
                         <a href="/wishlist" className="block px-4 py-2 hover:bg-gray-100">My Notes</a>
                         <a href="/settings" className="block px-4 py-2 hover:bg-gray-100">Settings</a>
-                        <a href="/help" className="block px-4 py-2 hover:bg-gray-100">Help</a>
-                        <a href="/logout" className="block px-4 py-2 hover:bg-gray-100">Logout</a>
+                        <a href="/help-center" className="block px-4 py-2 hover:bg-gray-100">Help</a>
+                        <a href="/" className="block px-4 py-2 hover:bg-gray-100">Logout</a>
                     </div>
                  )}
         </div>
     </div>
 </div>
             </nav>
-            <hr className="border-b border-black w-full rounded-b-lg" />
+            <div className="absolute top-12 left-0 w-full h-8 bg-gradient-to-b from-gray-100 to-transparent z-0"></div>
         </div>
     );
 }

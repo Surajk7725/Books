@@ -14,7 +14,7 @@ export default function NavBar() {
                     <Link to="#" className="text-white-700 hover:text-gray-300 transition duration-300 ease-in-out">Display Books</Link>
                     <Link to="#" className="text-white-700 hover:text-gray-300 transition duration-300 ease-in-out">Manage Students</Link>
                     <Link to="#" className="text-white-700 hover:text-gray-300 transition duration-300 ease-in-out">Manage Books</Link>
-                    <Link to="/contact" className="text-white-700 hover:text-gray-300 transition duration-300 ease-in-out">Contact Us</Link>
+                    <Link to="/contactus" className="text-white-700 hover:text-gray-300 transition duration-300 ease-in-out">Contact Us</Link>
                 </div>
 
                 <div className="relative">
@@ -41,15 +41,15 @@ export default function NavBar() {
                     <div className="absolute right-0 z-10 mt-2 w-48 bg-white text-black rounded-md shadow-lg">
                         <a href="/staff-profile" className="block px-4 py-2 hover:bg-gray-100">My Profile</a>
                         <a href="/settings" className="block px-4 py-2 hover:bg-gray-100">Settings</a>
-                        <a href="/staff-help" className="block px-4 py-2 hover:bg-gray-100">Help</a>
-                        <a href="/logout" className="block px-4 py-2 hover:bg-gray-100">Logout</a>
+                        <a href="/help-center" className="block px-4 py-2 hover:bg-gray-100">Help</a>
+                        <a href="/" className="block px-4 py-2 hover:bg-gray-100">Logout</a>
                     </div>
                  )}
         </div>
     </div>
 </div>
             </nav>
-            <hr className="border-b border-black w-full rounded-b-lg" />
+            <div className="absolute top-12 left-0 w-full h-8 bg-gradient-to-b from-gray-100 to-transparent z-0"></div>
         </div>
     );
 }

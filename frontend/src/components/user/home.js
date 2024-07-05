@@ -1,10 +1,42 @@
-import React from 'react'
+import React, {useState} from 'react'
 import NavBar from '../navbar';
+import Slide2 from '../images/slide2.jpg';
+import Slide3 from '../images/slide3.jpg';
+
+
+function ImageSlider() {
+  const images = [
+    'https://i.pinimg.com/736x/8d/7e/71/8d7e710a5166a0decf6c512f05be8650.jpg',
+     Slide2,
+     Slide3,
+  ];
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  React.useEffect(() => {
+    const intervalId = setInterval(() => {
+      setCurrentIndex((currentIndex + 1) % images.length);
+    }, 3000); // Change image every 3 seconds
+
+    return () => clearInterval(intervalId); // Cleanup interval on component unmount
+  }, [currentIndex, images.length]);
+
+  return (
+    <div className='h-[500px] bg-center bg-cover transition-all duration-500 relative' style={{ backgroundImage: `url(${images[currentIndex]})` }}>
+      <div className="absolute inset-0 flex items-center justify-center">
+        <h1 className="text-4xl font-bold text-white bg-black bg-opacity-50 p-4 rounded-lg shadow-lg">
+          Books Management System
+        </h1>
+      </div>
+    </div>
+  );
+}
 
 function Home() {
   return (
     <div>
       <NavBar />
+      <ImageSlider />
       <div class="flex flex-col md:flex-row items-center justify-center bg-white p-8">
         <div class="md:w-1/2 p-4">
           <img src="https://img.freepik.com/free-photo/beautiful-landscape-from-magazine-coming-life_23-2151158527.jpg?t=st=1720095328~exp=1720098928~hmac=d39a12d00a25b61b0d1e7ec64d422ac5bb74c071623aeb271a0520bd80b36eeb&w=740" alt="A group of diverse professionals smiling and working together in a modern office setting, showcasing teamwork, collaboration, and a positive work environment" width="400" height="400" class="rounded-lg object-cover" />
