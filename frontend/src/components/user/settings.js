@@ -158,55 +158,55 @@ const Settings = () => {
 
           <ul className="space-y-2">
             <li
-              className={`p-2 cursor-pointer rounded-lg ${selectedSection === 'home' ? 'bg-indigo-700' : ''}`}
+              className={`p-2 cursor-pointer rounded-lg ${selectedSection === 'home' ? 'bg-transparent-700 border border-gray-300' : ''}`}
               onClick={handleHome}
             >
               <MenuAlt1Icon className="h-6 w-6 inline-block mr-2" /> Home
             </li>
             <li
-              className={`p-2 cursor-pointer rounded-lg ${selectedSection === 'account' ? 'bg-indigo-700' : ''}`}
+              className={`p-2 cursor-pointer rounded-lg ${selectedSection === 'account' ? 'bg-transparent-700 border border-gray-300' : ''}`}
               onClick={() => handleSectionClick('account')}
             >
               <UserCircleIcon className="h-6 w-6 inline-block mr-2" /> Account
             </li>
             <li
-              className={`p-2 cursor-pointer rounded-lg ${selectedSection === 'security' ? 'bg-indigo-700' : ''}`}
+              className={`p-2 cursor-pointer rounded-lg ${selectedSection === 'security' ? 'bg-transparent-700 border border-gray-300' : ''}`}
               onClick={() => handleSectionClick('security')}
             >
               <LockClosedIcon className="h-6 w-6 inline-block mr-2" /> Security
             </li>
             <li
-              className={`p-2 cursor-pointer rounded-lg ${selectedSection === 'bookCategories' ? 'bg-indigo-700' : ''}`}
+              className={`p-2 cursor-pointer rounded-lg ${selectedSection === 'bookCategories' ? 'bg-transparent-700 border border-gray-300' : ''}`}
               onClick={() => handleSectionClick('bookCategories')}
             >
               <CollectionIcon className="h-6 w-6 inline-block mr-2" /> Book Categories
             </li>
             <li
-              className={`p-2 cursor-pointer rounded-lg ${selectedSection === 'subscriptionPlans' ? 'bg-indigo-700' : ''}`}
+              className={`p-2 cursor-pointer rounded-lg ${selectedSection === 'subscriptionPlans' ? 'bg-transparent-700 border border-gray-300' : ''}`}
               onClick={() => handleSectionClick('subscriptionPlans')}
             >
               <DocumentTextIcon className="h-6 w-6 inline-block mr-2" /> Subscription Plans
             </li>
             <li
-              className={`p-2 cursor-pointer rounded-lg ${selectedSection === 'bookmarks' ? 'bg-indigo-700' : ''}`}
+              className={`p-2 cursor-pointer rounded-lg ${selectedSection === 'bookmarks' ? 'bg-transparent-700 border border-gray-300' : ''}`}
               onClick={() => handleSectionClick('bookmarks')}
             >
               <HeartIcon className="h-6 w-6 inline-block mr-2" /> Bookmarks
             </li>
             <li
-              className={`p-2 cursor-pointer rounded-lg ${selectedSection === 'readingHistory' ? 'bg-indigo-700' : ''}`}
+              className={`p-2 cursor-pointer rounded-lg ${selectedSection === 'readingHistory' ? 'bg-transparent-700 border border-gray-300' : ''}`}
               onClick={() => handleSectionClick('readingHistory')}
             >
               <GlobeAltIcon className="h-6 w-6 inline-block mr-2" /> Reading History
             </li>
             <li
-              className={`p-2 cursor-pointer rounded-lg ${selectedSection === 'accessibilityFeatures' ? 'bg-indigo-700' : ''}`}
+              className={`p-2 cursor-pointer rounded-lg ${selectedSection === 'accessibilityFeatures' ? 'bg-transparent-700 border border-gray-300' : ''}`}
               onClick={() => handleSectionClick('accessibilityFeatures')}
             >
-              <DesktopComputerIcon className="h-6 w-6 inline-block mr-2" /> Accessibility Features
+              <DesktopComputerIcon className="h-6 w-6 inline-block mr-2" /> Access Features
             </li>
             <li
-              className={`p-2 cursor-pointer rounded-lg ${selectedSection === 'offlineAccess' ? 'bg-indigo-700' : ''}`}
+              className={`p-2 cursor-pointer rounded-lg ${selectedSection === 'offlineAccess' ? 'bg-transparent-700 border border-gray-300' : ''}`}
               onClick={() => handleSectionClick('offlineAccess')}
             >
               <DesktopComputerIcon className="h-6 w-6 inline-block mr-2" /> Offline Access

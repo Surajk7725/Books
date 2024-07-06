@@ -1,6 +1,7 @@
 import React from 'react';
 import NavBar from './navbar';
 import { Link } from 'react-router-dom';
+import Footer from './footer';
 
 const ContactUs = () => {
   return (
@@ -108,13 +109,7 @@ const ContactUs = () => {
           </div>
         </div>
       </div>
-      
-      {/* Footer */}
-      <footer className="bg-gray-800 py-4">
-        <div className="container mx-auto text-center">
-          <p className="text-white">&copy; Designed by Tome 2024</p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };

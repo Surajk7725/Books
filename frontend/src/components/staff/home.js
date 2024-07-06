@@ -1,5 +1,6 @@
 import React from 'react'
 import Navbar from './navbar';
+import Footer from '../footer';
 
 function Home() {
   return (
@@ -61,11 +62,7 @@ function Home() {
       </div>
 
     <div class="h-16"></div>
-      <footer class="bg-gray-800 py-4">
-        <div class="container mx-auto text-center">
-          <p class="text-white">&copy; Designed by Tome 2024</p>
-        </div>
-      </footer>    
+      <Footer />   
     </div>
   )
 }
