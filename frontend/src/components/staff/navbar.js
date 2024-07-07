@@ -49,7 +49,6 @@ export default function NavBar() {
     </div>
 </div>
             </nav>
-            <div className="absolute top-12 left-0 w-full h-8 bg-gradient-to-b from-gray-100 to-transparent z-0"></div>
         </div>
     );
 }

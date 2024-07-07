@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Slide4 from '../components/images/slide4.jpg';
-import Slide5 from '../components/images/slide5.jpg';
-import Slide6 from '../components/images/slide6.jpg';
-import Slide7 from '../components/images/slide7.jpg';
+import { useNavigate, Link } from 'react-router-dom';
+import Slide4 from './images/slide4.jpg';
+import Slide5 from './images/slide5.jpg';
+import Slide6 from './images/slide6.jpg';
+import Slide7 from './images/slide7.jpg';
+import { ChevronDownIcon, BookOpenIcon, ClipboardCheckIcon, MailIcon, PencilIcon } from '@heroicons/react/outline';
+import Footer from './footer';
 
 function ImageSlider() {
   const images = [Slide4, Slide5, Slide6, Slide7];
@@ -31,35 +33,76 @@ function ImageSlider() {
 export default function Landing() {
   const navigate = useNavigate();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false); // State for mobile menu toggle
 
   return (
     <div className="flex flex-col min-h-screen relative">
       <header className="bg-white shadow">
         <div className="container mx-auto flex justify-between items-center p-4">
-          <div className="text-2xl font-bold">BookHub</div>
-          <nav className="relative">
-            <div className="space-x-4 flex items-center">
-              <div className="relative">
-                <button
-                  className="text-gray-700 hover:text-blue-500"
-                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                >
-                  Books
-                </button>
-                {isDropdownOpen && (
-                  <div className="absolute left-0 mt-2 w-48 bg-white border border-gray-200 shadow-lg">
-                    <a href="#" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Kids</a>
-                    <a href="#" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Popular</a>
-                    <a href="#" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Recommendations</a>
-                  </div>
-                )}
-              </div>
-              <a href="#" className="text-gray-700 hover:text-blue-500">Queries</a>
-              <a href="#" className="text-gray-700 hover:text-blue-500">Write A Note</a>
-              <a href="#" className="text-gray-700 hover:text-blue-500">Contact Us</a>
+          <div className="flex items-center">
+            <div className="text-2xl font-bold mr-4">BookHub</div>
+          </div>
+
+          {/* Mobile Login and Signup buttons */}
+          <div className="flex items-center justify-center md:hidden space-x-4">
+            <button
+              className="px-4 py-2 bg-transparent text-gray-700 rounded hover:bg-blue-500 hover:text-white transition-colors duration-300"
+              onClick={() => navigate('/login')}
+            >
+              <span className="mr-2">🔑</span>
+              Login
+            </button>
+            <button
+              className="px-4 py-2 bg-transparent text-gray-700 rounded hover:bg-blue-500 hover:text-white transition-colors duration-300"
+              onClick={() => navigate('/signup')}
+            >
+              <span className="mr-2">✍️</span>
+              Sign Up
+            </button>
+          </div>
+
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="md:hidden text-gray-700 focus:outline-none"
+          >
+            <svg className="h-6 w-6 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path fillRule="evenodd" clipRule="evenodd" d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z" />
+            </svg>
+          </button>
+
+          <div className="hidden md:flex md:space-x-6 flex-grow justify-center">
+            <div className="relative">
+              <button
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                className="flex items-center text-gray-700 hover:text-gray-300 transition duration-300 ease-in-out"
+              >
+                <span className="flex items-center">
+                  <BookOpenIcon className="h-5 w-5" />
+                  <span className="ml-2">Books</span>
+                </span>
+                <ChevronDownIcon className="h-4 w-4 ml-1" />
+              </button>
+              {isDropdownOpen && (
+                <div className="absolute z-10 mt-2 w-48 bg-white text-black rounded-md shadow-lg">
+                  <Link to="/books/kids" className="block px-4 py-2 hover:bg-gray-100">Kids</Link>
+                  <Link to="/books/popular" className="block px-4 py-2 hover:bg-gray-100">Popular</Link>
+                  <Link to="/books/recommendations" className="block px-4 py-2 hover:bg-gray-100">Recommendations</Link>
+                </div>
+              )}
             </div>
-          </nav>
-          <div className="flex space-x-4">
+            <Link to="#" className="text-gray-700 hover:text-gray-300 transition duration-300 ease-in-out"><span className="flex items-center">
+              <ClipboardCheckIcon className="h-5 w-5" /> Queries</span>
+            </Link>
+            <Link to="#" className="text-gray-700 hover:text-gray-300 transition duration-300 ease-in-out"><span className="flex items-center">
+              <PencilIcon className="h-5 w-5" /> Write A Note</span>
+            </Link>
+            <Link to="/contactus" className="text-gray-700 hover:text-gray-300 transition duration-300 ease-in-out"><span className="flex items-center">
+              <MailIcon className="h-5 w-5" /> Contact Us</span>
+            </Link>
+          </div>
+
+          {/* Desktop Login and Signup buttons */}
+          <div className="hidden md:flex md:space-x-4">
             <button
               className="px-4 py-2 bg-transparent text-gray-700 rounded hover:bg-blue-500 hover:text-white transition-colors duration-300"
               onClick={() => navigate('/login')}
@@ -76,6 +119,42 @@ export default function Landing() {
             </button>
           </div>
         </div>
+
+        {/* Mobile menu */}
+        {menuOpen && (
+          <div className="md:hidden bg-white text-gray-800 py-2 px-4 mt-4 rounded-lg shadow-md relative">
+            <div className="flex flex-col space-y-2">
+              <div className="relative">
+                <button
+                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                  className="block py-2 w-full flex items-center text-gray-700 hover:text-gray-300 transition duration-300 ease-in-out"
+                >
+                  <span className="flex items-center">
+                    <BookOpenIcon className="h-5 w-5" />
+                    <span className="ml-2">Books</span>
+                  </span>
+                  <ChevronDownIcon className="h-4 w-4 ml-1" />
+                </button>
+                {isDropdownOpen && (
+                  <div className="absolute left-0 mt-2 w-full bg-white text-black rounded-md shadow-lg">
+                    <Link to="/books/kids" className="block px-4 py-2 hover:bg-gray-100">Kids</Link>
+                    <Link to="/books/popular" className="block px-4 py-2 hover:bg-gray-100">Popular</Link>
+                    <Link to="/books/recommendations" className="block px-4 py-2 hover:bg-gray-100">Recommendations</Link>
+                  </div>
+                )}
+              </div>
+              <Link to="#" className="block py-2 text-gray-700 hover:text-gray-300 transition duration-300 ease-in-out"><span className="flex items-center">
+                <ClipboardCheckIcon className="h-5 w-5" /> Queries</span>
+              </Link>
+              <Link to="#" className="block py-2 text-gray-700 hover:text-gray-300 transition duration-300 ease-in-out"><span className="flex items-center">
+                <PencilIcon className="h-5 w-5" /> Write A Note</span>
+              </Link>
+              <Link to="/contactus" className="block py-2 text-gray-700 hover:text-gray-300 transition duration-300 ease-in-out"><span className="flex items-center">
+                <MailIcon className="h-5 w-5" /> Contact Us</span>
+              </Link>
+            </div>
+          </div>
+        )}
       </header>
 
       <div className='flex-grow'>
@@ -147,10 +226,6 @@ export default function Landing() {
           </div>
         </section>
 
-
-
-
-
         <section className='my-12 px-4'>
           <h2 className='text-2xl font-bold text-center mb-8'>Recommended Books</h2>
           <div className='grid grid-cols-1 md:grid-cols-3 gap-8'>
@@ -211,8 +286,7 @@ export default function Landing() {
             ))}
           </div>
         </section>
-
-
+ 
         <section className='my-12 px-4'>
           <h2 className='text-2xl font-bold text-center mb-8'>User Reviews</h2>
           <div className='grid grid-cols-1 md:grid-cols-3 gap-8'>
@@ -227,7 +301,6 @@ export default function Landing() {
             ))}
           </div>
         </section>
-
 
         <section className='my-12 px-4'>
           <h2 className='text-2xl font-bold text-center mb-8'>Author Spotlights</h2>
@@ -247,7 +320,6 @@ export default function Landing() {
             ))}
           </div>
         </section>
-
 
         <section className='my-12 px-4'>
           <h2 className='text-2xl font-bold text-center mb-8'>Blog</h2>
@@ -289,8 +361,6 @@ export default function Landing() {
           </div>
         </section>
 
-
-
         <section className='my-12 px-4'>
           <h2 className='text-2xl font-bold text-center mb-8'>Newsletter Subscription</h2>
           <div className='flex justify-center'>
@@ -298,24 +368,14 @@ export default function Landing() {
             <button className='px-4 py-2 bg-blue-500 text-white rounded-r-md hover:bg-blue-600 transition-colors duration-300'>Subscribe</button>
           </div>
         </section>
-      </div>
 
-      <footer className="bg-gray-800 py-4">
-        <div className="container mx-auto text-center text-white">
-          <div className="mb-4">
-            <a href="#" className="hover:text-blue-500 mx-2">Privacy Policy</a>
-            <a href="#" className="hover:text-blue-500 mx-2">Terms of Service</a>
-          </div>
-          <div className="mb-4">
-            <a href="#" className="hover:text-blue-500 mx-2">Facebook</a>
-            <a href="#" className="hover:text-blue-500 mx-2">Twitter</a>
-            <a href="#" className="hover:text-blue-500 mx-2">Instagram</a>
-          </div>
-          <div>
-            &copy; Designed by Tome 2024
-          </div>
-        </div>
-      </footer>
+
+
+
+      </div>
+      <Footer />
     </div>
   );
 }
+
+
