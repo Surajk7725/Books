@@ -1,7 +1,7 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import NavBar from '../navbar';
 import Footer from '../footer';
+
 
 function ImageSlider() {
   const images = [
@@ -10,7 +10,7 @@ function ImageSlider() {
 
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const intervalId = setInterval(() => {
       setCurrentIndex((currentIndex + 1) % images.length);
     }, 3000); // Change image every 3 seconds
@@ -54,22 +54,22 @@ function Home() {
           <div className="bg-white rounded-lg shadow-md overflow-hidden">
             <div className="p-4">
               <img alt="A logo featuring a book with a heart, symbolizing the love and passion for reading" className="w-16 h-16 object-cover rounded-full mx-auto mb-4" src="https://placehold.co/100x100" />
-              <h3 className="text-xl font-semibold text-gray-800 mb-2 text-center">BookLove</h3>
-              <p className="text-gray-600">Indulge in your love for literature with our user-friendly library management system. Easily track your reading progress and discover new literary gems.</p>
+              <h3 className="text-xl font-semibold text-gray-800 mb-2 text-center">Literary Escapes</h3>
+              <p className="text-gray-600">Immerse yourself in the world of literature with our intuitive library management system. Track your reading journey effortlessly and uncover captivating literary treasures.</p>
             </div>
           </div>
           <div className="bg-white rounded-lg shadow-md overflow-hidden">
             <div className="p-4">
               <img alt="A logo featuring an open book with a globe, representing the vast and diverse collection of books from around the world" className="w-16 h-16 object-cover rounded-full mx-auto mb-4" src="https://placehold.co/100x100" />
-              <h3 className="text-xl font-semibold text-gray-800 mb-2 text-center">WorldOfBooks</h3>
-              <p className="text-gray-600">Embark on a literary journey across cultures and continents with our globally-inspired library management system. Explore a diverse collection of books from around the world.</p>
+              <h3 className="text-xl font-semibold text-gray-800 mb-2 text-center">Global Reads</h3>
+              <p className="text-gray-600">Embark on a voyage through the realms of storytelling with our richly diverse library collection. Explore narratives that span continents, cultures, and centuries.</p>
             </div>
           </div>
           <div className="bg-white rounded-lg shadow-md overflow-hidden">
             <div className="p-4">
               <img alt="A logo featuring a book with a clock, symbolizing the ability to manage and track book loans and due dates" className="w-16 h-16 object-cover rounded-full mx-auto mb-4" src="https://placehold.co/100x100" />
-              <h3 className="text-xl font-semibold text-gray-800 mb-2 text-center">BookKeeper</h3>
-              <p className="text-gray-600">Stay organized and on top of your reading with our efficient library management system. Easily manage book loans, renewals, and due dates.</p>
+              <h3 className="text-xl font-semibold text-gray-800 mb-2 text-center">Reading Organizer</h3>
+              <p className="text-gray-600">Streamline your reading experience with our efficient library management tools. From managing loans to tracking due dates, stay organized and focused on your literary adventures.</p>
             </div>
           </div>
           <div className="bg-white rounded-lg shadow-md overflow-hidden">
@@ -82,68 +82,28 @@ function Home() {
         </div>
       </div>
 
-      <div className="p-8">
-        <h2 className="text-3xl font-bold text-black-800 mb-8 text-center">User Reviews</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          <div className="bg-white rounded-lg shadow-md overflow-hidden p-4">
-            <p className="text-gray-600">"An absolute page-turner! I couldn't put it down until the very end. The plot was well-crafted and the characters were so relatable. Highly recommended!"</p>
+      <div>
+        <section className="bg-gray-200 py-16 text-center">
+          <h1 className="text-4xl font-semibold">Different – Thought Provoking – Fresh – Thoroughly Entertaining</h1>
+          <p className="mt-4 text-lg text-gray-700">If you’re tired of reading the same stories over and over, and are open to something a little different, Mark Lages might be the author you’re looking for.</p>
+          <div className="mt-8 flex justify-center space-x-4">
+            <img src="https://lh3.googleusercontent.com/proxy/X22_rGDzqg3c9yLWfyvxo_mpI3q7ZakAv8kAc1vHY1yPj8XUNYf1GKxPDhS0WPR8pzhxAdUyRGk-fUbjxf79R0L3VuHaiR5kjyW1sS_7Qy4hLbQ" alt="Book 1" className="h-80" />
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0j4ZQYO2JFoKkSbmG5aa_tO0yBhWl0YtcLUCz5DapnDGpYZnzEIg9EITL_s9FT8WpLgg&usqp=CAU" alt="Book 2" className="h-80" />
+            <img src="https://i.pinimg.com/736x/2c/f5/a6/2cf5a651f2e28832bce684326d0dd6a5.jpg" alt="Book 3" className="h-80" />
+            <img src="https://i.pinimg.com/474x/c6/b9/cb/c6b9cb9f4cc619d59386f3237e975b1b.jpg" alt="Book 4" className="h-80" />
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKdqMLjqBdOWwD7Rh4TYvA9P46oxG3HNdjC7RlMLejyYUPEacaA2jlQmOANfnr4UxjjD0&usqp=CAU" alt="Book 5" className="h-80" />
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsj2ePyvZiZC3ZY5EWRYZKnvMTcsczQ-LEsA&s" alt="Book 6" className="h-80" />
           </div>
-          <div className="bg-white rounded-lg shadow-md overflow-hidden p-4">
-            <p className="text-gray-600">"This book touched my heart. The storyline was emotional and beautifully written. It's a book that stays with you long after you've finished reading."</p>
-          </div>
-          <div className="bg-white rounded-lg shadow-md overflow-hidden p-4">
-            <p className="text-gray-600">"A fantastic read! The author did an amazing job creating a vivid and immersive world. I felt like I was right there with the characters."</p>
-          </div>
-        </div>
+        </section>
       </div>
 
-      <div className="p-8">
-        <h2 className="text-3xl font-bold text-black-800 mb-8 text-center">Author Spotlights</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          <div className="bg-white rounded-lg shadow-md overflow-hidden p-4">
-            <div className="p-4">
-              <h3 className="text-xl font-semibold text-gray-800 mb-2 text-center">Author 1</h3>
-              <p className="text-gray-600">Author 1 is known for their captivating storytelling and unique voice. With several bestsellers under their belt, they continue to enchant readers with every new release.</p>
-            </div>
-          </div>
-          <div className="bg-white rounded-lg shadow-md overflow-hidden p-4">
-            <div className="p-4">
-              <h3 className="text-xl font-semibold text-gray-800 mb-2 text-center">Author 2</h3>
-              <p className="text-gray-600">A master of suspense, Author 2's novels are filled with unexpected twists and turns. Their ability to keep readers guessing until the last page is truly remarkable.</p>
-            </div>
-          </div>
-          <div className="bg-white rounded-lg shadow-md overflow-hidden p-4">
-            <div className="p-4">
-              <h3 className="text-xl font-semibold text-gray-800 mb-2 text-center">Author 3</h3>
-              <p className="text-gray-600">Author 3 brings historical events to life with their meticulous research and engaging writing style. Their books offer a perfect blend of education and entertainment.</p>
-            </div>
-          </div>
-        </div>
-      </div>
+    
 
-      <div className="p-8">
-        <h2 className="text-3xl font-bold text-black-800 mb-8 text-center">Blog</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          <div className="bg-white rounded-lg shadow-md overflow-hidden p-4">
-            <h3 className="text-xl font-semibold text-gray-800 mb-2">Blog Post Title 1</h3>
-            <p className="text-gray-600">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quis tortor non urna fermentum eleifend.</p>
-            <a href="#" className="text-blue-500 mt-2 inline-block">Read More</a>
-          </div>
-          <div className="bg-white rounded-lg shadow-md overflow-hidden p-4">
-            <h3 className="text-xl font-semibold text-gray-800 mb-2">Blog Post Title 2</h3>
-            <p className="text-gray-600">Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nam vitae varius mauris.</p>
-            <a href="#" className="text-blue-500 mt-2 inline-block">Read More</a>
-          </div>
-          <div className="bg-white rounded-lg shadow-md overflow-hidden p-4">
-            <h3 className="text-xl font-semibold text-gray-800 mb-2">Blog Post Title 3</h3>
-            <p className="text-gray-600">Nullam sit amet risus consectetur, scelerisque risus ut, cursus elit. Mauris euismod felis eget turpis semper varius.</p>
-            <a href="#" className="text-blue-500 mt-2 inline-block">Read More</a>
-          </div>
-        </div>
-      </div>
-        <Footer />
-      </div>
-  )
+
+
+      <Footer />
+    </div>
+  );
 }
 
-export default Home
+export default Home;
