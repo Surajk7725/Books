@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { MenuAlt1Icon, UserCircleIcon, LockClosedIcon, CollectionIcon, DocumentTextIcon, HeartIcon, GlobeAltIcon, DesktopComputerIcon, LogoutIcon } from '@heroicons/react/outline'; // Importing the Heroicons
+import { MenuAlt1Icon, UserCircleIcon, LockClosedIcon, CollectionIcon, DocumentTextIcon, HeartIcon, GlobeAltIcon, DesktopComputerIcon, LogoutIcon, BookOpenIcon  } from '@heroicons/react/outline'; 
+import Footer from '../footer';
 
 const Settings = () => {
   const [selectedSection, setSelectedSection] = useState('account');
@@ -17,11 +18,6 @@ const Settings = () => {
     confirmPassword: '',
   });
 
-  const [bookCategories, setBookCategories] = useState({
-    category1: '',
-    category2: '',
-    // Add more categories as needed
-  });
 
   const [bookmarks, setBookmarks] = useState({
     bookmark1: '',
@@ -57,9 +53,8 @@ const Settings = () => {
     setPasswordDetails((prevDetails) => ({ ...prevDetails, [name]: value }));
   };
 
-  const handleBookCategoryChange = (e) => {
-    const { name, value } = e.target;
-    setBookCategories((prevCategories) => ({ ...prevCategories, [name]: value }));
+  const handleBookCategoryChange = (event) => {
+    // Implement your input change handling logic here if needed
   };
 
   const handleBookmarkChange = (e) => {
@@ -110,7 +105,6 @@ const Settings = () => {
 
   const handleBookCategorySubmit = (e) => {
     e.preventDefault();
-    console.log('Book categories:', bookCategories);
     // Implement your book categories update logic here
   };
 
@@ -149,6 +143,74 @@ const Settings = () => {
     featureIcon: 'ml-2',
     button: 'bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-full transition-colors duration-300'
   };
+
+
+  const genres = [
+    {
+      id: 1,
+      title: 'Fantasy',
+      description: 'Books featuring magic, mythical creatures, and imaginative worlds where extraordinary adventures unfold, often defying the laws of nature and reality.',
+      imageUrl: 'https://media.istockphoto.com/id/1165693109/photo/fantasy-word-from-wooden-blocks-with-letters.jpg?s=1024x1024&w=is&k=20&c=ktKf55A1EGBHYMs9IbgxdC4EA1R_ULOpNXwrj33AtzM=',
+      link: '/books/fantasy',
+    },
+    {
+      id: 2,
+      title: 'Science Fiction',
+      description: 'Speculative narratives set in futuristic or alternative realities, exploring advanced scientific concepts, technological innovations, and their impact on society.',
+      imageUrl: 'https://img.freepik.com/premium-photo/world-books-concept-with-student_999671-58048.jpg?w=740',
+      link: '/books/science-fiction',
+    },
+    {
+      id: 3,
+      title: 'Mystery',
+      description: 'Plots centered around solving complex puzzles or crimes, with a focus on unraveling clues and uncovering the truth, usually involving a skilled detective.',
+      imageUrl: 'https://t4.ftcdn.net/jpg/02/96/81/53/360_F_296815356_lvYpddoEHjBgR30a3iGxWPUMgoR6b8bC.jpg',
+      link: '/books/mystery',
+    },
+    {
+      id: 4,
+      title: 'Thriller',
+      description: 'Intense narratives filled with suspense, danger, and gripping plots that keep readers on edge, often featuring high-stakes conflicts and thrilling twists.',
+      imageUrl: 'https://media.istockphoto.com/id/1326493510/vector/illustration-of-man-inside-a-book-surreal-optical-illusion-educational-concept.jpg?s=1024x1024&w=is&k=20&c=dLXyUTHlPgIzqCHGSw5joY6FdNyLQ6UrjhVnfQLsrAE=',
+      link: '/books/thriller',
+    },
+    {
+      id: 5,
+      title: 'Romance',
+      description: 'Stories that explore relationships, love, and intimacy between characters, often with themes of passion, desire, and the complexities of human connection.',
+      imageUrl: 'https://img.freepik.com/premium-photo/beautiful-wedding-albums_810293-104936.jpg?w=740',
+      link: '/books/romance',
+    },
+    {
+      id: 6,
+      title: 'Historical Fiction',
+      description: 'Novels set in the past, intricately weaving real historical events, figures, and settings into fictional narratives that capture the essence of bygone eras.',
+      imageUrl: 'https://t3.ftcdn.net/jpg/07/64/76/22/240_F_764762271_AKaj5h68J6hRPCNRJKXsMQTJxte58p4M.jpg',
+      link: '/books/historical-fiction',
+    },
+    {
+      id: 7,
+      title: 'Horror',
+      description: 'Works designed to invoke fear and dread through supernatural phenomena, monstrous creatures, or psychological terror, aiming to thrill readers.',
+      imageUrl: 'https://img.freepik.com/premium-photo/open-book-contains-scene-with-image-halloween-grave_950002-199619.jpg?w=740',
+      link: '/books/horror',
+    },
+    {
+      id: 8,
+      title: 'Dystopian',
+      description: 'Depictions of societies marked by oppression, suffering, or societal collapse, often governed by totalitarian regimes or facing catastrophic futures.',
+      imageUrl: 'https://img.freepik.com/premium-photo/3d-rendering-fantasy-world-with-lot-old-books-ai-generated_538213-13706.jpg?w=740',
+      link: '/books/dystopian',
+    },
+    {
+      id: 9,
+      title: 'Biography',
+      description: 'Non-fiction narratives detailing the life story of an individual, typically written by someone else, offering insights into their achievements, challenges, and impact.',
+      imageUrl: 'https://media.istockphoto.com/id/1140981934/photo/biography-word-from-wooden-blocks.jpg?s=1024x1024&w=is&k=20&c=QRI8ywax-ALiR4r7fHZTo_SpOo2pGVhPZCDjUhaE-Xg=',
+      link: '/books/biography',
+    },
+  ];
+
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
@@ -317,36 +379,29 @@ const Settings = () => {
 
 
           {selectedSection === 'bookCategories' && (
-            <form onSubmit={handleBookCategorySubmit} className="bg-white rounded-lg shadow-md p-6 mb-8">
-              <h3 className="text-xl font-semibold mb-4">Book Categories</h3>
-              <div className="mb-4">
-                <label className="block text-gray-700">Category 1</label>
-                <input
-                  type="text"
-                  name="category1"
-                  value={bookCategories.category1}
-                  onChange={handleBookCategoryChange}
-                  className="w-full p-2 border border-gray-300 rounded"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-700">Category 2</label>
-                <input
-                  type="text"
-                  name="category2"
-                  value={bookCategories.category2}
-                  onChange={handleBookCategoryChange}
-                  className="w-full p-2 border border-gray-300 rounded"
-                />
-              </div>
-              {/* Add more categories as needed */}
-              <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                Save
-              </button>
-            </form>
-          )}
+            <div className="bg-white rounded-lg shadow-md p-4 mb-6">
+            <h3 className="text-xl font-semibold mb-4">Book Categories</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {genres.map((genre) => (
+                <div key={genre.id} className="bg-gray-100 rounded-lg p-6 mb-4">
+                  <img src={genre.imageUrl} alt={genre.title} className="w-full h-40 object-cover rounded-t-lg mb-4" />
+                  <h4 className="text-lg font-semibold mb-2">{genre.title}</h4>
+                  <p className="text-gray-800 mb-4 text-justify">{genre.description}</p>
+                  <a href={genre.link} className="inline-block bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
+                    Explore {genre.title}
+                  </a>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      
 
+      
+          
           {selectedSection === 'subscriptionPlans' && (
+            <div>
+            <h2 className="text-2xl font-bold my-4">Choose a Subscription Plan</h2>
             <div className="flex justify-center items-center flex-col md:flex-row gap-6 my-8">
               <div className={`${cardStyles.base} flex-1 max-w-xs`} style={{ height: '100%' }}>
                 <h3 className={cardStyles.title}>Standard</h3>
@@ -390,7 +445,9 @@ const Settings = () => {
                 <button className={cardStyles.button}>Subscribe</button>
               </div>
             </div>
+            </div>
           )}
+        
 
           {selectedSection === 'bookmarks' && (
             <form onSubmit={handleBookmarkSubmit} className="bg-white rounded-lg shadow-md p-6 mb-8">
@@ -514,11 +571,7 @@ const Settings = () => {
           )}
         </div>
       </div>
-      <footer className="bg-gray-800 py-4 mt-auto">
-        <div className="container mx-auto text-center">
-          <p className="text-white">&copy; Designed by Tome 2024</p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   )
 };
