@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MenuAlt1Icon, UserCircleIcon, LockClosedIcon, CollectionIcon, DocumentTextIcon, HeartIcon, GlobeAltIcon, DesktopComputerIcon, LogoutIcon, BookOpenIcon  } from '@heroicons/react/outline'; 
+import { MenuAlt1Icon, UserCircleIcon, LockClosedIcon, CollectionIcon, DocumentTextIcon, GlobeAltIcon, DesktopComputerIcon, LogoutIcon  } from '@heroicons/react/outline'; 
 import Footer from '../footer';
 
 const Settings = () => {
@@ -16,19 +16,6 @@ const Settings = () => {
     oldPassword: '',
     newPassword: '',
     confirmPassword: '',
-  });
-
-
-  const [bookmarks, setBookmarks] = useState({
-    bookmark1: '',
-    bookmark2: '',
-    // Add more bookmarks as needed
-  });
-
-  const [readingHistory, setReadingHistory] = useState({
-    historyItem1: '',
-    historyItem2: '',
-    // Add more history items as needed
   });
 
   const [accessibilityFeatures, setAccessibilityFeatures] = useState({
@@ -51,20 +38,6 @@ const Settings = () => {
   const handlePasswordChange = (e) => {
     const { name, value } = e.target;
     setPasswordDetails((prevDetails) => ({ ...prevDetails, [name]: value }));
-  };
-
-  const handleBookCategoryChange = (event) => {
-    // Implement your input change handling logic here if needed
-  };
-
-  const handleBookmarkChange = (e) => {
-    const { name, value } = e.target;
-    setBookmarks((prevBookmarks) => ({ ...prevBookmarks, [name]: value }));
-  };
-
-  const handleHistoryItemChange = (e) => {
-    const { name, value } = e.target;
-    setReadingHistory((prevHistory) => ({ ...prevHistory, [name]: value }));
   };
 
   const handleFeatureChange = (e) => {
@@ -101,23 +74,6 @@ const Settings = () => {
     e.preventDefault();
     console.log('Password details:', passwordDetails);
     // Implement your password update logic here
-  };
-
-  const handleBookCategorySubmit = (e) => {
-    e.preventDefault();
-    // Implement your book categories update logic here
-  };
-
-  const handleBookmarkSubmit = (e) => {
-    e.preventDefault();
-    console.log('Bookmarks:', bookmarks);
-    // Implement your bookmarks update logic here
-  };
-
-  const handleHistorySubmit = (e) => {
-    e.preventDefault();
-    console.log('Reading history:', readingHistory);
-    // Implement your reading history update logic here
   };
 
   const handleFeatureSubmit = (e) => {
@@ -212,12 +168,49 @@ const Settings = () => {
   ];
 
 
+  // For Frontend Book Click History
+  const tableData = [
+    { id: 1, bookName: 'The Hobbit', authorName: 'J.R.R. Tolkien', timestamp: '2024-07-07 10:00:00' },
+    { id: 2, bookName: '1984', authorName: 'George Orwell', timestamp: '2024-07-06 14:30:00' },
+    { id: 3, bookName: 'To Kill a Mockingbird', authorName: 'Harper Lee', timestamp: '2024-07-05 16:45:00' },
+    { id: 4, bookName: 'Pride and Prejudice', authorName: 'Jane Austen', timestamp: '2024-07-04 09:20:00' },
+    { id: 5, bookName: 'The Catcher in the Rye', authorName: 'J.D. Salinger', timestamp: '2024-07-03 11:10:00' },
+    { id: 6, bookName: 'The Great Gatsby', authorName: 'F. Scott Fitzgerald', timestamp: '2024-07-02 08:00:00' },
+    { id: 7, bookName: 'Moby-Dick', authorName: 'Herman Melville', timestamp: '2024-07-01 13:45:00' },
+    { id: 8, bookName: 'The Lord of the Rings', authorName: 'J.R.R. Tolkien', timestamp: '2024-06-30 15:30:00' },
+    { id: 9, bookName: 'Jane Eyre', authorName: 'Charlotte Brontë', timestamp: '2024-06-29 12:20:00' },
+    { id: 10, bookName: 'Brave New World', authorName: 'Aldous Huxley', timestamp: '2024-06-28 18:00:00' },
+    { id: 11, bookName: 'Frankenstein', authorName: 'Mary Shelley', timestamp: '2024-06-27 10:45:00' },
+    { id: 12, bookName: 'Alice\'s Adventures in Wonderland', authorName: 'Lewis Carroll', timestamp: '2024-06-26 14:15:00' },
+  ];
+
+  const itemsPerPage = 10;
+
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const totalPages = Math.ceil(tableData.length / itemsPerPage);
+  const paginatedData = tableData.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const handlePrevPage = () => {
+    setCurrentPage((prev) => Math.max(prev - 1, 1));
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+  };
+
+
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
       <div className="flex flex-col lg:flex-row">
         <div className="lg:w-64 bg-white text-black p-8">
           <h2 className="text-2xl font-bold mb-6">Settings</h2>
 
+          <div className="flex">
+          <div className="w-64">
           <ul className="space-y-2">
             <li
               className={`p-2 cursor-pointer rounded-lg ${selectedSection === 'home' ? 'bg-transparent-700 border border-gray-300' : ''}`}
@@ -244,18 +237,6 @@ const Settings = () => {
               <CollectionIcon className="h-6 w-6 inline-block mr-2" /> Book Categories
             </li>
             <li
-              className={`p-2 cursor-pointer rounded-lg ${selectedSection === 'subscriptionPlans' ? 'bg-transparent-700 border border-gray-300' : ''}`}
-              onClick={() => handleSectionClick('subscriptionPlans')}
-            >
-              <DocumentTextIcon className="h-6 w-6 inline-block mr-2" /> Subscription Plans
-            </li>
-            <li
-              className={`p-2 cursor-pointer rounded-lg ${selectedSection === 'bookmarks' ? 'bg-transparent-700 border border-gray-300' : ''}`}
-              onClick={() => handleSectionClick('bookmarks')}
-            >
-              <HeartIcon className="h-6 w-6 inline-block mr-2" /> Bookmarks
-            </li>
-            <li
               className={`p-2 cursor-pointer rounded-lg ${selectedSection === 'readingHistory' ? 'bg-transparent-700 border border-gray-300' : ''}`}
               onClick={() => handleSectionClick('readingHistory')}
             >
@@ -274,12 +255,20 @@ const Settings = () => {
               <DesktopComputerIcon className="h-6 w-6 inline-block mr-2" /> Offline Access
             </li>
             <li
+              className={`p-2 cursor-pointer rounded-lg ${selectedSection === 'subscriptionPlans' ? 'bg-transparent-700 border border-gray-300' : ''}`}
+              onClick={() => handleSectionClick('subscriptionPlans')}
+            >
+              <DocumentTextIcon className="h-6 w-6 inline-block mr-2" /> Subscription Plans
+            </li>
+            <li
               className="p-2 cursor-pointer rounded-lg"
               onClick={handleLogout}
             >
               <LogoutIcon className="h-6 w-6 inline-block mr-2" /> Logout
             </li>
           </ul>
+        </div>
+        </div>
         </div>
         <div className="flex-grow p-6 mb-8">
 
@@ -379,26 +368,28 @@ const Settings = () => {
 
 
           {selectedSection === 'bookCategories' && (
-            <div className="bg-white rounded-lg shadow-md p-4 mb-6">
-            <h3 className="text-xl font-semibold mb-4">Book Categories</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {genres.map((genre) => (
-                <div key={genre.id} className="bg-gray-100 rounded-lg p-6 mb-4">
-                  <img src={genre.imageUrl} alt={genre.title} className="w-full h-40 object-cover rounded-t-lg mb-4" />
-                  <h4 className="text-lg font-semibold mb-2">{genre.title}</h4>
-                  <p className="text-gray-800 mb-4 text-justify">{genre.description}</p>
-                  <a href={genre.link} className="inline-block bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
-                    Explore {genre.title}
-                  </a>
-                </div>
-              ))}
+            <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+              <h3 className="text-xl font-semibold mb-4">Book Categories</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {genres.map((genre) => (
+                  <div key={genre.id} className="bg-gray-100 rounded-lg p-6 mb-4 flex flex-col justify-between">
+                    <div>
+                      <img src={genre.imageUrl} alt={genre.title} className="w-full h-40 object-cover rounded-t-lg mb-4" />
+                      <h4 className="text-lg font-semibold mb-2">{genre.title}</h4>
+                      <p className="text-gray-800 mb-4 text-justify">{genre.description}</p>
+                    </div>
+                    <div className="flex justify-center">
+                      <a href={genre.link} className="block bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
+                        Explore {genre.title}
+                      </a>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-        )}
-      
+          )}
 
-      
-          
+
           {selectedSection === 'subscriptionPlans' && (
             <div>
             <h2 className="text-2xl font-bold my-4">Choose a Subscription Plan</h2>
@@ -449,64 +440,51 @@ const Settings = () => {
           )}
         
 
-          {selectedSection === 'bookmarks' && (
-            <form onSubmit={handleBookmarkSubmit} className="bg-white rounded-lg shadow-md p-6 mb-8">
-              <h3 className="text-xl font-semibold mb-4">Bookmarks</h3>
-              <div className="mb-4">
-                <label className="block text-gray-700">Bookmark 1</label>
-                <input
-                  type="text"
-                  name="bookmark1"
-                  value={bookmarks.bookmark1}
-                  onChange={handleBookmarkChange}
-                  className="w-full p-2 border border-gray-300 rounded"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-700">Bookmark 2</label>
-                <input
-                  type="text"
-                  name="bookmark2"
-                  value={bookmarks.bookmark2}
-                  onChange={handleBookmarkChange}
-                  className="w-full p-2 border border-gray-300 rounded"
-                />
-              </div>
-              {/* Add more bookmarks as needed */}
-              <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                Save
-              </button>
-            </form>
-          )}
-
           {selectedSection === 'readingHistory' && (
-            <form onSubmit={handleHistorySubmit} className="bg-white rounded-lg shadow-md p-6 mb-8">
-              <h3 className="text-xl font-semibold mb-4">Reading History</h3>
-              <div className="mb-4">
-                <label className="block text-gray-700">History Item 1</label>
-                <input
-                  type="text"
-                  name="historyItem1"
-                  value={readingHistory.historyItem1}
-                  onChange={handleHistoryItemChange}
-                  className="w-full p-2 border border-gray-300 rounded"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-700">History Item 2</label>
-                <input
-                  type="text"
-                  name="historyItem2"
-                  value={readingHistory.historyItem2}
-                  onChange={handleHistoryItemChange}
-                  className="w-full p-2 border border-gray-300 rounded"
-                />
-              </div>
-              {/* Add more history items as needed */}
-              <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                Save
-              </button>
-            </form>
+             <div className="max-w-4xl mx-auto mt-8">
+             <h3 className="text-xl font-semibold mb-4">Reading History</h3>
+             <div className="bg-white shadow-md rounded my-6 overflow-x-auto">
+               <table className="min-w-full bg-white">
+                 <thead>
+                   <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                     <th className="py-3 px-6 text-left">Sr.No</th>
+                     <th className="py-3 px-6 text-left">Book Name</th>
+                     <th className="py-3 px-6 text-left">Author Name</th>
+                     <th className="py-3 px-6 text-left">Timestamp</th>
+                   </tr>
+                 </thead>
+                 <tbody className="text-gray-600 text-sm font-light">
+                   {paginatedData.map((row) => (
+                     <tr key={row.id} className="border-b border-gray-200 hover:bg-gray-100">
+                       <td className="py-3 px-6 text-left whitespace-nowrap">{row.id}</td>
+                       <td className="py-3 px-6 text-left">{row.bookName}</td>
+                       <td className="py-3 px-6 text-left">{row.authorName}</td>
+                       <td className="py-3 px-6 text-left">{row.timestamp}</td>
+                     </tr>
+                   ))}
+                 </tbody>
+               </table>
+             </div>
+             <div className="flex justify-between items-center py-2">
+               <button
+                 onClick={handlePrevPage}
+                 className="bg-blue-500 text-white px-4 py-2 rounded disabled:bg-gray-400"
+                 disabled={currentPage === 1}
+               >
+                 Previous
+               </button>
+               <span>
+                 Page {currentPage} of {totalPages}
+               </span>
+               <button
+                 onClick={handleNextPage}
+                 className="bg-blue-500 text-white px-4 py-2 rounded disabled:bg-gray-400"
+                 disabled={currentPage === totalPages}
+               >
+                 Next
+               </button>
+             </div>
+           </div>
           )}
 
           {selectedSection === 'accessibilityFeatures' && (
@@ -577,6 +555,8 @@ const Settings = () => {
 };
 
 export default Settings;
+
+
 
 
 
