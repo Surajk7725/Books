@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { MenuAlt1Icon, UserCircleIcon, LockClosedIcon, CollectionIcon, DocumentTextIcon, GlobeAltIcon, DesktopComputerIcon, LogoutIcon  } from '@heroicons/react/outline'; 
 import Footer from '../footer';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faLinkedin, faInstagram, faTwitter, faYoutube } from '@fortawesome/free-brands-svg-icons';
 
 const Settings = () => {
   const [selectedSection, setSelectedSection] = useState('account');
@@ -273,59 +275,121 @@ const Settings = () => {
         <div className="flex-grow p-6 mb-8">
 
 
-          {selectedSection === 'account' && (
-            <form onSubmit={handleAccountSubmit} className="bg-white rounded-lg shadow-md p-6 mb-8">
-              <h3 className="text-xl font-semibold mb-4">Account Updation</h3>
-              <div className="mb-4">
-                <label className="block text-gray-700">Name</label>
-                <input
-                  type="text"
-                  name="name"
-                  value={accountDetails.name}
-                  onChange={handleAccountChange}
-                  className="w-full p-2 border border-gray-300 rounded"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-700">Phone Number</label>
-                <input
-                  type="text"
-                  name="phoneNumber"
-                  value={accountDetails.phoneNumber}
-                  onChange={handleAccountChange}
-                  className="w-full p-2 border border-gray-300 rounded"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-700">Email</label>
-                <input
-                  type="email"
-                  name="email"
-                  value={accountDetails.email}
-                  onChange={handleAccountChange}
-                  className="w-full p-2 border border-gray-300 rounded"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block font-semibold mb-2" htmlFor="avatar">Profile Picture</label>
-                <div className="flex items-center">
-                  <img className="w-16 h-16 rounded-full object-cover mr-4" src="https://placehold.co/64x64" alt="Profile" />
-                  <input
-                    className="border border-gray-300 rounded-md px-3 py-2"
-                    id="avatar"
-                    type="file"
-                    accept="image/*"
-                    value={accountDetails.profilePicture}
-                    onChange={handleAccountChange}
-                  />
-                </div>
-              </div>
-              <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                Save
-              </button>
-            </form>
-          )}
-
+        {selectedSection === 'account' && (
+        <form onSubmit={handleAccountSubmit} className="bg-white rounded-lg shadow-md p-6 mb-8">
+          <h3 className="text-xl font-semibold mb-4">Account Updation</h3>
+          <div className="mb-4">
+            <label className="block text-gray-700">Full Name</label>
+            <input
+              type="text"
+              name="name"
+              value={accountDetails.name}
+              onChange={handleAccountChange}
+              className="w-full p-2 border border-gray-300 rounded"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700">Phone Number</label>
+            <input
+              type="text"
+              name="phoneNumber"
+              value={accountDetails.phoneNumber}
+              onChange={handleAccountChange}
+              className="w-full p-2 border border-gray-300 rounded"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700">Email</label>
+            <input
+              type="email"
+              name="email"
+              value={accountDetails.email}
+              onChange={handleAccountChange}
+              className="w-full p-2 border border-gray-300 rounded"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block font-semibold mb-2" htmlFor="avatar">Profile Picture</label>
+            <div className="flex items-center">
+              {accountDetails.profilePicture ? (
+                <img className="w-16 h-16 rounded-full object-cover mr-4" src={accountDetails.profilePicture} alt="Profile" />
+              ) : (
+                <img className="w-16 h-16 rounded-full object-cover mr-4" src="https://placehold.co/64x64" alt="Profile" />
+              )}
+              <input
+                className="border border-gray-300 rounded-md px-3 py-2"
+                id="avatar"
+                type="file"
+                accept="image/*"
+                name="profilePicture"
+                onChange={handleAccountChange}
+              />
+            </div>
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700">House Address</label>
+            <input
+              type="text"
+              name="address"
+              value={accountDetails.address}
+              onChange={handleAccountChange}
+              className="w-full p-2 border border-gray-300 rounded"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700">Social Media Links</label>
+            <div className="flex items-center">
+              <FontAwesomeIcon icon={faInstagram} className="text-gray-500 mr-2" />
+              <input
+                type="text"
+                name="instagram"
+                value={accountDetails.instagram}
+                onChange={handleAccountChange}
+                className="w-full p-2 border border-gray-300 rounded"
+                placeholder="Instagram"
+              />
+            </div>
+            <div className="flex items-center mt-2">
+              <FontAwesomeIcon icon={faTwitter} className="text-gray-500 mr-2" />
+              <input
+                type="text"
+                name="twitter"
+                value={accountDetails.twitter}
+                onChange={handleAccountChange}
+                className="w-full p-2 border border-gray-300 rounded"
+                placeholder="Twitter"
+              />
+            </div>
+            <div className="flex items-center mt-2">
+              <FontAwesomeIcon icon={faLinkedin} className="text-gray-500 mr-2" />
+              <input
+                type="text"
+                name="linkedin"
+                value={accountDetails.linkedin}
+                onChange={handleAccountChange}
+                className="w-full p-2 border border-gray-300 rounded"
+                placeholder="LinkedIn"
+              />
+            </div>
+            <div className="flex items-center mt-2">
+              <FontAwesomeIcon icon={faYoutube} className="text-gray-500 mr-2" />
+              <input
+                type="text"
+                name="youtube"
+                value={accountDetails.youtube}
+                onChange={handleAccountChange}
+                className="w-full p-2 border border-gray-300 rounded"
+                placeholder="Youtube"
+              />
+            </div>
+          </div>
+          <div className="flex justify-end">
+            <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+              Save
+            </button>
+          </div>
+        </form>
+      )}
 
           {selectedSection === 'security' && (
             <form onSubmit={handlePasswordSubmit} className="bg-white rounded-lg shadow-md p-6 mb-8">
@@ -360,9 +424,11 @@ const Settings = () => {
                   className="w-full p-2 border border-gray-300 rounded"
                 />
               </div>
-              <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                Save
-              </button>
+              <div className="flex justify-end">
+                <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                  Save
+                </button>
+              </div>
             </form>
           )}
 
