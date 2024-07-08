@@ -1,18 +1,12 @@
 import React, { useState } from 'react';
-import { MenuAlt1Icon, UserCircleIcon, LockClosedIcon, CollectionIcon, DocumentTextIcon, GlobeAltIcon, DesktopComputerIcon, LogoutIcon  } from '@heroicons/react/outline'; 
+import { MenuAlt1Icon, UserCircleIcon, LockClosedIcon, CollectionIcon, DocumentTextIcon, GlobeAltIcon, DesktopComputerIcon, LogoutIcon, PhotographIcon  } from '@heroicons/react/outline'; 
 import Footer from '../footer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLinkedin, faInstagram, faTwitter, faYoutube } from '@fortawesome/free-brands-svg-icons';
+import { Link } from 'react-router-dom';
 
 const Settings = () => {
   const [selectedSection, setSelectedSection] = useState('account');
-
-  const [accountDetails, setAccountDetails] = useState({
-    name: '',
-    phoneNumber: '',
-    email: '',
-    profilePicture: '',
-  });
 
   const [passwordDetails, setPasswordDetails] = useState({
     oldPassword: '',
@@ -31,11 +25,6 @@ const Settings = () => {
     downloadOptions: '',
     // Add more offline access settings as needed
   });
-
-  const handleAccountChange = (e) => {
-    const { name, value } = e.target;
-    setAccountDetails((prevDetails) => ({ ...prevDetails, [name]: value }));
-  };
 
   const handlePasswordChange = (e) => {
     const { name, value } = e.target;
@@ -66,12 +55,6 @@ const Settings = () => {
     window.location.href = '/';
   };
 
-  const handleAccountSubmit = (e) => {
-    e.preventDefault();
-    console.log('Account details:', accountDetails);
-    // Implement your account update logic here
-  };
-
   const handlePasswordSubmit = (e) => {
     e.preventDefault();
     console.log('Password details:', passwordDetails);
@@ -90,6 +73,7 @@ const Settings = () => {
     // Implement your offline access settings update logic here
   };
 
+  // For Subscription Cards
   const cardStyles = {
     base: 'bg-white rounded-lg shadow-lg p-6 max-w-sm',
     title: 'text-2xl font-bold text-gray-800 mb-4',
@@ -102,7 +86,7 @@ const Settings = () => {
     button: 'bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-full transition-colors duration-300'
   };
 
-
+ // For Book Categories
   const genres = [
     {
       id: 1,
@@ -186,6 +170,7 @@ const Settings = () => {
     { id: 12, bookName: 'Alice\'s Adventures in Wonderland', authorName: 'Lewis Carroll', timestamp: '2024-06-26 14:15:00' },
   ];
 
+  // Pagination Logic
   const itemsPerPage = 10;
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -203,6 +188,37 @@ const Settings = () => {
   const handleNextPage = () => {
     setCurrentPage((prev) => Math.min(prev + 1, totalPages));
   };
+
+
+  //Account Details
+
+  const [profileImage, setProfileImage] = useState(null);
+  const [fullName, setFullName] = useState('');
+  const [userName, setUserName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [houseAddress, setHouseAddress] = useState('');
+  const [socialLinks, setSocialLinks] = useState({
+    youtube: '',
+    instagram: '',
+    twitter: '',
+    linkedin: ''
+  });
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setProfileImage(reader.result);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setSocialLinks({ ...socialLinks, [name]: value });
+  };
+
 
 
   return (
@@ -276,126 +292,149 @@ const Settings = () => {
 
 
         {selectedSection === 'account' && (
-        <form onSubmit={handleAccountSubmit} className="bg-white rounded-lg shadow-md p-6 mb-8">
-          <h3 className="text-xl font-semibold mb-4">Account Updation</h3>
-          <div className="mb-4">
-            <label className="block text-gray-700">Full Name</label>
-            <input
-              type="text"
-              name="name"
-              value={accountDetails.name}
-              onChange={handleAccountChange}
-              className="w-full p-2 border border-gray-300 rounded"
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700">Phone Number</label>
-            <input
-              type="text"
-              name="phoneNumber"
-              value={accountDetails.phoneNumber}
-              onChange={handleAccountChange}
-              className="w-full p-2 border border-gray-300 rounded"
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700">Email</label>
-            <input
-              type="email"
-              name="email"
-              value={accountDetails.email}
-              onChange={handleAccountChange}
-              className="w-full p-2 border border-gray-300 rounded"
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block font-semibold mb-2" htmlFor="avatar">Profile Picture</label>
-            <div className="flex items-center">
-              {accountDetails.profilePicture ? (
-                <img className="w-16 h-16 rounded-full object-cover mr-4" src={accountDetails.profilePicture} alt="Profile" />
+       <div className="max-w-4xl mx-auto p-8 bg-white rounded-md shadow-md">
+       <h2 className="text-3xl font-bold mb-6">Edit Profile</h2>
+       <div className="flex">
+       <div className="flex-shrink-0 mr-6">
+          <div className="relative w-24 h-24">
+              {profileImage ? (
+                <Link to={`/profile-image-view?image=${encodeURIComponent(profileImage)}`}>
+                  <img
+                    src={profileImage}
+                    alt="Profile"
+                    className="w-24 h-24 rounded-full object-cover"
+                  />
+                </Link>
               ) : (
-                <img className="w-16 h-16 rounded-full object-cover mr-4" src="https://placehold.co/64x64" alt="Profile" />
+                <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center">
+                  <PhotographIcon className="w-12 h-12 text-gray-500" />
+                </div>
               )}
               <input
-                className="border border-gray-300 rounded-md px-3 py-2"
-                id="avatar"
                 type="file"
                 accept="image/*"
-                name="profilePicture"
-                onChange={handleAccountChange}
+                className="absolute inset-0 opacity-0 cursor-pointer"
+                onChange={handleImageUpload}
               />
             </div>
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700">House Address</label>
-            <input
-              type="text"
-              name="address"
-              value={accountDetails.address}
-              onChange={handleAccountChange}
-              className="w-full p-2 border border-gray-300 rounded"
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700">Social Media Links</label>
-            <div className="flex items-center">
-              <FontAwesomeIcon icon={faInstagram} className="text-gray-500 mr-2" />
-              <input
-                type="text"
-                name="instagram"
-                value={accountDetails.instagram}
-                onChange={handleAccountChange}
-                className="w-full p-2 border border-gray-300 rounded"
-                placeholder="Instagram"
-              />
+            <div className="flex justify-center mt-2">
+              <button className="px-4 py-2 bg-blue-400 text-white rounded-md" style={{ marginTop: '10px' }}>Upload</button>
             </div>
-            <div className="flex items-center mt-2">
-              <FontAwesomeIcon icon={faTwitter} className="text-gray-500 mr-2" />
-              <input
-                type="text"
-                name="twitter"
-                value={accountDetails.twitter}
-                onChange={handleAccountChange}
-                className="w-full p-2 border border-gray-300 rounded"
-                placeholder="Twitter"
-              />
-            </div>
-            <div className="flex items-center mt-2">
-              <FontAwesomeIcon icon={faLinkedin} className="text-gray-500 mr-2" />
-              <input
-                type="text"
-                name="linkedin"
-                value={accountDetails.linkedin}
-                onChange={handleAccountChange}
-                className="w-full p-2 border border-gray-300 rounded"
-                placeholder="LinkedIn"
-              />
-            </div>
-            <div className="flex items-center mt-2">
-              <FontAwesomeIcon icon={faYoutube} className="text-gray-500 mr-2" />
-              <input
-                type="text"
-                name="youtube"
-                value={accountDetails.youtube}
-                onChange={handleAccountChange}
-                className="w-full p-2 border border-gray-300 rounded"
-                placeholder="Youtube"
-              />
-            </div>
-          </div>
-          <div className="flex justify-end">
-            <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-              Save
-            </button>
-          </div>
-        </form>
+        </div>
+
+         <form className="flex-1">
+           <div className="grid grid-cols-2 gap-4 ml-10">
+             <div className="col-span-2 sm:col-span-1">
+               <label className="block text-gray-700">Full Name</label>
+               <input
+                 type="text"
+                 className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
+                 value={fullName}
+                 onChange={(e) => setFullName(e.target.value)}
+               />
+             </div>
+             <div className="col-span-2 sm:col-span-1">
+               <label className="block text-gray-700">Username</label>
+               <input
+                 type="text"
+                 className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
+                 value={userName}
+                 onChange={(e) => setUserName(e.target.value)}
+               />
+             </div>
+             <div className="col-span-2">
+               <label className="block text-gray-700">Email Address</label>
+               <input
+                 type="email"
+                 className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
+                 value={email}
+                 onChange={(e) => setEmail(e.target.value)}
+               />
+             </div>
+             <div className="col-span-2 sm:col-span-1">
+               <label className="block text-gray-700">Phone Number</label>
+               <input
+                 type="text"
+                 className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
+                 value={phoneNumber}
+                 onChange={(e) => setPhoneNumber(e.target.value)}
+               />
+             </div>
+             <div className="col-span-2 sm:col-span-1">
+               <label className="block text-gray-700">House Address</label>
+               <input
+                 type="text"
+                 className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
+                 value={houseAddress}
+                 onChange={(e) => setHouseAddress(e.target.value)}
+               />
+             </div>
+           </div>
+           <h3 className="text-xl font-bold mt-6 mb-2 ml-10">Add Your Social Handles below</h3>
+           <div className="grid grid-cols-2 gap-4 ml-10">
+             <div className="flex items-center space-x-2">
+               <FontAwesomeIcon icon={faYoutube} className="text-red-600 w-6 h-6" />
+               <input
+                 type="url"
+                 name="youtube"
+                 placeholder="YouTube"
+                 className="flex-1 px-4 py-2 bg-gray-100 border rounded-md"
+                 value={socialLinks.youtube}
+                 onChange={handleInputChange}
+               />
+             </div>
+             <div className="flex items-center space-x-2">
+               <FontAwesomeIcon icon={faInstagram} className="text-pink-500 w-6 h-6" />
+               <input
+                 type="url"
+                 name="instagram"
+                 placeholder="Instagram"
+                 className="flex-1 px-4 py-2 bg-gray-100 border rounded-md"
+                 value={socialLinks.instagram}
+                 onChange={handleInputChange}
+               />
+             </div>
+             <div className="flex items-center space-x-2">
+               <FontAwesomeIcon icon={faTwitter} className="text-blue-400 w-6 h-6" />
+               <input
+                 type="url"
+                 name="twitter"
+                 placeholder="Twitter"
+                 className="flex-1 px-4 py-2 bg-gray-100 border rounded-md"
+                 value={socialLinks.twitter}
+                 onChange={handleInputChange}
+               />
+             </div>
+             <div className="flex items-center space-x-2">
+               <FontAwesomeIcon icon={faLinkedin} className="text-blue-700 w-6 h-6" />
+               <input
+                 type="url"
+                 name="linkedin"
+                 placeholder="LinkedIn"
+                 className="flex-1 px-4 py-2 bg-gray-100 border rounded-md"
+                 value={socialLinks.linkedin}
+                 onChange={handleInputChange}
+               />
+             </div>
+           </div>
+           <button
+             type="submit"
+             className="mt-6 w-full bg-blue-500 text-white py-2 rounded-md"
+           >
+             Update
+           </button>
+         </form>
+       </div>
+     </div>
       )}
 
           {selectedSection === 'security' && (
             <form onSubmit={handlePasswordSubmit} className="bg-white rounded-lg shadow-md p-6 mb-8">
               <h3 className="text-xl font-semibold mb-4">Security</h3>
               <div className="mb-4">
-                <label className="block text-gray-700">Old Password</label>
+                <label className="block text-gray-700">Old Password
+                <span className="text-red-500">*</span>
+                </label>
                 <input
                   type="password"
                   name="oldPassword"

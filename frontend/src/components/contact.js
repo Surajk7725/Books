@@ -77,25 +77,33 @@ const ContactUs = () => {
             <h2 className="text-2xl font-extrabold text-gray-900 text-center">Send us a message</h2>
             <form className="mt-8 grid grid-cols-1 gap-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700" htmlFor="name">Name</label>
+                <label className="block text-sm font-medium text-gray-700" htmlFor="name">Full Name
+                <span className="text-red-500">*</span>
+                </label>
                 <div className="mt-1">
                   <input autoComplete="name" className="py-3 px-4 block w-full shadow-sm focus:ring-primary-500 focus:border-primary-500 border-2 border-gray-300 rounded-md" id="name" name="name" required type="text"/>
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700" htmlFor="phoneNumber">Phone Number</label>
+                <label className="block text-sm font-medium text-gray-700" htmlFor="phoneNumber">Phone Number
+                <span className="text-red-500">*</span>
+                </label>
                 <div className="mt-1">
                   <input autoComplete="tel" className="py-3 px-4 block w-full shadow-sm focus:ring-primary-500 focus:border-primary-500 border-2 border-gray-300 rounded-md" id="phoneNumber" name="phoneNumber" required type="tel" />
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700" htmlFor="email">Email address</label>
+                <label className="block text-sm font-medium text-gray-700" htmlFor="email">Email address
+                <span className="text-red-500">*</span>
+                </label>
                 <div className="mt-1">
                   <input autoComplete="email" className="py-3 px-4 block w-full shadow-sm focus:ring-primary-500 focus:border-primary-500 border-2 border-gray-300 rounded-md" id="email" name="email" required type="email"/>
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700" htmlFor="message">Message</label>
+                <label className="block text-sm font-medium text-gray-700" htmlFor="message">Message
+                <span className="text-red-500">*</span>
+                </label>
                 <div className="mt-1">
                   <textarea className="py-3 px-4 block w-full shadow-sm focus:ring-primary-500 focus:border-primary-500 border-2 border-gray-300 rounded-md" id="message" name="message" required rows="4"></textarea>
                 </div>

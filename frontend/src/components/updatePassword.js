@@ -43,7 +43,9 @@ export default function UpdatePassword() {
         {error && <p className="text-red-500 text-center mb-4">{error}</p>}
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-gray-700 font-bold mb-2" htmlFor="email">Email</label>
+            <label className="block text-gray-700 font-bold mb-2" htmlFor="email">Email
+            <span className="text-red-500">*</span>
+            </label>
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               id="email"
@@ -55,7 +57,9 @@ export default function UpdatePassword() {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 font-bold mb-2" htmlFor="newPassword">New Password</label>
+            <label className="block text-gray-700 font-bold mb-2" htmlFor="newPassword">New Password
+            <span className="text-red-500">*</span>
+            </label>
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               id="newPassword"
@@ -67,7 +71,9 @@ export default function UpdatePassword() {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 font-bold mb-2" htmlFor="confirmPassword">Confirm Password</label>
+            <label className="block text-gray-700 font-bold mb-2" htmlFor="confirmPassword">Confirm Password
+            <span className="text-red-500">*</span>
+            </label>
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               id="confirmPassword"

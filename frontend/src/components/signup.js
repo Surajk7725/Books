@@ -14,19 +14,27 @@ export default function Signup() {
         <h2 className="text-2xl font-bold mb-6 text-center text-secondary">Sign Up</h2>
         <form>
           <div className="mb-4">
-            <label className="block text-gray-700 font-bold mb-2" htmlFor="fullName">Full Name</label>
+            <label className="block text-gray-700 font-bold mb-2" htmlFor="fullName">Full Name
+            <span className="text-red-500">*</span>
+            </label>
             <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="fullName" placeholder="Enter your full name" type="text" />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 font-bold mb-2" htmlFor="fullName">User Name</label>
+            <label className="block text-gray-700 font-bold mb-2" htmlFor="fullName">User Name
+            <span className="text-red-500">*</span>
+            </label>
             <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="userName" placeholder="Enter your user name" type="text" />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 font-bold mb-2" htmlFor="email">Email</label>
+            <label className="block text-gray-700 font-bold mb-2" htmlFor="email">Email
+            <span className="text-red-500">*</span>
+            </label>
             <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="email" placeholder="Enter your email address" type="email" />
           </div>
           <div className="mb-6">
-            <label className="block text-gray-700 font-bold mb-2" htmlFor="password">Password</label>
+            <label className="block text-gray-700 font-bold mb-2" htmlFor="password">Password
+            <span className="text-red-500">*</span>
+            </label>
             <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="password" placeholder="Enter your password" type="password" />
           </div>
           <div className="flex items-center justify-center">

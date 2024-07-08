@@ -10,6 +10,7 @@ import Settings from './components/user/settings';
 import Help from './components/user/help';
 import Contactus from './components/contact';
 import Profile from './components/user/profile';
+import BookForm from './components/user/bookForm';
 
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
         <Route path="/forgot" element={<Forgot />} />
         <Route path="/update-password" element={<Update />} />
         <Route path="/home" element={<Home />} />
+        <Route path="/user-addbook" element={<BookForm />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/help-center" element={<Help />} />

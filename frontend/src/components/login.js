@@ -14,7 +14,9 @@ export default function Login() {
     <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">Login</h1>
     <form>
       <div class="mb-4">
-        <label class="block text-gray-700 font-bold mb-2" for="text">User Name</label>
+        <label class="block text-gray-700 font-bold mb-2" for="text">User Name
+        <span className="text-red-500">*</span>
+        </label>
         <input
           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           id="username"
@@ -23,7 +25,9 @@ export default function Login() {
         />
       </div>
       <div class="mb-6">
-        <label class="block text-gray-700 font-bold mb-2" for="password">Password</label>
+        <label class="block text-gray-700 font-bold mb-2" for="password">Password
+        <span className="text-red-500">*</span>
+        </label>
         <input
           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
           id="password"

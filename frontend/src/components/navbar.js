@@ -63,7 +63,7 @@ export default function NavBar() {
                     <button id="notification-bell" className="text-gray-500 hover:text-gray-700 focus:outline-none ml-6">
                         <span className="text-2xl">🔔</span>
                     </button>
-                    <Link to="#" className="text-white-700 hover:text-gray-300 transition duration-300 ease-in-out text-2xl ml-6">+</Link>
+                    <Link to="/user-addbook" className="text-white-700 hover:text-gray-300 transition duration-300 ease-in-out text-2xl ml-6">+</Link>
                     <div className="relative ml-6">
                         <button
                             onClick={() => setDropdownOpen(!dropdownOpen)}
