@@ -7,8 +7,6 @@ export default function NavBar() {
     const [booksDropdownOpen, setBooksDropdownOpen] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false); // State for mobile menu toggle
 
-    const [redirectToBooks, setRedirectToBooks] = useState(false);
-
     return (
         <div className="bg-transparent-800 text-black rounded-lg shadow-md">
             <nav className="container mx-auto flex justify-between items-center py-4 px-6">
@@ -44,9 +42,9 @@ export default function NavBar() {
                     </button>
                         {booksDropdownOpen && (
                             <div className="absolute z-10 mt-2 w-48 bg-white text-black rounded-md shadow-lg">
-                                <Link to="/books/kids" className="block px-4 py-2 hover:bg-gray-100"> Kids</Link>
-                                <Link to="/books/popular" className="block px-4 py-2 hover:bg-gray-100">Popular</Link>
-                                <Link to="/books/academic" className="block px-4 py-2 hover:bg-gray-100">Academics</Link>
+                                <Link to="/display-books/kids" className="block px-4 py-2 hover:bg-gray-100"> Kids</Link>
+                                <Link to="/display-books/popular" className="block px-4 py-2 hover:bg-gray-100">Popular</Link>
+                                <Link to="/display-books/academics" className="block px-4 py-2 hover:bg-gray-100">Academics</Link>
                             </div>
                         )}
                 </div>
@@ -88,7 +86,7 @@ export default function NavBar() {
                                 <Link to="/profile" className="block px-4 py-2 flex items-center hover:bg-gray-100">
                                     <UserCircleIcon className="h-5 w-5 mr-2" /> My Profile
                                 </Link>
-                                <Link to="/wishlist" className="block px-4 py-2 flex items-center hover:bg-gray-100">
+                                <Link to="/my-wishlist" className="block px-4 py-2 flex items-center hover:bg-gray-100">
                                     <StarIcon className="h-5 w-5 mr-2" /> My Wishlist
                                 </Link>
                                 <Link to="/notes" className="block px-4 py-2 flex items-center hover:bg-gray-100">
@@ -110,24 +108,24 @@ export default function NavBar() {
             </nav>
 
             {/* Mobile menu */}
-            {menuOpen && (
+       {menuOpen && (
                 <div className="md:hidden bg-transparent-800 text-black py-2 px-4">
-                    <div className="relative">
+
+                <Link to="/display-books" className="text-gray-700 hover:text-gray-300 transition duration-300 ease-in-out"><span className="flex items-center">
+                        <BookOpenIcon className="h-5 w-5" /> Books</span>
+                </Link>
+                    <div className="relative mt-1.5">
                         <button
                             onClick={() => setBooksDropdownOpen(!booksDropdownOpen)}
-                            className="block py-2 bg-white flex items-center text-white-700 hover:text-gray-300 transition duration-300 ease-in-out"
+                            className="bg-white flex items-center text-white-700 hover:text-gray-300 transition duration-300 ease-in-out"
                         >
-                            <span className="flex items-center">
-                                <BookOpenIcon className="h-5 w-5" /> 
-                                <span className="ml-2">Books</span>
-                            </span>
-                            <ChevronDownIcon className="h-4 w-4 ml-1" />
+                            <ChevronDownIcon className="h-4 w-4 ml-16 mt-[-2rem]" />
                         </button>
                         {booksDropdownOpen && (
                             <div className="absolute left-0 mt-2 w-full bg-white text-black rounded-md shadow-lg">
-                                <Link to="/books/kids" className="block px-4 py-2 hover:bg-gray-100">Kids</Link>
-                                <Link to="/books/popular" className="block px-4 py-2 hover:bg-gray-100">Popular</Link>
-                                <Link to="/books/recommendations" className="block px-4 py-2 hover:bg-gray-100">Recommendations</Link>
+                                <Link to="/display-books/kids" className="block px-4 py-2 hover:bg-gray-100">Kids</Link>
+                                <Link to="/display-books/popular" className="block px-4 py-2 hover:bg-gray-100">Popular</Link>
+                                <Link to="/display-books/academics" className="block px-4 py-2 hover:bg-gray-100">Academics</Link>
                             </div>
                         )}
                     </div>

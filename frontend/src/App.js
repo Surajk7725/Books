@@ -11,6 +11,11 @@ import Help from './components/user/help';
 import Contactus from './components/contact';
 import Profile from './components/user/profile';
 import BookForm from './components/user/bookForm';
+import AllBooks from './components/user/allBooks';
+import KidsBooks from './components/user/kidsBooks';
+import PopularBooks from './components/user/popularBooks';
+import AcademicBooks from './components/user/academicBooks';
+import MyWishlist from './components/user/myWishlist';
 
 
 function App() {
@@ -23,6 +28,11 @@ function App() {
         <Route path="/forgot" element={<Forgot />} />
         <Route path="/update-password" element={<Update />} />
         <Route path="/home" element={<Home />} />
+        <Route path="/display-books" element={<AllBooks />} />
+        <Route path="/display-books/kids" element={<KidsBooks />}/>
+        <Route path="/display-books/popular" element={<PopularBooks />}/>
+        <Route path="/display-books/academics" element={<AcademicBooks />}/>
+        <Route path="/my-wishlist" element={<MyWishlist />} />
         <Route path="/user-addbook" element={<BookForm />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/settings" element={<Settings />} />
