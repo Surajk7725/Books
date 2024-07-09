@@ -82,15 +82,25 @@ function BookForm() {
                             <label className="block text-gray-700 font-bold mb-2" htmlFor="genre">
                                 Genre
                             </label>
-                            <input
+                            <select
                                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                 id="genre"
-                                type="text"
-                                placeholder="Enter book genre"
                                 value={genre}
                                 onChange={(e) => setGenre(e.target.value)}
-                            />
+                            >
+                                <option value="">Select a genre</option>
+                                <option value="Fantasy">Fantasy</option>
+                                <option value="Romance">Romance</option>
+                                <option value="Biography">Biography</option>
+                                <option value="Horror">Horror</option>
+                                <option value="Science Fiction">Science Fiction</option>
+                                <option value="Mystery">Mystery</option>
+                                <option value="Thriller">Thriller</option>
+                                <option value="Historical Fiction">Historical Fiction</option>
+                                <option value="Dystopian">Dystopian</option>
+                            </select>
                         </div>
+
                         <div className="mb-4">
                             <label className="block text-gray-700 font-bold mb-2" htmlFor="description">
                                 Description

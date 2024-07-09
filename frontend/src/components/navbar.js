@@ -7,6 +7,8 @@ export default function NavBar() {
     const [booksDropdownOpen, setBooksDropdownOpen] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false); // State for mobile menu toggle
 
+    const [redirectToBooks, setRedirectToBooks] = useState(false);
+
     return (
         <div className="bg-transparent-800 text-black rounded-lg shadow-md">
             <nav className="container mx-auto flex justify-between items-center py-4 px-6">
@@ -28,25 +30,27 @@ export default function NavBar() {
 
                 {/* Desktop navigation */}
                 <div className="hidden md:flex space-x-6">
-                    <div className="relative">
-                        <button
-                            onClick={() => setBooksDropdownOpen(!booksDropdownOpen)}
-                            className="flex items-center text-white-700 hover:text-gray-300 transition duration-300 ease-in-out"
-                        >
-                            <span className="flex items-center">
-                                <BookOpenIcon className="h-5 w-5" /> 
-                                <span className="ml-2">Books</span>
-                            </span>
-                            <ChevronDownIcon className="h-4 w-4 ml-1" />
-                        </button>
+
+                <Link to="/display-books" className="text-gray-700 hover:text-gray-300 transition duration-300 ease-in-out"><span className="flex items-center">
+                        <BookOpenIcon className="h-5 w-5" /> Books</span>
+                </Link>
+
+                <div className="relative mt-1.5">
+                    <button
+                        onClick={() => setBooksDropdownOpen(!booksDropdownOpen)}
+                        className="flex items-center text-white-700 hover:text-gray-300 transition duration-300 ease-in-out"
+                    >
+                        <ChevronDownIcon className="h-4 w-4 ml-[-1rem]" />
+                    </button>
                         {booksDropdownOpen && (
                             <div className="absolute z-10 mt-2 w-48 bg-white text-black rounded-md shadow-lg">
                                 <Link to="/books/kids" className="block px-4 py-2 hover:bg-gray-100"> Kids</Link>
                                 <Link to="/books/popular" className="block px-4 py-2 hover:bg-gray-100">Popular</Link>
-                                <Link to="/books/recommendations" className="block px-4 py-2 hover:bg-gray-100">Recommendations</Link>
+                                <Link to="/books/academic" className="block px-4 py-2 hover:bg-gray-100">Academics</Link>
                             </div>
                         )}
-                    </div>
+                </div>
+
                     <Link to="#" className="text-gray-700 hover:text-gray-300 transition duration-300 ease-in-out"><span className="flex items-center">
                         <ClipboardCheckIcon className="h-5 w-5" /> Queries</span>
                     </Link>
