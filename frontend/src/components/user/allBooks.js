@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { SearchIcon } from '@heroicons/react/outline';
+import { SearchIcon, HeartIcon } from '@heroicons/react/outline';
+import { HeartIcon as HeartIconSolid } from '@heroicons/react/solid';
 import NavBar from '../navbar';
 import Footer from '../footer';
+import {Link} from 'react-router-dom';
 
-const booksData = [
+export const booksData = [
   { id: 1, title: 'To Kill a Mockingbird', imageUrl: 'https://images.gr-assets.com/books/1553383690l/2657.jpg' },
   { id: 2, title: '1984', imageUrl: 'https://images.gr-assets.com/books/1348990566l/5470.jpg' },
   { id: 3, title: 'The Great Gatsby', imageUrl: 'https://images.gr-assets.com/books/1490528560l/4671.jpg' },
@@ -26,7 +28,7 @@ const booksData = [
 ];
 
 
-function AllBooks() {
+const AllBooks = ({bookmarkedBooks, toggleBookmark}) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const booksPerPage = 12;
@@ -68,18 +70,25 @@ function AllBooks() {
                 <img
                   alt={`Cover of ${book.title}`}
                   src={book.imageUrl}
-                   className="w-full h-48 object-contain"
+                  className="w-full h-48 object-contain"
                 />
-                <div className="absolute top-2 right-2 bg-white rounded-full p-1">
-                  ★
+                <div
+                  className="absolute top-2 right-2 bg-white rounded-full p-1 cursor-pointer"
+                  onClick={() => toggleBookmark(book.id)}
+                >
+                  {bookmarkedBooks.includes(book.id) ? (
+                    <HeartIconSolid className="h-6 w-6 text-red-500" />
+                  ) : (
+                    <HeartIcon className="h-6 w-6 text-gray-500" />
+                  )}
                 </div>
               </div>
               <div className="px-6 py-4">
                 <div className="font-bold text-xl mb-2 text-center">{book.title}</div>
                 <div className="flex justify-between">
-                  <button className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition-colors duration-300">
+                  <Link to="/display-books/rating" className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition-colors duration-300">
                     Rating
-                  </button>
+                  </Link>
                   <button className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded transition-colors duration-300">
                     View Book
                   </button>
@@ -109,7 +118,7 @@ function AllBooks() {
       </div>
       <Footer />
     </div>
-  )
+  );
 }
 
 export default AllBooks;

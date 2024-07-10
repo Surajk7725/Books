@@ -1,29 +1,27 @@
 import React, { useState } from 'react';
-import { SearchIcon } from '@heroicons/react/outline';
+import { SearchIcon, HeartIcon } from '@heroicons/react/outline';
+import { HeartIcon as HeartIconSolid } from '@heroicons/react/solid';
 import NavBar from '../navbar';
 import Footer from '../footer';
 
-const booksData = [
-    { id: 1, title: "Campbell Biology", imageUrl: "https://rukminim2.flixcart.com/image/750/900/jbdys280/book/6/5/8/campbell-biology-original-imafyhh9nwvdn2gj.jpeg?q=20&crop=false" },
-    { id: 2, title: "Organic Chemistry", imageUrl: "https://m.media-amazon.com/images/I/61XeLR07VFL._AC_UF1000,1000_QL80_.jpg" },
-    { id: 3, title: "Principles of Economics", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/0/03/Alfred_Marshall_-_Principles_of_Economics_%281890%29.JPG" },
-    { id: 4, title: "Psychology", imageUrl: "https://5.imimg.com/data5/SELLER/Default/2020/8/IN/BJ/NY/94559699/human-psychology-books.jpg" },
-    { id: 5, title: "Engineering Mechanics: Dynamics", imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT-1Qb5XmzUTjJBnrEWuZjaTbK4N7vcYqv6hQ&s" },
-    { id: 6, title: "Fundamentals of Corporate Finance", imageUrl: "https://m.media-amazon.com/images/I/61oV1G3iZNL._AC_UF1000,1000_QL80_.jpg" },
-    { id: 7, title: "Introduction to Algorithms", imageUrl: "https://m.media-amazon.com/images/I/81PnkB-2AiL._AC_UF1000,1000_QL80_.jpg" },
+export const academicData = [
+    { id: 301, title: "Campbell Biology", imageUrl: "https://rukminim2.flixcart.com/image/750/900/jbdys280/book/6/5/8/campbell-biology-original-imafyhh9nwvdn2gj.jpeg?q=20&crop=false" },
+    { id: 302, title: "Organic Chemistry", imageUrl: "https://m.media-amazon.com/images/I/61XeLR07VFL._AC_UF1000,1000_QL80_.jpg" },
+    { id: 303, title: "Principles of Economics", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/0/03/Alfred_Marshall_-_Principles_of_Economics_%281890%29.JPG" },
+    { id: 304, title: "Psychology", imageUrl: "https://5.imimg.com/data5/SELLER/Default/2020/8/IN/BJ/NY/94559699/human-psychology-books.jpg" },
+    { id: 305, title: "Engineering Mechanics: Dynamics", imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT-1Qb5XmzUTjJBnrEWuZjaTbK4N7vcYqv6hQ&s" },
+    { id: 306, title: "Fundamentals of Corporate Finance", imageUrl: "https://m.media-amazon.com/images/I/61oV1G3iZNL._AC_UF1000,1000_QL80_.jpg" },
+    { id: 307, title: "Introduction to Algorithms", imageUrl: "https://m.media-amazon.com/images/I/81PnkB-2AiL._AC_UF1000,1000_QL80_.jpg" },
 ];
 
 
-
-  
-
-function AcademicBooks() {
+function AcademicBooks({bookmarkedBooks, toggleBookmark}) {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const booksPerPage = 12;
 
   // Filtered books based on search term
-  const filteredBooks = booksData.filter(book =>
+  const filteredBooks = academicData.filter(book =>
     book.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -61,8 +59,15 @@ function AcademicBooks() {
                   src={book.imageUrl}
                    className="w-full h-48 object-contain"
                 />
-                <div className="absolute top-2 right-2 bg-white rounded-full p-1">
-                  ★
+               <div
+                  className="absolute top-2 right-2 bg-white rounded-full p-1 cursor-pointer"
+                  onClick={() => toggleBookmark(book.id)}
+                >
+                  {bookmarkedBooks.includes(book.id) ? (
+                    <HeartIconSolid className="h-6 w-6 text-red-500" />
+                  ) : (
+                    <HeartIcon className="h-6 w-6 text-gray-500" />
+                  )}
                 </div>
               </div>
               <div className="px-6 py-4">

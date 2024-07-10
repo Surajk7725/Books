@@ -1,24 +1,25 @@
 import React, { useState } from 'react';
-import { SearchIcon } from '@heroicons/react/outline';
+import { SearchIcon, HeartIcon } from '@heroicons/react/outline';
+import { HeartIcon as HeartIconSolid } from '@heroicons/react/solid';
 import NavBar from '../navbar';
 import Footer from '../footer';
 
-const booksData = [
-    { id: 1, title: "The Night Circus", imageUrl: "https://images.gr-assets.com/books/1387124618l/9361589.jpg" },
-    { id: 2, title: "Educated: A Memoir", imageUrl: "https://images.gr-assets.com/books/1506026635l/35133922.jpg" },
-    { id: 3, title: "The Book Thief", imageUrl: "https://images.gr-assets.com/books/1390053681l/19063.jpg" },
-    { id: 4, title: "A Man Called Ove", imageUrl: "https://images.gr-assets.com/books/1405259930l/18774964.jpg" },
-    { id: 5, title: "All the Light We Cannot See", imageUrl: "https://images.gr-assets.com/books/1451445646l/18143977.jpg" },
+export const popularData = [
+    { id: 201, title: "The Night Circus", imageUrl: "https://images.gr-assets.com/books/1387124618l/9361589.jpg" },
+    { id: 202, title: "Educated: A Memoir", imageUrl: "https://images.gr-assets.com/books/1506026635l/35133922.jpg" },
+    { id: 203, title: "The Book Thief", imageUrl: "https://images.gr-assets.com/books/1390053681l/19063.jpg" },
+    { id: 204, title: "A Man Called Ove", imageUrl: "https://images.gr-assets.com/books/1405259930l/18774964.jpg" },
+    { id: 205, title: "All the Light We Cannot See", imageUrl: "https://images.gr-assets.com/books/1451445646l/18143977.jpg" },
 ];
 
 
-function PopularBooks() {
+function PopularBooks({bookmarkedBooks, toggleBookmark}) {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const booksPerPage = 12;
 
   // Filtered books based on search term
-  const filteredBooks = booksData.filter(book =>
+  const filteredBooks = popularData.filter(book =>
     book.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -56,8 +57,15 @@ function PopularBooks() {
                   src={book.imageUrl}
                    className="w-full h-48 object-contain"
                 />
-                <div className="absolute top-2 right-2 bg-white rounded-full p-1">
-                  ★
+                <div
+                  className="absolute top-2 right-2 bg-white rounded-full p-1 cursor-pointer"
+                  onClick={() => toggleBookmark(book.id)}
+                >
+                  {bookmarkedBooks.includes(book.id) ? (
+                    <HeartIconSolid className="h-6 w-6 text-red-500" />
+                  ) : (
+                    <HeartIcon className="h-6 w-6 text-gray-500" />
+                  )}
                 </div>
               </div>
               <div className="px-6 py-4">
