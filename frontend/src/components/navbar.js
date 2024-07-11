@@ -89,7 +89,7 @@ export default function NavBar() {
                                 <Link to="/my-wishlist" className="block px-4 py-2 flex items-center hover:bg-gray-100">
                                     <StarIcon className="h-5 w-5 mr-2" /> My Wishlist
                                 </Link>
-                                <Link to="/notes" className="block px-4 py-2 flex items-center hover:bg-gray-100">
+                                <Link to="/private-notes" className="block px-4 py-2 flex items-center hover:bg-gray-100">
                                     <PencilIcon className="h-5 w-5 mr-2" /> My Notes
                                 </Link>
                                 <Link to="/settings" className="block px-4 py-2 flex items-center hover:bg-gray-100">

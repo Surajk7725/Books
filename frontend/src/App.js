@@ -18,6 +18,8 @@ import PopularBooks from './components/user/popularBooks';
 import AcademicBooks from './components/user/academicBooks';
 import Rating from './components/user/rating';
 import MyWishlist from './components/user/myWishlist';
+import Notes from './components/user/notes';
+import NoteDetail from './components/user/noteDetails';
 
 
 function App() {
@@ -58,6 +60,8 @@ function App() {
         <Route path="/my-wishlist" element={<MyWishlist bookmarkedBooks={bookmarkedBooks} toggleBookmark={toggleBookmark} />} />
         <Route path="/user-addbook" element={<BookForm />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/private-notes" element={<Notes />} />
+        <Route path="/private-notes/:id" element={<NoteDetail />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/help-center" element={<Help />} />
         <Route path="/contactus" element={<Contactus />} />
