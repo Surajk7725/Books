@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Slide4 from './images/slide4.jpg';
 import Slide5 from './images/slide5.jpg';
 import Slide6 from './images/slide6.jpg';
 import Slide7 from './images/slide7.jpg';
-import { ChevronDownIcon, BookOpenIcon, ClipboardCheckIcon, MailIcon, PencilIcon } from '@heroicons/react/outline';
 import Footer from './footer';
 
 function ImageSlider() {
@@ -32,8 +31,6 @@ function ImageSlider() {
 
 export default function Landing() {
   const navigate = useNavigate();
-  const [menuOpen, setMenuOpen] = useState(false); // State for mobile menu toggle
-  const [booksDropdownOpen, setBooksDropdownOpen] = useState(false);
 
   return (
     <div className="flex flex-col min-h-screen relative">
@@ -61,45 +58,6 @@ export default function Landing() {
             </button>
           </div>
 
-          <button
-            onClick={() => setMenuOpen(!menuOpen)}
-            className="md:hidden text-gray-700 focus:outline-none"
-          >
-            <svg className="h-6 w-6 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path fillRule="evenodd" clipRule="evenodd" d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z" />
-            </svg>
-          </button>
-
-          <div className="hidden md:flex md:space-x-6 flex-grow justify-center">
-          <Link to="/display-books" className="text-gray-700 hover:text-gray-300 transition duration-300 ease-in-out"><span className="flex items-center">
-                  <BookOpenIcon className="h-5 w-5" /> Books</span>
-          </Link>
-
-                <div className="relative mt-1.5">
-                    <button
-                        onClick={() => setBooksDropdownOpen(!booksDropdownOpen)}
-                        className="flex items-center text-white-700 hover:text-gray-300 transition duration-300 ease-in-out"
-                    >
-                        <ChevronDownIcon className="h-4 w-4 ml-[-1rem]" />
-                    </button>
-                        {booksDropdownOpen && (
-                            <div className="absolute z-10 mt-2 w-48 bg-white text-black rounded-md shadow-lg">
-                                <Link to="/display-books/kids" className="block px-4 py-2 hover:bg-gray-100"> Kids</Link>
-                                <Link to="/display-books/popular" className="block px-4 py-2 hover:bg-gray-100">Popular</Link>
-                                <Link to="/display-books/academics" className="block px-4 py-2 hover:bg-gray-100">Academics</Link>
-                            </div>
-                        )}
-                </div>
-            <Link to="#" className="text-gray-700 hover:text-gray-300 transition duration-300 ease-in-out"><span className="flex items-center">
-              <ClipboardCheckIcon className="h-5 w-5" /> Queries</span>
-            </Link>
-            <Link to="#" className="text-gray-700 hover:text-gray-300 transition duration-300 ease-in-out"><span className="flex items-center">
-              <PencilIcon className="h-5 w-5" /> Write A Note</span>
-            </Link>
-            <Link to="/contactus" className="text-gray-700 hover:text-gray-300 transition duration-300 ease-in-out"><span className="flex items-center">
-              <MailIcon className="h-5 w-5" /> Contact Us</span>
-            </Link>
-          </div>
 
           {/* Desktop Login and Signup buttons */}
           <div className="hidden md:flex md:space-x-4">
@@ -119,40 +77,6 @@ export default function Landing() {
             </button>
           </div>
         </div>
-
-       {/* Mobile menu */}
-       {menuOpen && (
-                <div className="md:hidden bg-transparent-800 text-black py-2 px-4">
-
-                <Link to="/display-books" className="text-gray-700 hover:text-gray-300 transition duration-300 ease-in-out"><span className="flex items-center">
-                        <BookOpenIcon className="h-5 w-5" /> Books</span>
-                </Link>
-                    <div className="relative mt-1.5">
-                        <button
-                            onClick={() => setBooksDropdownOpen(!booksDropdownOpen)}
-                            className="bg-white flex items-center text-white-700 hover:text-gray-300 transition duration-300 ease-in-out"
-                        >
-                            <ChevronDownIcon className="h-4 w-4 ml-16 mt-[-2rem]" />
-                        </button>
-                        {booksDropdownOpen && (
-                            <div className="absolute left-0 mt-2 w-full bg-white text-black rounded-md shadow-lg">
-                                <Link to="/display-books/kids" className="block px-4 py-2 hover:bg-gray-100">Kids</Link>
-                                <Link to="/display-books/popular" className="block px-4 py-2 hover:bg-gray-100">Popular</Link>
-                                <Link to="/display-books/academics" className="block px-4 py-2 hover:bg-gray-100">Academics</Link>
-                            </div>
-                        )}
-                    </div>
-                    <Link to="#" className="block py-2 bg-white text-black hover:text-gray-300"><span className="flex items-center">
-                        <ClipboardCheckIcon className="h-5 w-5" /> Queries</span>
-                    </Link>
-                    <Link to="#" className="block py-2 bg-white text-black hover:text-gray-300"><span className="flex items-center">
-                        <PencilIcon className="h-5 w-5" /> Write A Note</span>
-                    </Link>
-                    <Link to="/contactus" className="block py-2 bg-white text-black hover:text-gray-300"><span className="flex items-center">
-                        <MailIcon className="h-5 w-5" /> Contact Us</span>
-                    </Link>
-                </div>
-            )}
       </header>
 
       <div className='flex-grow'>
