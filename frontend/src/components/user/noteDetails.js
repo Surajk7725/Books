@@ -67,6 +67,7 @@
 
 import React from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
+import 'react-quill/dist/quill.snow.css';
 
 const formatDate = (dateString) => {
   const options = { 
@@ -91,8 +92,7 @@ const NoteDetail = ({ note, onClose }) => {
           </button>
         </div>
         <h2 className="text-2xl font-bold mb-4 text-center">{note.title}</h2>
-        <p className="mb-4 text-gray-700">{note.content}</p>
-        
+        <div className="mt-2 text-gray-700 dark:text-gray-300" dangerouslySetInnerHTML={{ __html: note.content }} />
         {note.file && (
           <a
             href={URL.createObjectURL(note.file)}
