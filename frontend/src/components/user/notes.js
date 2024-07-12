@@ -115,11 +115,9 @@ const Notes = () => {
   };
 
   const deleteNote = (index) => {
-    if (window.confirm('Are you sure you want to delete this note?')) {
-      const updatedNotes = notes.filter((_, i) => i !== index);
-      setNotes(updatedNotes);
-      toast.success('Note deleted successfully');
-    }
+    const updatedNotes = notes.filter((_, i) => i !== index);
+    setNotes(updatedNotes);
+    toast.success('Note deleted successfully');
   };
 
   const pinNote = (index) => {

@@ -52,7 +52,7 @@ export default function NavBar() {
                     <Link to="#" className="text-gray-700 hover:text-gray-300 transition duration-300 ease-in-out"><span className="flex items-center">
                         <ClipboardCheckIcon className="h-5 w-5" /> Queries</span>
                     </Link>
-                    <Link to="#" className="text-gray-700 hover:text-gray-300 transition duration-300 ease-in-out"><span className="flex items-center">
+                    <Link to="/write-book" className="text-gray-700 hover:text-gray-300 transition duration-300 ease-in-out"><span className="flex items-center">
                         <PencilIcon className="h-5 w-5" /> Write A Note</span>
                     </Link>
                     <Link to="/contactus" className="text-gray-700 hover:text-gray-300 transition duration-300 ease-in-out"><span className="flex items-center">
@@ -132,7 +132,7 @@ export default function NavBar() {
                     <Link to="#" className="block py-2 bg-white text-black hover:text-gray-300"><span className="flex items-center">
                         <ClipboardCheckIcon className="h-5 w-5" /> Queries</span>
                     </Link>
-                    <Link to="#" className="block py-2 bg-white text-black hover:text-gray-300"><span className="flex items-center">
+                    <Link to="/write-book" className="block py-2 bg-white text-black hover:text-gray-300"><span className="flex items-center">
                         <PencilIcon className="h-5 w-5" /> Write A Note</span>
                     </Link>
                     <Link to="/contactus" className="block py-2 bg-white text-black hover:text-gray-300"><span className="flex items-center">
