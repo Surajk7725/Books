@@ -1,12 +1,11 @@
 // import React, { useState } from 'react';
 // import { AiOutlinePlus, AiOutlineEdit, AiOutlineDelete, AiOutlinePushpin, AiOutlineClose } from 'react-icons/ai';
 // import { BsSearch } from 'react-icons/bs';
-// import NavBar from '../navbar';
-// import Footer from '../footer';
 // import { ToastContainer, toast } from 'react-toastify';
 // import 'react-toastify/dist/ReactToastify.css';
-// import { useNavigate } from 'react-router-dom';
-
+// import NavBar from '../navbar';
+// import Footer from '../footer';
+// import NoteDetail from './noteDetails';
 
 // const formatDate = (dateString) => {
 //   const options = { 
@@ -28,19 +27,18 @@
 //   const [isEditing, setIsEditing] = useState(false);
 //   const [editIndex, setEditIndex] = useState(null);
 //   const [isFormVisible, setIsFormVisible] = useState(false);
-//   const navigate = useNavigate();
+//   const [selectedNote, setSelectedNote] = useState(null); // State for selected note
 
 //   const handleInputChange = (e) => {
 //     const { name, value, files } = e.target;
 
 //     if (name === 'file') {
-//       // Allow csv,xlsx,word docx,txt,pdf and ppt
 //       const allowedTypes = [
 //         'application/pdf',
 //         'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
 //         'application/vnd.ms-excel',
 //         'text/csv',
-//         'text/plain', // Allow plain text (.txt) files
+//         'text/plain',
 //         'application/vnd.ms-powerpoint' 
 //       ];
 //       if (files[0] && allowedTypes.includes(files[0].type)) {
@@ -52,7 +50,6 @@
 //         toast.error('Please select a valid document file (PDF, DOCX, XLSX, CSV)');
 //       }
 //     } else if (name === 'media') {
-//       // Restrict file types for images and videos (jpg, jpeg, png, svg, mp4)
 //       const allowedTypes = ['image/jpeg', 'image/png', 'image/svg+xml', 'video/mp4'];
 //       if (files[0] && allowedTypes.includes(files[0].type)) {
 //         setCurrentNote({
@@ -63,7 +60,6 @@
 //         toast.error('Please select a valid image or video file (JPG, JPEG, PNG, SVG, MP4)');
 //       }
 //     } else if (name === 'song') {
-//       // Restrict file types for songs (mp3, wav)
 //       const allowedTypes = ['audio/mpeg', 'audio/wav'];
 //       if (files[0] && allowedTypes.includes(files[0].type)) {
 //         setCurrentNote({
@@ -86,7 +82,7 @@
 //       const noteToAdd = {
 //         ...currentNote,
 //         pinned: false,
-//         date: new Date().toISOString() 
+//         date: new Date().toISOString() // Add date here
 //       };
 
 //       if (isEditing) {
@@ -145,8 +141,12 @@
 //     setIsFormVisible(false);
 //   };
 
-//   const viewNote = (index) => {
-//     navigate(`/private-notes/${index}`);
+//   const viewNote = (note) => {
+//     setSelectedNote(note);
+//   };
+
+//   const closeNoteDetail = () => {
+//     setSelectedNote(null);
 //   };
 
 //   return (
@@ -167,74 +167,93 @@
 //           </div>
 //         </div>
 
-//         <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-24">
-//           {filteredNotes.map((note, index) => (
-//             <div key={index} className="rounded w-full h-auto flex flex-col justify-between bg-white dark:bg-gray-800 rounded-lg border dark:border-gray-700 mb-6 py-5 px-4 shadow-md relative min-h-[300px]" onClick={() => viewNote(index)}>
-//               {/* Pin Button */}
-//               <button
-//                 onClick={() => pinNote(index)}
-//                 className={`absolute top-2 right-2 ${note.pinned ? 'text-yellow-500' : 'text-gray-500'} text-2xl`}
+//         {selectedNote ? (
+//           <NoteDetail note={selectedNote} onClose={closeNoteDetail} />
+//         ) : (
+//           <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-24">
+//             {filteredNotes.map((note, index) => (
+//               <div 
+//                 key={index} 
+//                 className="rounded w-full h-auto flex flex-col justify-between bg-white dark:bg-gray-800 rounded-lg border dark:border-gray-700 mb-6 py-5 px-4 shadow-md relative min-h-[300px]"
 //               >
-//                 <AiOutlinePushpin />
-//               </button>
-              
-//               <div className="flex-1">
-//                 <h4 className="text-gray-800 dark:text-gray-100 font-bold mb-3 cursor-pointer">{note.title}</h4>
-//                 <p className="mt-2 text-gray-700 dark:text-gray-300">{note.content}</p>
+//                 <button
+//                   onClick={(e) => {
+//                     e.stopPropagation();
+//                     pinNote(index);
+//                   }}
+//                   className={`absolute top-2 right-2 ${note.pinned ? 'text-yellow-500' : 'text-gray-500'} text-2xl`}
+//                 >
+//                   <AiOutlinePushpin />
+//                 </button>
                 
-//                 {note.file && (
-//                   <a
-//                     href={URL.createObjectURL(note.file)}
-//                     download
-//                     className="block mt-2 text-blue-500 underline"
-//                   >
-//                     {note.file.name}
-//                   </a>
-//                 )}
-//                 {note.media && note.media.type.startsWith('image/') && (
-//                   <img
-//                     src={URL.createObjectURL(note.media)}
-//                     alt="Note visual"
-//                     className="w-full h-32 object-cover mt-2 rounded"
-//                   />
-//                 )}
-//                 {note.media && note.media.type.startsWith('video/') && (
-//                   <video
-//                     controls
-//                     src={URL.createObjectURL(note.media)}
-//                     className="w-full h-32 object-cover mt-2 rounded"
-//                   />
-//                 )}
-//                 {note.song && (
-//                   <audio controls className="w-full mt-2">
-//                     <source src={URL.createObjectURL(note.song)} type={note.song.type} />
-//                     Your browser does not support the audio element.
-//                   </audio>
-//                 )}
-//               </div>
-              
-//               <div className="flex items-center justify-between text-gray-800 dark:text-gray-100 mt-4">
-//               <p className="text-black text-sm">{formatDate(note.date)}</p>
-//                 <div className="flex space-x-2 text-2xl">
-//                   <button
-//                     onClick={() => editNote(index)}
-//                     className="text-blue-500"
-//                   >
-//                     <AiOutlineEdit />
-//                   </button>
-//                   <button
-//                     onClick={() => deleteNote(index)}
-//                     className="text-red-500"
-//                   >
-//                     <AiOutlineDelete />
-//                   </button>
+//                 <div className="flex-1">
+//                   <h4 className="text-gray-800 dark:text-gray-100 font-bold mb-3">{note.title}</h4>
+//                   <p className="mt-2 text-gray-700 dark:text-gray-300 line-clamp-3">{note.content}</p>
+//                   {note.file && (
+//                     <a
+//                       href={URL.createObjectURL(note.file)}
+//                       download
+//                       className="block mt-2 text-blue-500 underline"
+//                     >
+//                       {note.file.name}
+//                     </a>
+//                   )}
+//                   {note.media && note.media.type.startsWith('image/') && (
+//                     <img
+//                       src={URL.createObjectURL(note.media)}
+//                       alt="Note visual"
+//                       className="w-full h-32 object-cover mt-2 rounded"
+//                     />
+//                   )}
+//                   {note.media && note.media.type.startsWith('video/') && (
+//                     <video
+//                       controls
+//                       src={URL.createObjectURL(note.media)}
+//                       className="w-full h-32 object-cover mt-2 rounded"
+//                     />
+//                   )}
+//                   {note.song && (
+//                     <audio controls className="w-full mt-2">
+//                       <source src={URL.createObjectURL(note.song)} type={note.song.type} />
+//                       Your browser does not support the audio element.
+//                     </audio>
+//                   )}
+//                 </div>
+
+//                 <button 
+//                   onClick={() => viewNote(note)}
+//                   className="p-2 bg-blue-500 text-white rounded w-full hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 mt-4"
+//                 >
+//                   View
+//                 </button>
+
+//                 <div className="flex items-center justify-between text-gray-800 dark:text-gray-100 mt-4">
+//                   <p className="text-green-500 text-sm">{formatDate(note.date)}</p>
+//                   <div className="flex space-x-2 text-2xl">
+//                     <button
+//                       onClick={(e) => {
+//                         e.stopPropagation();
+//                         editNote(index);
+//                       }}
+//                       className="text-blue-500"
+//                     >
+//                       <AiOutlineEdit />
+//                     </button>
+//                     <button
+//                       onClick={(e) => {
+//                         e.stopPropagation();
+//                         deleteNote(index);
+//                       }}
+//                       className="text-red-500"
+//                     >
+//                       <AiOutlineDelete />
+//                     </button>
+//                   </div>
 //                 </div>
 //               </div>
-//             </div>
-//           ))}
-//         </div>
-
-
+//             ))}
+//           </div>
+//         )}
 
 //         {isFormVisible && (
 //           <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
@@ -294,7 +313,7 @@
 //           </div>
 //         )}
 
-//         <div className="absolute right-10 bottom-[-4rem] ">
+//         <div className="absolute right-10 bottom-[-4rem]">
 //           <button
 //             onClick={() => setIsFormVisible(true)}
 //             className="p-4 bg-blue-500 text-white rounded-full hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 text-2xl shadow-lg"
@@ -309,6 +328,8 @@
 // };
 
 // export default Notes;
+
+
 
 
 import React, { useState } from 'react';
@@ -458,6 +479,14 @@ const Notes = () => {
     setSelectedNote(note);
   };
 
+  const closeNoteDetail = () => {
+    setSelectedNote(null);
+  };
+
+  const toggleExpand = (note) => {
+    setSelectedNote(note);
+  };
+
   return (
     <div>
       <NavBar />
@@ -477,14 +506,13 @@ const Notes = () => {
         </div>
 
         {selectedNote ? (
-          <NoteDetail note={selectedNote} setNotes={setNotes} notes={notes} />
+          <NoteDetail note={selectedNote} onClose={closeNoteDetail} />
         ) : (
           <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-24">
             {filteredNotes.map((note, index) => (
               <div 
                 key={index} 
                 className="rounded w-full h-auto flex flex-col justify-between bg-white dark:bg-gray-800 rounded-lg border dark:border-gray-700 mb-6 py-5 px-4 shadow-md relative min-h-[300px]"
-                onClick={() => viewNote(note)}
               >
                 <button
                   onClick={(e) => {
@@ -497,9 +525,22 @@ const Notes = () => {
                 </button>
                 
                 <div className="flex-1">
-                  <h4 className="text-gray-800 dark:text-gray-100 font-bold mb-3 cursor-pointer">{note.title}</h4>
-                  <p className="mt-2 text-gray-700 dark:text-gray-300">{note.content}</p>
-                  
+                  <h4 className="text-gray-800 dark:text-gray-100 font-bold mb-3">{note.title}</h4>
+                  <p className="mt-2 text-gray-700 dark:text-gray-300">
+                    {note.content.split(' ').length <= 100 ? (
+                      note.content
+                    ) : (
+                      <>
+                        {note.content.split(' ').slice(0, 20).join(' ')}...
+                        <button
+                          onClick={() => toggleExpand(note)}
+                          className="text-blue-500 ml-1"
+                        >
+                          More
+                        </button>
+                      </>
+                    )}
+                  </p>
                   {note.file && (
                     <a
                       href={URL.createObjectURL(note.file)}
@@ -530,9 +571,16 @@ const Notes = () => {
                     </audio>
                   )}
                 </div>
-                
+
+                <button 
+                  onClick={() => viewNote(note)}
+                  className="p-2 bg-blue-500 text-white rounded w-full hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 mt-4"
+                >
+                  View
+                </button>
+
                 <div className="flex items-center justify-between text-gray-800 dark:text-gray-100 mt-4">
-                  <p className="text-black text-sm">{formatDate(note.date)}</p>
+                  <p className="text-green-500 text-sm">{formatDate(note.date)}</p>
                   <div className="flex space-x-2 text-2xl">
                     <button
                       onClick={(e) => {
@@ -632,5 +680,6 @@ const Notes = () => {
 };
 
 export default Notes;
+
 
 
