@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { EditorContent, useEditor, BubbleMenu } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import SlashCommand from "./slashCommand";
@@ -20,6 +20,7 @@ import CodeBlock from '@tiptap/extension-code-block';
 import DropdownStyle from "./bubbleButtons/dropDownStyle";
 import Marks from "./bubbleButtons/marks";
 import DropdownLinkInput from "./bubbleButtons/dropDownLinkInput";
+import Sidebar from "./bubbleButtons/sidebar";
 
 function Writebook() {
   const [title, setTitle] = useState("Untitled");
@@ -103,10 +104,23 @@ function Writebook() {
     setCoverImage(null);
   };
 
+  const createPage = useCallback(() => {
+    setTitle('Untitled');
+    setCoverImage(null);
+    setIconImage(null);
+    editor.commands.setContent('');
+  }, [editor]);
+
+  const handleTitleChange = (event) => {
+    setTitle(event.target.value);
+  };
+
 
 
   return (
     <div className="min-h-screen p-8 flex flex-col items-center">
+
+       <Sidebar title={title} setTitle={setTitle} createPage={createPage} />
 
       {coverImage && (
         <div className="relative w-full h-64 bg-cover bg-center mb-4 group" style={{ backgroundImage: `url(${coverImage})` }}>
@@ -201,7 +215,7 @@ function Writebook() {
                 placeholder="Untitled"
                 type="text"
                 value={title}
-                onChange={(e) => setTitle(e.target.value)}
+                onChange={handleTitleChange}
               />
             </div>
           </div>
