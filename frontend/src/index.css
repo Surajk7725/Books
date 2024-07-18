@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom styles */
+.bg-primary {
+    background-color: #208AAE;
+  }
+  
+  .bg-primary-dark {
+    background-color: #0D2149;
+  }
+  
+  .hover\:bg-primary-dark:hover {
+    background-color: #0D2149;
+  }
+
+  .tiptap .ProseMirror {
+    background-color: transparent;
+    padding: 10rem; 
+    white-space: pre-wrap;
+  }
+
+    
+  .tiptap .ProseMirror:focus {
+    outline: none; 
+  }
+  
+  .tiptap .is-empty.is-editor-empty::before {
+    content: attr(data-placeholder);
+    color: #999; 
+    float: left;
+    pointer-events: none;
+    height: 0; 
+  }
+  
