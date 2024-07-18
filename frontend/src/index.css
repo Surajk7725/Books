@@ -18,8 +18,10 @@
   .tiptap .ProseMirror {
     background-color: transparent;
     padding: 10rem; 
+    white-space: pre-wrap;
   }
-  
+
+    
   .tiptap .ProseMirror:focus {
     outline: none; 
   }

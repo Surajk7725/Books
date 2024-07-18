@@ -47,6 +47,7 @@
     "@tiptap/starter-kit": "^2.4.0",
     "@tiptap/suggestion": "^2.1.7",
     "axios": "^1.7.2",
+    "dotenv": "^16.4.5",
     "openai": "^4.52.7",
     "quill": "^2.0.2",
     "react": "^18.3.1",
@@ -57,7 +58,6 @@
     "react-scripts": "5.0.1",
     "react-toastify": "^10.0.5",
     "tailwind-merge": "^2.4.0",
-    "uuid": "^10.0.0",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
