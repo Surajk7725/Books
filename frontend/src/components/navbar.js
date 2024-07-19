@@ -49,9 +49,7 @@ export default function NavBar() {
                         )}
                 </div>
 
-                    <Link to="#" className="text-gray-700 hover:text-gray-300 transition duration-300 ease-in-out"><span className="flex items-center">
-                        <ClipboardCheckIcon className="h-5 w-5" /> Queries</span>
-                    </Link>
+                    
                     <Link to="/write-book" className="text-gray-700 hover:text-gray-300 transition duration-300 ease-in-out"><span className="flex items-center">
                         <PencilIcon className="h-5 w-5" /> Write A Note</span>
                     </Link>

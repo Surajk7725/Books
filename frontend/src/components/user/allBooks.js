@@ -114,7 +114,6 @@ const AllBooks = ({bookmarkedBooks, toggleBookmark}) => {
           ))}
         </div>
 
-        {/* share option */}
 
 
 

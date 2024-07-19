@@ -53,10 +53,7 @@ const RelatedBooks = ({ category }) => {
               <div className="px-6 py-4">
                 <div className="font-bold text-xl mb-2 text-center">{book.title}</div>
                 <div className="flex justify-between">
-                  <Link to="/display-books/rating" className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition-colors duration-300">
-                    Rating
-                  </Link>
-                  <button className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded transition-colors duration-300">
+                  <button className="bg-gray-300 ml-24 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded transition-colors duration-300">
                     View Book
                   </button>
                 </div>
