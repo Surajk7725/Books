@@ -444,7 +444,9 @@ const Settings = () => {
                 />
               </div>
               <div className="mb-4">
-                <label className="block text-gray-700">New Password</label>
+                <label className="block text-gray-700">New Password
+                <span className="text-red-500">*</span>
+                </label>
                 <input
                   type="password"
                   name="newPassword"
@@ -454,7 +456,9 @@ const Settings = () => {
                 />
               </div>
               <div className="mb-4">
-                <label className="block text-gray-700">Confirm Password</label>
+                <label className="block text-gray-700">Confirm Password
+                <span className="text-red-500">*</span>
+                </label>
                 <input
                   type="password"
                   name="confirmPassword"
