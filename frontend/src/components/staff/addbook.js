@@ -3,7 +3,7 @@ import { PlusCircleIcon } from '@heroicons/react/outline';
 import NavBar from '../staff/navbar';
 import Footer from '../footer';
 
-function BookForm() {
+function AddBook() {
     const [authors, setAuthors] = useState(['']);
     const [title, setTitle] = useState('');
     const [genre, setGenre] = useState('');
@@ -11,6 +11,10 @@ function BookForm() {
     const [coverImage, setCoverImage] = useState(null);
     const [coverImageUrl, setCoverImageUrl] = useState('');
     const [bookFile, setBookFile] = useState(null);
+    const [isbn, setIsbn] = useState('');
+    const [publisher, setPublisher] = useState('');
+    const [language, setLanguage] = useState('');
+    const [bookDescription, setBookDescription] = useState('');
 
     const addAuthorField = () => {
         setAuthors([...authors, '']);
@@ -30,7 +34,7 @@ function BookForm() {
     const handleFormSubmit = (e) => {
         e.preventDefault();
         // Handle form submission logic
-        console.log({ title, authors, genre, description, coverImage, coverImageUrl, bookFile });
+        console.log({ title, authors, genre, description, coverImage, coverImageUrl, bookFile, isbn, publisher, language, bookDescription });
     };
 
     return (
@@ -111,9 +115,69 @@ function BookForm() {
                                 rows="3"
                                 value={description}
                                 onChange={(e) => setDescription(e.target.value)}
-                                placeholder="Enter book description"
+                                placeholder="Enter short description"
                             ></textarea>
                         </div>
+
+                        <div className="mb-4">
+                            <label className="block text-gray-700 font-bold mb-2" htmlFor="isbn">
+                                ISBN <span className="text-red-500">*</span>
+                            </label>
+                            <input
+                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                id="isbn"
+                                type="text"
+                                placeholder="Enter ISBN"
+                                value={isbn}
+                                onChange={(e) => setIsbn(e.target.value)}
+                                required
+                            />
+                        </div>
+
+                        <div className="mb-4">
+                            <label className="block text-gray-700 font-bold mb-2" htmlFor="publisher">
+                                Publisher <span className="text-red-500">*</span>
+                            </label>
+                            <input
+                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                id="publisher"
+                                type="text"
+                                placeholder="Enter publisher"
+                                value={publisher}
+                                onChange={(e) => setPublisher(e.target.value)}
+                                required
+                            />
+                        </div>
+
+                        <div className="mb-4">
+                            <label className="block text-gray-700 font-bold mb-2" htmlFor="language">
+                                Language <span className="text-red-500">*</span>
+                            </label>
+                            <input
+                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                id="language"
+                                type="text"
+                                placeholder="Enter language"
+                                value={language}
+                                onChange={(e) => setLanguage(e.target.value)}
+                                required
+                            />
+                        </div>
+
+                        <div className="mb-4">
+                            <label className="block text-gray-700 font-bold mb-2" htmlFor="bookDescription">
+                                Book Description
+                            </label>
+                            <textarea
+                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                id="bookDescription"
+                                rows="5"
+                                value={bookDescription}
+                                onChange={(e) => setBookDescription(e.target.value)}
+                                placeholder="Enter detailed book description"
+                            ></textarea>
+                        </div>
+
                         <div className="mb-4">
                             <label className="block text-gray-700 font-bold mb-2" htmlFor="cover-image">
                                 Cover Image
@@ -166,4 +230,4 @@ function BookForm() {
     );
 }
 
-export default BookForm;
+export default AddBook;
