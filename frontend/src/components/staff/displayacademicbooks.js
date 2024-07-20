@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { SearchIcon } from '@heroicons/react/outline';
+import { SearchIcon, PencilAltIcon, TrashIcon } from '@heroicons/react/outline';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import NavBar from '../staff/navbar';
 import Footer from '../footer';
 
@@ -32,6 +34,14 @@ function Academic_Books() {
   // Change page
   const paginate = pageNumber => setCurrentPage(pageNumber);
 
+  const deleteBook = () => {
+    toast.success('Deleted Book Successfully');
+  };
+
+  const editBook = () => {
+    history.push('/staff-allbooks/description');
+  };
+
   return (
     <div>
       <NavBar />
@@ -58,15 +68,25 @@ function Academic_Books() {
                   src={book.imageUrl}
                    className="w-full h-48 object-contain"
                 />
+                <div
+                  className="absolute top-2 right-2 bg-white rounded-full p-1 cursor-pointer"
+                  onClick={editBook}
+                >
+                  <PencilAltIcon className="h-6 w-6 text-gray-500" />
+                </div>
+                <div
+                  className="absolute top-10 right-2 bg-white rounded-full p-1 cursor-pointer"
+                  onClick={deleteBook}
+                >
+                  <TrashIcon className="h-6 w-6 text-gray-500" />
+                </div>
+                <ToastContainer />
               </div>
               <div className="px-6 py-4">
                 <div className="font-bold text-xl mb-2 text-center">{book.title}</div>
-                <div className="flex justify-between">
-                <button className="bg-gray-300  hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded transition-colors duration-300">
-                    Edit Book
-                </button>
-                <button className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded transition-colors duration-300">
-                    Delete Book
+                <div className="flex">
+                <button className="bg-gray-300 ml-24  hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded transition-colors duration-300">
+                    View Book
                 </button>
                 </div>
               </div>
