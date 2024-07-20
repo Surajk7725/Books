@@ -27,6 +27,7 @@ import Popular_Books from './components/staff/displaypopularbooks';
 import Academic_Books from './components/staff/displayacademicbooks';
 import AddBook from './components/staff/addbook';
 import EditBook from './components/staff/editbook';
+import Book_Description from './components/staff/bookdescription';
 
 
 function App() {
@@ -83,6 +84,7 @@ function App() {
         <Route path='/staff-allbooks/academic' element={<Academic_Books />} />
         <Route path='/staff-addbook' element={<AddBook />} />
         <Route path='/staff-editbook' element={<EditBook />} />
+        <Route path='/staff-allbooks/description' element={<Book_Description />} />
 
 
       </Routes>

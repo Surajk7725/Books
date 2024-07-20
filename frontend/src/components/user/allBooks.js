@@ -105,7 +105,7 @@ const AllBooks = ({bookmarkedBooks, toggleBookmark}) => {
                 <div className="font-bold text-xl mb-2 text-center">{book.title}</div>
                 <div className="flex">
                   
-                  <button className="bg-gray-300 ml-24 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded transition-colors duration-300">
+                  <button className="bg-gray-300 ml-20 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded transition-colors duration-300">
                     View Book
                   </button>
                 </div>
