@@ -4,6 +4,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import NavBar from '../staff/navbar';
 import Footer from '../footer';
+import { useNavigate } from 'react-router-dom';
 
 
 export const booksData = [
@@ -33,6 +34,7 @@ const All_Books = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const booksPerPage = 12;
+  const navigate = useNavigate();
 
   // Filtered books based on search term
   const filteredBooks = booksData.filter(book =>
@@ -52,8 +54,10 @@ const All_Books = () => {
   };
 
   const editBook = () => {
-    history.push('/staff-allbooks/description');
+    navigate('/staff-editbook'); // Use navigate instead of history.push
   };
+
+
 
   return (
     <div>

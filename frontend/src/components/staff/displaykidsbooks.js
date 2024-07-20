@@ -4,6 +4,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import NavBar from '../staff/navbar';
 import Footer from '../footer';
+import { useNavigate } from 'react-router-dom';
 
 export const kidsData = [
   { "id": 101, "title": "Charlotte's Web", "imageUrl": "https://images.gr-assets.com/books/1439632243l/24178.jpg" },
@@ -18,6 +19,7 @@ function Kids_Books() {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const booksPerPage = 12;
+  const navigate = useNavigate();
 
   // Filtered books based on search term
   const filteredBooks = kidsData.filter(book =>
@@ -37,7 +39,7 @@ function Kids_Books() {
   };
 
   const editBook = () => {
-    history.push('/staff-allbooks/description');
+    navigate('/staff-editbook'); // Use navigate instead of history.push
   };
 
   return (

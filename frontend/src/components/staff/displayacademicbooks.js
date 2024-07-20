@@ -4,6 +4,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import NavBar from '../staff/navbar';
 import Footer from '../footer';
+import { useNavigate } from 'react-router-dom';
 
 export const academicData = [
     { id: 301, title: "Campbell Biology", imageUrl: "https://rukminim2.flixcart.com/image/750/900/jbdys280/book/6/5/8/campbell-biology-original-imafyhh9nwvdn2gj.jpeg?q=20&crop=false" },
@@ -20,6 +21,7 @@ function Academic_Books() {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const booksPerPage = 12;
+  const navigate = useNavigate();
 
   // Filtered books based on search term
   const filteredBooks = academicData.filter(book =>
@@ -39,7 +41,7 @@ function Academic_Books() {
   };
 
   const editBook = () => {
-    history.push('/staff-allbooks/description');
+    navigate('/staff-editbook'); // Use navigate instead of history.push
   };
 
   return (
