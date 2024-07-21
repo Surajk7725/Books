@@ -26,7 +26,7 @@ const Staff_Settings = () => {
   };
 
   const handleHome = () => {
-    window.location.href = '/home';
+    window.location.href = '/staff-home';
   };
 
   const handleLogout = () => {
