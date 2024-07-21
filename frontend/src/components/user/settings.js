@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { MenuAlt1Icon, UserCircleIcon, LockClosedIcon, CollectionIcon, DocumentTextIcon, GlobeAltIcon, DesktopComputerIcon, LogoutIcon, PhotographIcon } from '@heroicons/react/outline';
+import React, { useState, useRef } from 'react';
+import { MenuAlt1Icon, UserCircleIcon, LockClosedIcon, BookOpenIcon, DocumentTextIcon, GlobeAltIcon, DesktopComputerIcon, LogoutIcon, PhotographIcon } from '@heroicons/react/outline';
 import Footer from '../footer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLinkedin, faInstagram, faTwitter, faYoutube } from '@fortawesome/free-brands-svg-icons';
@@ -184,6 +184,11 @@ const Settings = () => {
     setSocialLinks({ ...socialLinks, [name]: value });
   };
 
+  const fileInputRef = useRef(null);
+
+  const handleButtonClick = () => {
+    fileInputRef.current.click();
+  };
 
 
   return (
@@ -217,7 +222,7 @@ const Settings = () => {
                   className={`p-2 cursor-pointer rounded-lg ${selectedSection === 'bookCategories' ? 'bg-transparent-700 border border-gray-300' : ''}`}
                   onClick={() => handleSectionClick('bookCategories')}
                 >
-                  <CollectionIcon className="h-6 w-6 inline-block mr-2" /> Book Categories
+                  <BookOpenIcon className="h-6 w-6 inline-block mr-2" /> Book Categories
                 </li>
                 <li
                   className={`p-2 cursor-pointer rounded-lg ${selectedSection === 'readingHistory' ? 'bg-transparent-700 border border-gray-300' : ''}`}
@@ -255,31 +260,34 @@ const Settings = () => {
               <h2 className="text-3xl font-bold mb-6">Edit Profile</h2>
               <div className="flex">
                 <div className="flex-shrink-0 mr-6">
-                  <div className="relative w-24 h-24">
-                    {profileImage ? (
-                      <Link to={`/profile-image-view?image=${encodeURIComponent(profileImage)}`}>
-                        <img
-                          src={profileImage}
-                          alt="Profile"
-                          className="w-24 h-24 rounded-full object-cover"
-                        />
-                      </Link>
-                    ) : (
-                      <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center">
-                        <PhotographIcon className="w-12 h-12 text-gray-500" />
-                      </div>
-                    )}
-                    <input
-                      type="file"
-                      accept="image/*"
-                      className="absolute inset-0 opacity-0 cursor-pointer"
-                      onChange={handleImageUpload}
+                <div className="relative w-24 h-24">
+                {profileImage ? (
+                  <Link to={`/profile-image-view?image=${encodeURIComponent(profileImage)}`}>
+                    <img
+                      src={profileImage}
+                      alt="Profile"
+                      className="w-24 h-24 rounded-full object-cover shadow-lg transition-transform transform hover:scale-105"
                     />
+                  </Link>
+                ) : (
+                  <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center shadow-lg">
+                    <PhotographIcon className="w-12 h-12 text-gray-500" />
                   </div>
-                  <div className="flex justify-center mt-2">
-                    <button className="px-4 py-2 bg-blue-400 text-white rounded-md" style={{ marginTop: '10px' }}>Upload</button>
-                  </div>
-                </div>
+                )}
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="absolute inset-0 opacity-0 cursor-pointer"
+                  onChange={handleImageUpload}
+                  ref={fileInputRef}
+                />
+              </div>
+              <div className="flex justify-center mt-6">
+                <button onClick={handleButtonClick} className="px-4 py-1 bg-gradient-to-r from-blue-400 to-blue-600 text-white rounded-md shadow-lg transition-colors hover:from-blue-500 hover:to-blue-700">
+                  Upload
+                </button>
+              </div>
+            </div>
 
                 <form className="flex-1">
                   <div className="grid grid-cols-2 gap-4 ml-10">

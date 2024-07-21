@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronDownIcon, BookOpenIcon, ClipboardCheckIcon, PencilIcon, MailIcon, UserCircleIcon, CogIcon, QuestionMarkCircleIcon, LogoutIcon, UserIcon} from '@heroicons/react/outline'; // Import required icons
+import { ChevronDownIcon, BookOpenIcon, PencilIcon, MailIcon, UserCircleIcon, CogIcon, QuestionMarkCircleIcon, LogoutIcon, UserIcon} from '@heroicons/react/outline'; // Import required icons
 
 export default function NavBar() {
     const [dropdownOpen, setDropdownOpen] = useState(false);

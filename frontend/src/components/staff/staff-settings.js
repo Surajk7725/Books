@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
-import { MenuAlt1Icon, UserCircleIcon, LockClosedIcon, CollectionIcon, LogoutIcon, PhotographIcon } from '@heroicons/react/outline';
+import React, { useState, useRef } from 'react';
+import { MenuAlt1Icon, UserCircleIcon, LockClosedIcon, BookOpenIcon, LogoutIcon, PhotographIcon } from '@heroicons/react/outline';
 import Footer from '../footer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLinkedin, faInstagram, faTwitter, faYoutube } from '@fortawesome/free-brands-svg-icons';
 import { Link } from 'react-router-dom';
+import Select from 'react-select';
+
 
 const Staff_Settings = () => {
   const [selectedSection, setSelectedSection] = useState('account');
@@ -38,18 +40,6 @@ const Staff_Settings = () => {
     // Implement your password update logic here
   };
 
-  // For Subscription Cards
-  const cardStyles = {
-    base: 'bg-white rounded-lg shadow-lg p-6 max-w-sm',
-    title: 'text-2xl font-bold text-gray-800 mb-4',
-    description: 'text-gray-600 mb-4',
-    priceWrapper: 'text-4xl font-bold text-gray-800 mb-6',
-    price: 'text-gray-500 text-base',
-    features: 'text-gray-600 mb-6',
-    featureItem: 'flex items-center mb-2',
-    featureIcon: 'ml-2',
-    button: 'bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-full transition-colors duration-300'
-  };
 
   // For Book Categories
   const genres = [
@@ -135,26 +125,6 @@ const Staff_Settings = () => {
     { id: 12, bookName: 'Alice\'s Adventures in Wonderland', authorName: 'Lewis Carroll', timestamp: '2024-06-26 14:15:00' },
   ];
 
-  // Pagination Logic
-  const itemsPerPage = 10;
-
-  const [currentPage, setCurrentPage] = useState(1);
-
-  const totalPages = Math.ceil(tableData.length / itemsPerPage);
-  const paginatedData = tableData.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
-
-  const handlePrevPage = () => {
-    setCurrentPage((prev) => Math.max(prev - 1, 1));
-  };
-
-  const handleNextPage = () => {
-    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
-  };
-
-
   //Account Details
 
   const [profileImage, setProfileImage] = useState('');
@@ -165,7 +135,6 @@ const Staff_Settings = () => {
   const [houseAddress, setHouseAddress] = useState('');
   const [socialLinks, setSocialLinks] = useState({ youtube: '', instagram: '', twitter: '', linkedin: '' });
   const [jobTitle, setJobTitle] = useState('');
-  const [libraryBranch, setLibraryBranch] = useState('');
   const [startDate, setStartDate] = useState('');
   const [employeeID, setEmployeeID] = useState('');
   const [highestEducation, setHighestEducation] = useState('');
@@ -185,9 +154,68 @@ const Staff_Settings = () => {
     reader.readAsDataURL(file);
   };
 
+  const fileInputRef = useRef(null);
+
+  const handleButtonClick = () => {
+    fileInputRef.current.click();
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setSocialLinks({ ...socialLinks, [name]: value });
+  };
+
+  const languageOptions = [
+    { label: 'English', value: 'English' },
+    { label: 'Hindi', value: 'Hindi' },
+    { label: 'Bengali', value: 'Bengali' },
+    { label: 'Telugu', value: 'Telugu' },
+    { label: 'Marathi', value: 'Marathi' },
+    { label: 'Tamil', value: 'Tamil' },
+    { label: 'Urdu', value: 'Urdu' },
+    { label: 'Gujarati', value: 'Gujarati' },
+    { label: 'Kannada', value: 'Kannada' },
+    { label: 'Odia', value: 'Odia' },
+    { label: 'Malayalam', value: 'Malayalam' },
+    { label: 'Punjabi', value: 'Punjabi' },
+    { label: 'Assamese', value: 'Assamese' },
+    { label: 'Maithili', value: 'Maithili' },
+    { label: 'Sanskrit', value: 'Sanskrit' },
+    { label: 'Santali', value: 'Santali' },
+    { label: 'Kashmiri', value: 'Kashmiri' }
+  ];
+  
+
+  const computerSkillOptions = [
+    { label: 'Library Management Systems', value: 'Library Management Systems' },
+    { label: 'Cataloging Software', value: 'Cataloging Software' },
+    { label: 'Digital Archives Management', value: 'Digital Archives Management' },
+    { label: 'Information Retrieval Tools', value: 'Information Retrieval Tools' },
+    { label: 'Database Management', value: 'Database Management' },
+    { label: 'Other', value: 'Other' }
+  ];
+  
+
+  const customStyles = {
+    multiValue: (provided, state) => ({
+      ...provided,
+      backgroundColor: '#f0f0f0',
+      borderRadius: '20px',
+      padding: '2px 8px',
+      margin: '2px',
+    }),
+    multiValueLabel: (provided, state) => ({
+      ...provided,
+      color: '#333',
+    }),
+    multiValueRemove: (provided, state) => ({
+      ...provided,
+      color: '#999',
+      ':hover': {
+        backgroundColor: '#e0e0e0',
+        color: '#666',
+      },
+    }),
   };
 
 
@@ -222,7 +250,7 @@ const Staff_Settings = () => {
                   className={`p-2 cursor-pointer rounded-lg ${selectedSection === 'bookCategories' ? 'bg-transparent-700 border border-gray-300' : ''}`}
                   onClick={() => handleSectionClick('bookCategories')}
                 >
-                  <CollectionIcon className="h-6 w-6 inline-block mr-2" /> Book Categories
+                  <BookOpenIcon className="h-6 w-6 inline-block mr-2" /> Book Categories
                 </li>
                 <li
                   className="p-2 cursor-pointer rounded-lg"
@@ -238,36 +266,39 @@ const Staff_Settings = () => {
 
 
           {selectedSection === 'account' && (
-            <div className="max-w-4xl mx-auto p-8 bg-white rounded-md shadow-md">
-            <h2 className="text-3xl font-bold mb-6">Edit Staff Profile</h2>
+            <div className="max-w-full mx-4 p-8 bg-white rounded-md shadow-md">
+            <h2 className="text-3xl font-bold mb-6">Edit Profile</h2>
             <div className="flex">
               <div className="flex-shrink-0 mr-6">
-                <div className="relative w-24 h-24">
-                  {profileImage ? (
-                    <Link to={`/profile-image-view?image=${encodeURIComponent(profileImage)}`}>
-                      <img
-                        src={profileImage}
-                        alt="Profile"
-                        className="w-24 h-24 rounded-full object-cover"
-                      />
-                    </Link>
-                  ) : (
-                    <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center">
-                      <PhotographIcon className="w-12 h-12 text-gray-500" />
-                    </div>
-                  )}
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="absolute inset-0 opacity-0 cursor-pointer"
-                    onChange={handleImageUpload}
-                  />
-                </div>
-                <div className="flex justify-center mt-2">
-                  <button className="px-4 py-2 bg-blue-400 text-white rounded-md" style={{ marginTop: '10px' }}>Upload</button>
-                </div>
+              <div className="relative w-24 h-24">
+                {profileImage ? (
+                  <Link to={`/profile-image-view?image=${encodeURIComponent(profileImage)}`}>
+                    <img
+                      src={profileImage}
+                      alt="Profile"
+                      className="w-24 h-24 rounded-full object-cover shadow-lg transition-transform transform hover:scale-105"
+                    />
+                  </Link>
+                ) : (
+                  <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center shadow-lg">
+                    <PhotographIcon className="w-12 h-12 text-gray-500" />
+                  </div>
+                )}
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="absolute inset-0 opacity-0 cursor-pointer"
+                  onChange={handleImageUpload}
+                  ref={fileInputRef}
+                />
               </div>
-      
+              <div className="flex justify-center mt-6">
+                <button onClick={handleButtonClick} className="px-4 py-1 bg-gradient-to-r from-blue-400 to-blue-600 text-white rounded-md shadow-lg transition-colors hover:from-blue-500 hover:to-blue-700">
+                  Upload
+                </button>
+              </div>
+            </div>
+     
               <form className="flex-1">
                 <div className="grid grid-cols-2 gap-4 ml-10">
                   <div className="col-span-2 sm:col-span-1">
@@ -316,6 +347,133 @@ const Staff_Settings = () => {
                     />
                   </div>
                 </div>
+      
+                <h3 className="text-xl font-bold mt-6 mb-2 ml-10">Professional Details</h3>
+                <div className="grid grid-cols-2 gap-4 ml-10">
+                  <div className="col-span-2 sm:col-span-1">
+                    <label className="block text-gray-700">Job Title</label>
+                    <input
+                      type="text"
+                      className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
+                      value={jobTitle}
+                      onChange={(e) => setJobTitle(e.target.value)}
+                    />
+                  </div>
+                  <div className="col-span-2 sm:col-span-1">
+                    <label className="block text-gray-700">Start Date</label>
+                    <input
+                      type="date"
+                      className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
+                      value={startDate}
+                      onChange={(e) => setStartDate(e.target.value)}
+                    />
+                  </div>
+                  <div className="col-span-2 sm:col-span-1">
+                    <label className="block text-gray-700">Employee ID or Code</label>
+                    <input
+                      type="text"
+                      className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
+                      value={employeeID}
+                      onChange={(e) => setEmployeeID(e.target.value)}
+                    />
+                  </div>
+                </div>
+      
+                <h3 className="text-xl font-bold mt-6 mb-2 ml-10">Qualifications and Education</h3>
+                <div className="grid grid-cols-2 gap-4 ml-10">
+                  <div className="col-span-2 sm:col-span-1">
+                    <label className="block text-gray-700">Highest Education Level Attained</label>
+                    <select
+                      className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
+                      value={highestEducation}
+                      onChange={(e) => setHighestEducation(e.target.value)}
+                    >
+                      <option value=""></option>
+                      <option value="High School Diploma">High School Diploma</option>
+                      <option value="Associate's Degree">Associate's Degree</option>
+                      <option value="Bachelor's Degree">Bachelor's Degree</option>
+                      <option value="Master's Degree">Master's Degree</option>
+                      <option value="Doctorate">Doctorate</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+                  <div className="col-span-2 sm:col-span-1">
+                    <label className="block text-gray-700">Degrees or Certifications</label>
+                    <select
+                      className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
+                      value={degrees}
+                      onChange={(e) => setDegrees(e.target.value)}
+                    >
+                      <option value=""></option>
+                      <option value="Certified Librarian">Certified Librarian</option>
+                      <option value="School Media Specialist Certification">School Media Specialist Certification</option>
+                      <option value="Archival Certifications">Archival Certifications</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+                  <div className="col-span-2">
+                    <label className="block text-gray-700">Professional Affiliations</label>
+                    <select
+                      className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
+                      value={affiliations}
+                      onChange={(e) => setAffiliations(e.target.value)}
+                    >
+                      <option value=""></option>
+                      <option value="ALA (American Library Association)">ALA (American Library Association)</option>
+                      <option value="SLA (Special Libraries Association)">SLA (Special Libraries Association)</option>
+                      <option value="PLA (Public Library Association)">PLA (Public Library Association)</option>
+                      <option value="ACRL (Association of College and Research Libraries)">ACRL (Association of College and Research Libraries)</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+                </div>
+
+                <h3 className="text-xl font-bold mt-6 mb-2 ml-10">Work Experience</h3>
+                <div className="grid grid-cols-2 gap-4 ml-10">
+                  <div className="col-span-2 sm:col-span-1">
+                    <label className="block text-gray-700">Previous Position</label>
+                    <input
+                      type="text"
+                      className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
+                      value={workExperience}
+                      onChange={(e) => setWorkExperience(e.target.value)}
+                    />
+                  </div>
+                  <div className="col-span-2 sm:col-span-1">
+                    <label className="block text-gray-700">Years of Experience in Libraries</label>
+                    <input
+                      type="text"
+                      className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
+                      value={yearsExperience}
+                      onChange={(e) => setYearsExperience(e.target.value)}
+                    />
+                  </div>
+                </div>
+      
+                <h3 className="text-xl font-bold mt-6 mb-2 ml-10">Skills and Competencies</h3>
+                <div className="grid grid-cols-2 gap-4 ml-10">
+                  <div className="col-span-2 sm:col-span-1">
+                    <label className="block text-gray-700">Languages Spoken</label>
+                    <Select
+                      options={languageOptions}
+                      isMulti
+                      onChange={(selected) => setLanguagesSpoken(selected ? selected.map(option => option.value) : [])}
+                      value={languageOptions.filter(option => languagesSpoken.includes(option.value))}
+                      styles={customStyles}
+                    />
+                  </div>
+                  <div className="col-span-2 sm:col-span-1">
+                    <label className="block text-gray-700">Computer Skills</label>
+                    <Select
+                      options={computerSkillOptions}
+                      isMulti
+                      onChange={(selected) => setComputerSkills(selected ? selected.map(option => option.value) : [])}
+                      value={computerSkillOptions.filter(option => computerSkills.includes(option.value))}
+                      styles={customStyles}
+                    />
+                  </div>
+                </div>
+
                 <h3 className="text-xl font-bold mt-6 mb-2 ml-10">Add Your Social Handles below</h3>
                 <div className="grid grid-cols-2 gap-4 ml-10">
                   <div className="flex items-center space-x-2">
@@ -363,121 +521,7 @@ const Staff_Settings = () => {
                     />
                   </div>
                 </div>
-      
-                <h3 className="text-xl font-bold mt-6 mb-2 ml-10">Professional Details</h3>
-                <div className="grid grid-cols-2 gap-4 ml-10">
-                  <div className="col-span-2 sm:col-span-1">
-                    <label className="block text-gray-700">Job Title</label>
-                    <input
-                      type="text"
-                      className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
-                      value={jobTitle}
-                      onChange={(e) => setJobTitle(e.target.value)}
-                    />
-                  </div>
-                  <div className="col-span-2 sm:col-span-1">
-                    <label className="block text-gray-700">Library Branch (if applicable)</label>
-                    <input
-                      type="text"
-                      className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
-                      value={libraryBranch}
-                      onChange={(e) => setLibraryBranch(e.target.value)}
-                    />
-                  </div>
-                  <div className="col-span-2 sm:col-span-1">
-                    <label className="block text-gray-700">Start Date</label>
-                    <input
-                      type="date"
-                      className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
-                      value={startDate}
-                      onChange={(e) => setStartDate(e.target.value)}
-                    />
-                  </div>
-                  <div className="col-span-2 sm:col-span-1">
-                    <label className="block text-gray-700">Employee ID or Code</label>
-                    <input
-                      type="text"
-                      className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
-                      value={employeeID}
-                      onChange={(e) => setEmployeeID(e.target.value)}
-                    />
-                  </div>
-                </div>
-      
-                <h3 className="text-xl font-bold mt-6 mb-2 ml-10">Qualifications and Education</h3>
-                <div className="grid grid-cols-2 gap-4 ml-10">
-                  <div className="col-span-2 sm:col-span-1">
-                    <label className="block text-gray-700">Highest Education Level Attained</label>
-                    <input
-                      type="text"
-                      className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
-                      value={highestEducation}
-                      onChange={(e) => setHighestEducation(e.target.value)}
-                    />
-                  </div>
-                  <div className="col-span-2 sm:col-span-1">
-                    <label className="block text-gray-700">Degrees or Certifications</label>
-                    <input
-                      type="text"
-                      className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
-                      value={degrees}
-                      onChange={(e) => setDegrees(e.target.value)}
-                    />
-                  </div>
-                  <div className="col-span-2">
-                    <label className="block text-gray-700">Professional Affiliations (e.g., ALA membership)</label>
-                    <input
-                      type="text"
-                      className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
-                      value={affiliations}
-                      onChange={(e) => setAffiliations(e.target.value)}
-                    />
-                  </div>
-                </div>
-      
-                <h3 className="text-xl font-bold mt-6 mb-2 ml-10">Work Experience</h3>
-                <div className="grid grid-cols-2 gap-4 ml-10">
-                  <div className="col-span-2 sm:col-span-1">
-                    <label className="block text-gray-700">Previous Positions Held (relevant to library work)</label>
-                    <input
-                      type="text"
-                      className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
-                      value={workExperience}
-                      onChange={(e) => setWorkExperience(e.target.value)}
-                    />
-                  </div>
-                  <div className="col-span-2 sm:col-span-1">
-                    <label className="block text-gray-700">Years of Experience in Libraries</label>
-                    <input
-                      type="text"
-                      className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
-                      value={yearsExperience}
-                      onChange={(e) => setYearsExperience(e.target.value)}
-                    />
-                  </div>
-                </div>
-      
-                <h3 className="text-xl font-bold mt-6 mb-2 ml-10">Skills and Competencies</h3>
-                <div className="grid grid-cols-2 gap-4 ml-10">
-                  <div className="col-span-2 sm:col-span-1">
-                    <label className="block text-gray-700">Languages Spoken</label>
-                    <input
-                      type="text"
-                      className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
-                      value={languagesSpoken}
-                      onChange={(e) => setLanguagesSpoken(e.target.value)}
-                    />
-                  </div>
-                  <div className="col-span-2 sm:col-span-1">
-                    <label className="block text-gray-700">Computer Skills (Library Management Software, Microsoft Office, etc.)</label>
-                    <input
-                      type="text"
-                      className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
-                      value={computerSkills}
-                      onChange={(e) => setComputerSkills(e.target.value)}
-                    />
-                  </div>
-                </div>
+                
                 <button
                   type="submit"
                   className="mt-6 w-full bg-blue-500 text-white py-2 rounded-md"
