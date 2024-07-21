@@ -104,16 +104,16 @@ export default function NavBar() {
                         </button>
                         {dropdownOpen && (
                             <div className="absolute z-10 mt-2 w-48 bg-white text-black rounded-md shadow-lg right-0">
-                                <Link to="/profile" className="block px-4 py-2 flex items-center hover:bg-gray-100">
+                                <Link to="/staff-profile" className="px-4 py-2 flex items-center hover:bg-gray-100">
                                     <UserCircleIcon className="h-5 w-5 mr-2" /> My Profile
                                 </Link>
-                                <Link to="/settings" className="block px-4 py-2 flex items-center hover:bg-gray-100">
+                                <Link to="/staff-settings" className="px-4 py-2 flex items-center hover:bg-gray-100">
                                     <CogIcon className="h-5 w-5 mr-2" /> Settings
                                 </Link>
-                                <Link to="/help-center" className="block px-4 py-2 flex items-center hover:bg-gray-100">
+                                <Link to="/help-center" className="px-4 py-2 flex items-center hover:bg-gray-100">
                                     <QuestionMarkCircleIcon className="h-5 w-5 mr-2" /> Help
                                 </Link>
-                                <Link to="/" className="block px-4 py-2 flex items-center hover:bg-gray-100">
+                                <Link to="/" className="px-4 py-2 flex items-center hover:bg-gray-100">
                                     <LogoutIcon className="h-5 w-5 mr-2" /> Logout
                                 </Link>
                             </div>
@@ -126,29 +126,48 @@ export default function NavBar() {
             {menuOpen && (
                 <div className="md:hidden bg-transparent-800 text-black py-2 px-4">
 
-                    <Link to="/display-books" className="text-gray-700 hover:text-gray-300 transition duration-300 ease-in-out"><span className="flex items-center">
+                <span className="flex items-center">
                         <BookOpenIcon className="h-5 w-5" /> Books</span>
-                    </Link>
+
+
                     <div className="relative mt-1.5">
                         <button
                             onClick={() => setBooksDropdownOpen(!booksDropdownOpen)}
-                            className="bg-white flex items-center text-white-700 hover:text-gray-300 transition duration-300 ease-in-out"
+                            className="flex items-center text-white-700 hover:text-gray-300 transition duration-300 ease-in-out"
                         >
                             <ChevronDownIcon className="h-4 w-4 ml-16 mt-[-2rem]" />
                         </button>
                         {booksDropdownOpen && (
-                            <div className="absolute left-0 mt-2 w-full bg-white text-black rounded-md shadow-lg">
-                                <Link to="/display-books/kids" className="block px-4 py-2 hover:bg-gray-100">Kids</Link>
-                                <Link to="/display-books/popular" className="block px-4 py-2 hover:bg-gray-100">Popular</Link>
-                                <Link to="/display-books/academics" className="block px-4 py-2 hover:bg-gray-100">Academics</Link>
+                            <div className="absolute z-10 mt-2 w-48 bg-white text-black rounded-md shadow-lg">
+                                <Link to="/staff-addbook" className="block px-4 py-2 hover:bg-gray-100">Add a book</Link>
+                                <div className="relative">
+                                    <div className="flex items-center justify-between px-4 py-2 hover:bg-gray-100">
+                                        <Link to="/staff-allbooks" className="flex-grow">Display Books</Link>
+                                        <ChevronDownIcon
+                                            className="h-4 w-4 cursor-pointer"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setDisplayDropdownOpen(!displayDropdownOpen);
+                                            }}
+                                        />
+                                    </div>
+                                    {displayDropdownOpen && (
+                                        <div className="absolute left-full top-0 mt-2 w-48 bg-white text-black rounded-md shadow-lg">
+                                            <Link to="/staff-allbooks/kids" className="block px-4 py-2 hover:bg-gray-100">Kids</Link>
+                                            <Link to="/staff-allbooks/popular" className="block px-4 py-2 hover:bg-gray-100">Popular</Link>
+                                            <Link to="/staff-allbooks/academics" className="block px-4 py-2 hover:bg-gray-100">Academics</Link>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
+
                         )}
                     </div>
                     <Link to="#" className="block py-2 bg-white text-black hover:text-gray-300"><span className="flex items-center">
-                        <ClipboardCheckIcon className="h-5 w-5" /> Queries</span>
+                        <UserIcon className="h-5 w-5" /> Manage Users</span>
                     </Link>
                     <Link to="/write-book" className="block py-2 bg-white text-black hover:text-gray-300"><span className="flex items-center">
-                        <PencilIcon className="h-5 w-5" /> Write A Note</span>
+                        <PencilIcon className="h-5 w-5" /> Written Notes</span>
                     </Link>
                     <Link to="/contactus" className="block py-2 bg-white text-black hover:text-gray-300"><span className="flex items-center">
                         <MailIcon className="h-5 w-5" /> Contact Us</span>
