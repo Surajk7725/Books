@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 import { HeartIcon } from '@heroicons/react/outline';
 import { HeartIcon as HeartIconSolid } from '@heroicons/react/solid';
 
@@ -52,11 +51,8 @@ const RelatedBooks = ({ category }) => {
               </div>
               <div className="px-6 py-4">
                 <div className="font-bold text-xl mb-2 text-center">{book.title}</div>
-                <div className="flex justify-between">
-                  <Link to="/display-books/rating" className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition-colors duration-300">
-                    Rating
-                  </Link>
-                  <button className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded transition-colors duration-300">
+                <div className="flex">
+                  <button className="bg-gray-300 ml-20 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded transition-colors duration-300">
                     View Book
                   </button>
                 </div>

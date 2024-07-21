@@ -21,9 +21,6 @@ function Footer() {
                 <a href="/books" className="hover:text-gray-400 transition-colors duration-200 hover:bg-gray-200 text-base rounded-lg py-1 px-2 block shadow-md">Books</a>
               </li>
               <li>
-                <a href="/queries" className="hover:text-gray-400 transition-colors duration-200 hover:bg-gray-200 text-base rounded-lg py-1 px-2 block shadow-md">Queries</a>
-              </li>
-              <li>
                 <a href="/write-a-note" className="hover:text-gray-400 transition-colors duration-200 hover:bg-gray-200 text-base rounded-lg py-1 px-2 block shadow-md">Write A Note</a>
               </li>
               <li>

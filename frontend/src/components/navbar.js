@@ -49,9 +49,7 @@ export default function NavBar() {
                         )}
                 </div>
 
-                    <Link to="#" className="text-gray-700 hover:text-gray-300 transition duration-300 ease-in-out"><span className="flex items-center">
-                        <ClipboardCheckIcon className="h-5 w-5" /> Queries</span>
-                    </Link>
+                    
                     <Link to="/write-book" className="text-gray-700 hover:text-gray-300 transition duration-300 ease-in-out"><span className="flex items-center">
                         <PencilIcon className="h-5 w-5" /> Write A Note</span>
                     </Link>
@@ -83,22 +81,22 @@ export default function NavBar() {
                         </button>
                         {dropdownOpen && (
                             <div className="absolute z-10 mt-2 w-48 bg-white text-black rounded-md shadow-lg right-0">
-                                <Link to="/profile" className="block px-4 py-2 flex items-center hover:bg-gray-100">
+                                <Link to="/profile" className="px-4 py-2 flex items-center hover:bg-gray-100">
                                     <UserCircleIcon className="h-5 w-5 mr-2" /> My Profile
                                 </Link>
-                                <Link to="/my-wishlist" className="block px-4 py-2 flex items-center hover:bg-gray-100">
+                                <Link to="/my-wishlist" className="px-4 py-2 flex items-center hover:bg-gray-100">
                                     <StarIcon className="h-5 w-5 mr-2" /> My Wishlist
                                 </Link>
-                                <Link to="/private-notes" className="block px-4 py-2 flex items-center hover:bg-gray-100">
+                                <Link to="/private-notes" className="px-4 py-2 flex items-center hover:bg-gray-100">
                                     <PencilIcon className="h-5 w-5 mr-2" /> My Notes
                                 </Link>
-                                <Link to="/settings" className="block px-4 py-2 flex items-center hover:bg-gray-100">
+                                <Link to="/settings" className="px-4 py-2 flex items-center hover:bg-gray-100">
                                     <CogIcon className="h-5 w-5 mr-2" /> Settings
                                 </Link>
-                                <Link to="/help-center" className="block px-4 py-2 flex items-center hover:bg-gray-100">
+                                <Link to="/help-center" className="px-4 py-2 flex items-center hover:bg-gray-100">
                                     <QuestionMarkCircleIcon className="h-5 w-5 mr-2" /> Help
                                 </Link>
-                                <Link to="/" className="block px-4 py-2 flex items-center hover:bg-gray-100">
+                                <Link to="/" className="px-4 py-2 flex items-center hover:bg-gray-100">
                                     <LogoutIcon className="h-5 w-5 mr-2" /> Logout
                                 </Link>
                             </div>

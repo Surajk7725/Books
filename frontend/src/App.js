@@ -7,7 +7,7 @@ import Forgot from './components/forgot';
 import Update from './components/updatePassword';
 import Home from './components/user/home';
 import Settings from './components/user/settings';
-import Help from './components/user/help';
+import Help from './components/help';
 import Contactus from './components/contact';
 import Profile from './components/user/profile';
 import BookForm from './components/user/bookForm';
@@ -20,6 +20,16 @@ import Rating from './components/user/rating';
 import MyWishlist from './components/user/myWishlist';
 import Notes from './components/user/notes';
 import Writebook from './components/user/writebook';
+import Staff_home from './components/staff/home';
+import All_Books from './components/staff/displaybooks';
+import Kids_Books from './components/staff/displaykidsbooks';
+import Popular_Books from './components/staff/displaypopularbooks';
+import Academic_Books from './components/staff/displayacademicbooks';
+import AddBook from './components/staff/addbook';
+import EditBook from './components/staff/editbook';
+import Book_Description from './components/staff/bookdescription';
+import Staff_Settings from './components/staff/staff-settings';
+import Staff_Profile from './components/staff/staffprofile';
 
 
 function App() {
@@ -65,6 +75,22 @@ function App() {
         <Route path="/settings" element={<Settings />} />
         <Route path="/help-center" element={<Help />} />
         <Route path="/contactus" element={<Contactus />} />
+
+
+        {/* teacher */}
+
+        <Route path='/staff-home' element={<Staff_home />} />
+        <Route path='/staff-allbooks' element={<All_Books />} />
+        <Route path='/staff-allbooks/kids' element={<Kids_Books />} />
+        <Route path='/staff-allbooks/popular' element={<Popular_Books />} />
+        <Route path='/staff-allbooks/academic' element={<Academic_Books />} />
+        <Route path='/staff-addbook' element={<AddBook />} />
+        <Route path='/staff-editbook' element={<EditBook />} />
+        <Route path='/staff-allbooks/description' element={<Book_Description />} />
+        <Route path='/staff-settings' element={<Staff_Settings />} />
+        <Route path='/staff-profile' element={<Staff_Profile />} />
+
+
       </Routes>
     </Router>
   );

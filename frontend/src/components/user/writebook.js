@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { EditorContent, useEditor, BubbleMenu } from "@tiptap/react";
+import { FaEllipsisV } from 'react-icons/fa';
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import StarterKit from "@tiptap/starter-kit";
@@ -24,8 +25,6 @@ import DropdownLinkInput from "./bubbleButtons/dropDownLinkInput";
 import Sidebar from "./bubbleButtons/sidebar";
 
 function Writebook() {
-  const [coverImage, setCoverImage] = useState(null);
-  const [iconImage, setIconImage] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const containerRef = useRef(null);
 
@@ -39,7 +38,7 @@ function Writebook() {
   ]);
 
   const [currentDocumentIndex, setCurrentDocumentIndex] = useState(0);
-
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const currentDocument = documents[currentDocumentIndex];
 
 
@@ -167,6 +166,26 @@ function Writebook() {
     toast.success('Published Your Book');
   };
 
+  const handleDelete = () => {
+    if (documents.length > 1) {
+      const updatedDocuments = documents.filter((_, index) => index !== currentDocumentIndex);
+      setDocuments(updatedDocuments);
+      setCurrentDocumentIndex(0);
+    } else {
+      // Reset to default document
+      setDocuments([{
+        title: "Untitled",
+        coverImage: null,
+        iconImage: null,
+        content: "<p></p>",
+      }]);
+      setCurrentDocumentIndex(0);
+    }
+  };
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
 
   return (
     <div className="min-h-screen p-8 flex flex-col items-center">
@@ -269,16 +288,33 @@ function Writebook() {
                 </button>
               )}
             </div>
-            <div className="text-4xl font-bold relative h-20 flex flex-col justify-center w-full">
-              <h1 className="outline-none py-5 opacity-0 sr-only">{currentDocument.title}</h1>
+            <div className="flex items-center mt-4">
+            <h1 className="outline-none py-5 opacity-0 sr-only">{currentDocument.title}</h1>
               <input
-                className="appearance-none outline-none py-5 absolute inset-0 bg-transparent"
-                placeholder="Untitled"
                 type="text"
                 value={currentDocument.title}
                 onChange={handleTitleChange}
+                placeholder="Untitled"
+                className="text-4xl font-extrabold text-gray-900 w-full focus:outline-none focus:ring-0 border-none bg-transparent"
               />
-            </div> 
+              <div className="absolute bottom-2 right-24 z-10 transition-opacity bg-white flex">
+                <div className="relative">
+                  <button onClick={toggleMenu} className="text-gray-700 p-2 rounded-full hover:bg-gray-300">
+                    <FaEllipsisV />
+                  </button>
+                  {isMenuOpen && (
+                    <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded-md shadow-lg">
+                      <button
+                        onClick={handleDelete}
+                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
         </section>
       </main>
