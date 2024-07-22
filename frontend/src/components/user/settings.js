@@ -141,10 +141,6 @@ const Settings = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
   const totalPages = Math.ceil(tableData.length / itemsPerPage);
-  const paginatedData = tableData.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
 
   const handlePrevPage = () => {
     setCurrentPage((prev) => Math.max(prev - 1, 1));
@@ -189,6 +185,43 @@ const Settings = () => {
   const handleButtonClick = () => {
     fileInputRef.current.click();
   };
+
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
+
+  const handleSort = (key) => {
+    let direction = 'ascending';
+    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
+      direction = 'descending';
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const sortedData = React.useMemo(() => {
+    let sortableItems = [...tableData];
+    if (sortConfig.key !== null) {
+      sortableItems.sort((a, b) => {
+        if (a[sortConfig.key] < b[sortConfig.key]) {
+          return sortConfig.direction === 'ascending' ? -1 : 1;
+        }
+        if (a[sortConfig.key] > b[sortConfig.key]) {
+          return sortConfig.direction === 'ascending' ? 1 : -1;
+        }
+        return 0;
+      });
+    }
+    return sortableItems;
+  }, [tableData, sortConfig]);
+
+  const paginatedData = sortedData.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const SortIcon = ({ field }) => (
+    <span onClick={() => handleSort(field)} className="cursor-pointer ml-2">
+      {sortConfig.key === field ? (sortConfig.direction === 'ascending' ? '↑' : '↓') : '↕'}
+    </span>
+  );
 
 
   return (
@@ -516,52 +549,64 @@ const Settings = () => {
           )}
 
 
-          {selectedSection === 'readingHistory' && (
-            <div className="max-w-4xl mx-auto mt-8">
-              <h3 className="text-xl font-semibold mb-4">Reading History</h3>
-              <div className="bg-white shadow-md rounded my-6 overflow-x-auto">
-                <table className="min-w-full bg-white">
-                  <thead>
-                    <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
-                      <th className="py-3 px-6 text-left">Sr.No</th>
-                      <th className="py-3 px-6 text-left">Book Name</th>
-                      <th className="py-3 px-6 text-left">Author Name</th>
-                      <th className="py-3 px-6 text-left">Timestamp</th>
-                    </tr>
-                  </thead>
-                  <tbody className="text-gray-600 text-sm font-light">
-                    {paginatedData.map((row) => (
-                      <tr key={row.id} className="border-b border-gray-200 hover:bg-gray-100">
-                        <td className="py-3 px-6 text-left whitespace-nowrap">{row.id}</td>
-                        <td className="py-3 px-6 text-left">{row.bookName}</td>
-                        <td className="py-3 px-6 text-left">{row.authorName}</td>
-                        <td className="py-3 px-6 text-left">{row.timestamp}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-              <div className="flex justify-between items-center py-2">
-                <button
-                  onClick={handlePrevPage}
-                  className="bg-blue-500 text-white px-4 py-2 rounded disabled:bg-gray-400"
-                  disabled={currentPage === 1}
-                >
-                  Previous
-                </button>
-                <span>
-                  Page {currentPage} of {totalPages}
-                </span>
-                <button
-                  onClick={handleNextPage}
-                  className="bg-blue-500 text-white px-4 py-2 rounded disabled:bg-gray-400"
-                  disabled={currentPage === totalPages}
-                >
-                  Next
-                </button>
-              </div>
-            </div>
-          )}
+        {selectedSection === 'readingHistory' && (
+        <div className="max-w-4xl mx-auto mt-8">
+          <h3 className="text-xl font-semibold mb-4">Reading History</h3>
+          <div className="bg-white shadow-md rounded my-6 overflow-x-auto">
+            <table className="min-w-full bg-white">
+              <thead>
+                <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                  <th className="py-3 px-6 text-left">
+                    Sr.No
+                    <SortIcon field="id" />
+                  </th>
+                  <th className="py-3 px-6 text-left">
+                    Book Name
+                    <SortIcon field="bookName" />
+                  </th>
+                  <th className="py-3 px-6 text-left">
+                    Author Name
+                    <SortIcon field="authorName" />
+                  </th>
+                  <th className="py-3 px-6 text-left">
+                    Timestamp
+                    <SortIcon field="timestamp" />
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="text-gray-600 text-sm font-light">
+                {paginatedData.map((row) => (
+                  <tr key={row.id} className="border-b border-gray-200 hover:bg-gray-100">
+                    <td className="py-3 px-6 text-left whitespace-nowrap">{row.id}</td>
+                    <td className="py-3 px-6 text-left">{row.bookName}</td>
+                    <td className="py-3 px-6 text-left">{row.authorName}</td>
+                    <td className="py-3 px-6 text-left">{row.timestamp}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div className="flex justify-between items-center py-2">
+            <button
+              onClick={handlePrevPage}
+              className="bg-blue-500 text-white px-4 py-2 rounded disabled:bg-gray-400"
+              disabled={currentPage === 1}
+            >
+              Previous
+            </button>
+            <span>
+              Page {currentPage} of {totalPages}
+            </span>
+            <button
+              onClick={handleNextPage}
+              className="bg-blue-500 text-white px-4 py-2 rounded disabled:bg-gray-400"
+              disabled={currentPage === totalPages}
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      )}
 
           {selectedSection === 'offlineAccess' && (
             <div className="flex flex-col">
