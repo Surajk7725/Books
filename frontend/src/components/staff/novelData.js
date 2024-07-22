@@ -13,6 +13,7 @@ const sampleData = [
 
 const NovelData = () => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
   const itemsPerPage = 5;
   const totalPages = Math.ceil(sampleData.length / itemsPerPage);
 
@@ -24,9 +25,39 @@ const NovelData = () => {
     if (currentPage < totalPages) setCurrentPage(currentPage + 1);
   };
 
-  const paginatedData = sampleData.slice(
+  const handleSort = (key) => {
+    let direction = 'ascending';
+    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
+      direction = 'descending';
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const sortedData = React.useMemo(() => {
+    let sortableItems = [...sampleData];
+    if (sortConfig.key !== null) {
+      sortableItems.sort((a, b) => {
+        if (a[sortConfig.key] < b[sortConfig.key]) {
+          return sortConfig.direction === 'ascending' ? -1 : 1;
+        }
+        if (a[sortConfig.key] > b[sortConfig.key]) {
+          return sortConfig.direction === 'ascending' ? 1 : -1;
+        }
+        return 0;
+      });
+    }
+    return sortableItems;
+  }, [sampleData, sortConfig]);
+
+  const paginatedData = sortedData.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
+  );
+
+  const SortIcon = ({ field }) => (
+    <span onClick={() => handleSort(field)} className="cursor-pointer ml-2">
+      {sortConfig.key === field ? (sortConfig.direction === 'ascending' ? '↑' : '↓') : '↕'}
+    </span>
   );
 
   return (
@@ -38,12 +69,30 @@ const NovelData = () => {
           <table className="min-w-full bg-white">
             <thead>
               <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
-                <th className="py-3 px-6 text-left">Sr.No</th>
-                <th className="py-3 px-6 text-left">User Name</th>
-                <th className="py-3 px-6 text-left">Book Title</th>
-                <th className="py-3 px-6 text-left">Stars</th>
-                <th className="py-3 px-6 text-left">Comments</th>
-                <th className="py-3 px-6 text-left">Status</th>
+                <th className="py-3 px-6 text-left">
+                  Sr.No
+                  <SortIcon field="id" />
+                </th>
+                <th className="py-3 px-6 text-left">
+                  User Name
+                  <SortIcon field="userName" />
+                </th>
+                <th className="py-3 px-6 text-left">
+                  Book Title
+                  <SortIcon field="bookTitle" />
+                </th>
+                <th className="py-3 px-6 text-left">
+                  Stars
+                  <SortIcon field="stars" />
+                </th>
+                <th className="py-3 px-6 text-left">
+                  Comments
+                  <SortIcon field="comments" />
+                </th>
+                <th className="py-3 px-6 text-left">
+                  Status
+                  <SortIcon field="status" />
+                </th>
               </tr>
             </thead>
             <tbody className="text-gray-600 text-sm font-light">
@@ -86,4 +135,5 @@ const NovelData = () => {
 };
 
 export default NovelData;
+
 
