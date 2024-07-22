@@ -32,6 +32,8 @@ import Staff_Settings from './components/staff/staff-settings';
 import Staff_Profile from './components/staff/staffprofile';
 import UserContent from './components/staff/writtenDescription';
 import NovelData from './components/staff/novelData';
+import UserBooks from './components/staff/userbooks.js';
+import ManageUser from './components/staff/manageuser.js';
 
 
 function App() {
@@ -79,6 +81,7 @@ function App() {
         <Route path="/contactus" element={<Contactus />} />
 
 
+
         {/* teacher */}
 
         <Route path='/staff-home' element={<Staff_home />} />
@@ -93,6 +96,8 @@ function App() {
         <Route path='/staff-profile' element={<Staff_Profile />} />
         <Route path='/staff-writeinfo' element={<UserContent />} />
         <Route path='/novel-data' element={<NovelData />} />
+        <Route path='/userbooks-data' element={<UserBooks />} />
+        <Route path='/manageuser-data' element={<ManageUser />} />
 
 
       </Routes>

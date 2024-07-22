@@ -83,8 +83,8 @@ export default function NavBar() {
                         </button>
                         {usersDropdownOpen && (
                             <div className="absolute z-10 mt-2 w-48 bg-white text-black rounded-md shadow-lg">
-                                <Link to="/display-books/kids" className="block px-4 py-2 hover:bg-gray-100">Manage User</Link>
-                                <Link to="/display-books/popular" className="block px-4 py-2 hover:bg-gray-100">User Books</Link>
+                                <Link to="/manageuser-data" className="block px-4 py-2 hover:bg-gray-100">Manage User</Link>
+                                <Link to="/userbooks-data" className="block px-4 py-2 hover:bg-gray-100">User Books</Link>
                             </div>
                         )}
                     </div>
