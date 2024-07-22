@@ -30,6 +30,8 @@ import EditBook from './components/staff/editbook';
 import Book_Description from './components/staff/bookdescription';
 import Staff_Settings from './components/staff/staff-settings';
 import Staff_Profile from './components/staff/staffprofile';
+import UserContent from './components/staff/writtenDescription';
+import NovelData from './components/staff/novelData';
 
 
 function App() {
@@ -89,6 +91,8 @@ function App() {
         <Route path='/staff-allbooks/description' element={<Book_Description />} />
         <Route path='/staff-settings' element={<Staff_Settings />} />
         <Route path='/staff-profile' element={<Staff_Profile />} />
+        <Route path='/staff-writeinfo' element={<UserContent />} />
+        <Route path='/novel-data' element={<NovelData />} />
 
 
       </Routes>

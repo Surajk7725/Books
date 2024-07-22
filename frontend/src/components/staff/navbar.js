@@ -5,6 +5,8 @@ import { ChevronDownIcon, BookOpenIcon, PencilIcon, MailIcon, UserCircleIcon, Co
 export default function NavBar() {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [booksDropdownOpen, setBooksDropdownOpen] = useState(false);
+    const [usersDropdownOpen, setUsersDropdownOpen] = useState(false);
+    const [novelsDropdownOpen, setNovelsDropdownOpen] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false); // State for mobile menu toggle
     const [displayDropdownOpen, setDisplayDropdownOpen] = useState(false);
 
@@ -69,16 +71,42 @@ export default function NavBar() {
                         )}
                     </div>
 
+                    <span className="flex items-center">
+                        <UserIcon className="h-5 w-5" /> Users </span>
 
+                    <div className="relative mt-1.5">
+                        <button
+                            onClick={() => setUsersDropdownOpen(!usersDropdownOpen)}
+                            className="flex items-center text-white-700 hover:text-gray-300 transition duration-300 ease-in-out"
+                        >
+                            <ChevronDownIcon className="h-4 w-4 ml-[-1rem]" />
+                        </button>
+                        {usersDropdownOpen && (
+                            <div className="absolute z-10 mt-2 w-48 bg-white text-black rounded-md shadow-lg">
+                                <Link to="/display-books/kids" className="block px-4 py-2 hover:bg-gray-100">Manage User</Link>
+                                <Link to="/display-books/popular" className="block px-4 py-2 hover:bg-gray-100">User Books</Link>
+                            </div>
+                        )}
+                    </div>
 
-                    <Link to="/write-book" className="text-gray-700 hover:text-gray-300 transition duration-300 ease-in-out">
-                        <span className="flex items-center">
-                            <UserIcon className="h-5 w-5" /> Manage Users
-                        </span>
-                    </Link>
-                    <Link to="/write-book" className="text-gray-700 hover:text-gray-300 transition duration-300 ease-in-out"><span className="flex items-center">
-                        <PencilIcon className="h-5 w-5" /> Written Notes</span>
-                    </Link>
+                    <span className="flex items-center">
+                        <PencilIcon className="h-5 w-5" /> Novels </span>
+
+                    <div className="relative mt-1.5">
+                        <button
+                            onClick={() => setNovelsDropdownOpen(!novelsDropdownOpen)}
+                            className="flex items-center text-white-700 hover:text-gray-300 transition duration-300 ease-in-out"
+                        >
+                            <ChevronDownIcon className="h-4 w-4 ml-[-1rem]" />
+                        </button>
+                        {novelsDropdownOpen && (
+                            <div className="absolute z-10 mt-2 w-48 bg-white text-black rounded-md shadow-lg">
+                                <Link to="/staff-writeinfo" className="block px-4 py-2 hover:bg-gray-100"> Written Novels</Link>
+                                <Link to="/novel-data" className="block px-4 py-2 hover:bg-gray-100">Novel Data</Link>
+                            </div>
+                        )}
+                    </div>
+
                     <Link to="/contactus" className="text-gray-700 hover:text-gray-300 transition duration-300 ease-in-out"><span className="flex items-center">
                         <MailIcon className="h-5 w-5" /> Contact Us</span>
                     </Link>
@@ -166,7 +194,7 @@ export default function NavBar() {
                     <Link to="#" className="block py-2 bg-white text-black hover:text-gray-300"><span className="flex items-center">
                         <UserIcon className="h-5 w-5" /> Manage Users</span>
                     </Link>
-                    <Link to="/write-book" className="block py-2 bg-white text-black hover:text-gray-300"><span className="flex items-center">
+                    <Link to="/staff-writeinfo" className="block py-2 bg-white text-black hover:text-gray-300"><span className="flex items-center">
                         <PencilIcon className="h-5 w-5" /> Written Notes</span>
                     </Link>
                     <Link to="/contactus" className="block py-2 bg-white text-black hover:text-gray-300"><span className="flex items-center">
