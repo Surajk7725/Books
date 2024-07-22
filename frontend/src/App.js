@@ -34,6 +34,7 @@ import UserContent from './components/staff/writtenDescription';
 import NovelData from './components/staff/novelData';
 import UserBooks from './components/staff/userbooks.js';
 import ManageUser from './components/staff/manageuser.js';
+import BookReview from './components/staff/bookreview.js';
 
 
 function App() {
@@ -98,6 +99,7 @@ function App() {
         <Route path='/novel-data' element={<NovelData />} />
         <Route path='/userbooks-data' element={<UserBooks />} />
         <Route path='/manageuser-data' element={<ManageUser />} />
+        <Route path='/staff-bookreview' element={<BookReview />} />
 
 
       </Routes>

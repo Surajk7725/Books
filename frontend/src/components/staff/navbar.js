@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronDownIcon, BookOpenIcon, PencilIcon, MailIcon, UserCircleIcon, CogIcon, QuestionMarkCircleIcon, LogoutIcon, UserIcon} from '@heroicons/react/outline'; // Import required icons
+import { ChevronDownIcon, BookOpenIcon, PencilIcon, MailIcon, UserCircleIcon, CogIcon, QuestionMarkCircleIcon, LogoutIcon, UserIcon } from '@heroicons/react/outline'; // Import required icons
 
 export default function NavBar() {
     const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -66,9 +66,12 @@ export default function NavBar() {
                                         </div>
                                     )}
                                 </div>
+                                <Link to="/staff-bookreview" className="block px-4 py-2 hover:bg-gray-100">Book Review</Link>
                             </div>
 
+
                         )}
+                        
                     </div>
 
                     <span className="flex items-center">
@@ -114,7 +117,7 @@ export default function NavBar() {
 
                 {/* Profile dropdown */}
                 <div className="relative flex items-center">
-                    
+
                     <div className="relative ml-6">
                         <button
                             onClick={() => setDropdownOpen(!dropdownOpen)}
@@ -154,7 +157,7 @@ export default function NavBar() {
             {menuOpen && (
                 <div className="md:hidden bg-transparent-800 text-black py-2 px-4">
 
-                <span className="flex items-center">
+                    <span className="flex items-center">
                         <BookOpenIcon className="h-5 w-5" /> Books</span>
 
 
@@ -187,16 +190,60 @@ export default function NavBar() {
                                         </div>
                                     )}
                                 </div>
+                                <Link to="/staff-bookreview" className="block px-4 py-2 hover:bg-gray-100">Book Review</Link>
                             </div>
 
                         )}
+                        
                     </div>
+
+                    <span className="flex items-center">
+                        <UserIcon className="h-5 w-5" /> Users </span>
+
+                    <div className="relative mt-1.5">
+                        <button
+                            onClick={() => setUsersDropdownOpen(!usersDropdownOpen)}
+                            className="flex items-center text-white-700 hover:text-gray-300 transition duration-300 ease-in-out"
+                        >
+                            <ChevronDownIcon className="h-4 w-4 ml-16 mt-[-2rem]" />
+                        </button>
+
+                        {usersDropdownOpen && (
+                            <div className="absolute z-10 mt-2 w-48 bg-white text-black rounded-md shadow-lg">
+                                <Link to="/manageuser-data" className="block px-4 py-2 hover:bg-gray-100">Manage User</Link>
+                                <Link to="/userbooks-data" className="block px-4 py-2 hover:bg-gray-100">User Books</Link>
+                            </div>
+                        )}
+                    </div>
+
+                    <span className="flex items-center">
+                        <PencilIcon className="h-5 w-5" /> Novels </span>
+
+                    <div className="relative mt-1.5">
+                        <button
+                            onClick={() => setNovelsDropdownOpen(!novelsDropdownOpen)}
+                            className="flex items-center text-white-700 hover:text-gray-300 transition duration-300 ease-in-out"
+                        >
+                            <ChevronDownIcon className="h-4 w-4 ml-16 mt-[-2rem]" />
+                        </button>
+                        {novelsDropdownOpen && (
+                            <div className="absolute z-10 mt-2 w-48 bg-white text-black rounded-md shadow-lg">
+                                <Link to="/staff-writeinfo" className="block px-4 py-2 hover:bg-gray-100"> Written Novels</Link>
+                                <Link to="/novel-data" className="block px-4 py-2 hover:bg-gray-100">Novel Data</Link>
+                            </div>
+                        )}
+                    </div>
+
+
                     <Link to="#" className="block py-2 bg-white text-black hover:text-gray-300"><span className="flex items-center">
                         <UserIcon className="h-5 w-5" /> Manage Users</span>
                     </Link>
                     <Link to="/staff-writeinfo" className="block py-2 bg-white text-black hover:text-gray-300"><span className="flex items-center">
                         <PencilIcon className="h-5 w-5" /> Written Notes</span>
                     </Link>
+
+
+
                     <Link to="/contactus" className="block py-2 bg-white text-black hover:text-gray-300"><span className="flex items-center">
                         <MailIcon className="h-5 w-5" /> Contact Us</span>
                     </Link>
