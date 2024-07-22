@@ -135,7 +135,7 @@ const Settings = () => {
     { id: 12, bookName: 'Alice\'s Adventures in Wonderland', authorName: 'Lewis Carroll', timestamp: '2024-06-26 14:15:00' },
   ];
 
-  // Pagination Logic
+  // Pagination Logicre
   const itemsPerPage = 10;
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -293,34 +293,34 @@ const Settings = () => {
               <h2 className="text-3xl font-bold mb-6">Edit Profile</h2>
               <div className="flex">
                 <div className="flex-shrink-0 mr-6">
-                <div className="relative w-24 h-24">
-                {profileImage ? (
-                  <Link to={`/profile-image-view?image=${encodeURIComponent(profileImage)}`}>
-                    <img
-                      src={profileImage}
-                      alt="Profile"
-                      className="w-24 h-24 rounded-full object-cover shadow-lg transition-transform transform hover:scale-105"
+                  <div className="relative w-24 h-24">
+                    {profileImage ? (
+                      <Link to={`/profile-image-view?image=${encodeURIComponent(profileImage)}`}>
+                        <img
+                          src={profileImage}
+                          alt="Profile"
+                          className="w-24 h-24 rounded-full object-cover shadow-lg transition-transform transform hover:scale-105"
+                        />
+                      </Link>
+                    ) : (
+                      <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center shadow-lg">
+                        <PhotographIcon className="w-12 h-12 text-gray-500" />
+                      </div>
+                    )}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="absolute inset-0 opacity-0 cursor-pointer"
+                      onChange={handleImageUpload}
+                      ref={fileInputRef}
                     />
-                  </Link>
-                ) : (
-                  <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center shadow-lg">
-                    <PhotographIcon className="w-12 h-12 text-gray-500" />
                   </div>
-                )}
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="absolute inset-0 opacity-0 cursor-pointer"
-                  onChange={handleImageUpload}
-                  ref={fileInputRef}
-                />
-              </div>
-              <div className="flex justify-center mt-6">
-                <button onClick={handleButtonClick} className="px-4 py-1 bg-gradient-to-r from-blue-400 to-blue-600 text-white rounded-md shadow-lg transition-colors hover:from-blue-500 hover:to-blue-700">
-                  Upload
-                </button>
-              </div>
-            </div>
+                  <div className="flex justify-center mt-6">
+                    <button onClick={handleButtonClick} className="px-4 py-1 bg-gradient-to-r from-blue-400 to-blue-600 text-white rounded-md shadow-lg transition-colors hover:from-blue-500 hover:to-blue-700">
+                      Upload
+                    </button>
+                  </div>
+                </div>
 
                 <form className="flex-1">
                   <div className="grid grid-cols-2 gap-4 ml-10">
@@ -445,7 +445,7 @@ const Settings = () => {
               </div>
               <div className="mb-4">
                 <label className="block text-gray-700">New Password
-                <span className="text-red-500">*</span>
+                  <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="password"
@@ -457,7 +457,7 @@ const Settings = () => {
               </div>
               <div className="mb-4">
                 <label className="block text-gray-700">Confirm Password
-                <span className="text-red-500">*</span>
+                  <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="password"
@@ -549,64 +549,69 @@ const Settings = () => {
           )}
 
 
-        {selectedSection === 'readingHistory' && (
-        <div className="max-w-4xl mx-auto mt-8">
-          <h3 className="text-xl font-semibold mb-4">Reading History</h3>
-          <div className="bg-white shadow-md rounded my-6 overflow-x-auto">
-            <table className="min-w-full bg-white">
-              <thead>
-                <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
-                  <th className="py-3 px-6 text-left">
-                    Sr.No
-                    <SortIcon field="id" />
-                  </th>
-                  <th className="py-3 px-6 text-left">
-                    Book Name
-                    <SortIcon field="bookName" />
-                  </th>
-                  <th className="py-3 px-6 text-left">
-                    Author Name
-                    <SortIcon field="authorName" />
-                  </th>
-                  <th className="py-3 px-6 text-left">
-                    Timestamp
-                    <SortIcon field="timestamp" />
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="text-gray-600 text-sm font-light">
-                {paginatedData.map((row) => (
-                  <tr key={row.id} className="border-b border-gray-200 hover:bg-gray-100">
-                    <td className="py-3 px-6 text-left whitespace-nowrap">{row.id}</td>
-                    <td className="py-3 px-6 text-left">{row.bookName}</td>
-                    <td className="py-3 px-6 text-left">{row.authorName}</td>
-                    <td className="py-3 px-6 text-left">{row.timestamp}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <div className="flex justify-between items-center py-2">
-            <button
-              onClick={handlePrevPage}
-              className="bg-blue-500 text-white px-4 py-2 rounded disabled:bg-gray-400"
-              disabled={currentPage === 1}
-            >
-              Previous
-            </button>
-            <span>
-              Page {currentPage} of {totalPages}
-            </span>
-            <button
-              onClick={handleNextPage}
-              className="bg-blue-500 text-white px-4 py-2 rounded disabled:bg-gray-400"
-              disabled={currentPage === totalPages}
-            >
-              Next
-            </button>
-          </div>
-        </div>
-      )}
+          {selectedSection === 'readingHistory' && (
+            <main className="flex-grow mt-8 mb-8">
+              <div className="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md">
+                <h3 className="text-2xl font-bold mb-6 text-gray-800">Reading History</h3>
+                <div className="bg-white shadow-md rounded my-6 overflow-x-auto">
+                  <table className="min-w-full bg-white">
+                    <thead>
+                      <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                        <th className="py-3 px-6 text-left">
+                          Sr.No
+                          <SortIcon field="id" />
+                        </th>
+                        <th className="py-3 px-6 text-left">
+                          Book Name
+                          <SortIcon field="bookName" />
+                        </th>
+                        <th className="py-3 px-6 text-left">
+                          Author Name
+                          <SortIcon field="authorName" />
+                        </th>
+                        <th className="py-3 px-6 text-left">
+                          Timestamp
+                          <SortIcon field="timestamp" />
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="text-gray-600 text-sm font-light">
+                      {paginatedData.map((row) => (
+                        <tr key={row.id} className="border-b border-gray-200 hover:bg-gray-100">
+                          <td className="py-3 px-6 text-left whitespace-nowrap">{row.id}</td>
+                          <td className="py-3 px-6 text-left">{row.bookName}</td>
+                          <td className="py-3 px-6 text-left">{row.authorName}</td>
+                          <td className="py-3 px-6 text-left">{row.timestamp}</td>
+                        </tr>
+
+                      ))}
+                    </tbody>
+                  </table>
+
+                </div>
+                <div className="flex justify-between items-center py-2">
+                  <button
+                    onClick={handlePrevPage}
+                    className="bg-blue-500 text-white px-4 py-2 rounded disabled:bg-gray-400"
+                    disabled={currentPage === 1}
+                  >
+                    Previous
+                  </button>
+                  <span>
+                    Page {currentPage} of {totalPages}
+                  </span>
+                  <button
+                    onClick={handleNextPage}
+                    className="bg-blue-500 text-white px-4 py-2 rounded disabled:bg-gray-400"
+                    disabled={currentPage === totalPages}
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+            </main>
+
+          )}
 
           {selectedSection === 'offlineAccess' && (
             <div className="flex flex-col">
