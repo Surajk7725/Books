@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Landing from './components/landing';
 import Login from './components/login';
@@ -35,17 +35,18 @@ import NovelData from './components/staff/novelData';
 import UserBooks from './components/staff/userbooks.js';
 import ManageUser from './components/staff/manageuser.js';
 import BookReview from './components/staff/bookreview.js';
-
+import PageTitle from './components/pagetitle.js'; 
+import AdminHome from './components/admin/home.js';
 
 function App() {
-   // Initialize state from localStorage if available
-   const initialBookmarkedBooks = JSON.parse(localStorage.getItem('bookmarkedBooks')) || [];
-   const [bookmarkedBooks, setBookmarkedBooks] = useState(initialBookmarkedBooks);
- 
-   // Update localStorage whenever bookmarkedBooks changes
-   useEffect(() => {
-     localStorage.setItem('bookmarkedBooks', JSON.stringify(bookmarkedBooks));
-   }, [bookmarkedBooks]);
+  // Initialize state from localStorage if available
+  const initialBookmarkedBooks = JSON.parse(localStorage.getItem('bookmarkedBooks')) || [];
+  const [bookmarkedBooks, setBookmarkedBooks] = useState(initialBookmarkedBooks);
+
+  // Update localStorage whenever bookmarkedBooks changes
+  useEffect(() => {
+    localStorage.setItem('bookmarkedBooks', JSON.stringify(bookmarkedBooks));
+  }, [bookmarkedBooks]);
 
   const toggleBookmark = (bookId) => {
     setBookmarkedBooks((prevBookmarkedBooks) => {
@@ -59,6 +60,7 @@ function App() {
 
   return (
     <Router>
+      <PageTitle title="Book Hub" /> {/* Set the title for all pages */}
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
@@ -68,9 +70,9 @@ function App() {
         <Route path="/home" element={<Home />} />
         <Route path="/display-books" element={<AllBooks bookmarkedBooks={bookmarkedBooks} toggleBookmark={toggleBookmark} />} />
         <Route path="/display-books/description" element={<BookDescription />} />
-        <Route path="/display-books/kids" element={<KidsBooks bookmarkedBooks={bookmarkedBooks} toggleBookmark={toggleBookmark}/>}/>
-        <Route path="/display-books/popular" element={<PopularBooks bookmarkedBooks={bookmarkedBooks} toggleBookmark={toggleBookmark}/>}/>
-        <Route path="/display-books/academics" element={<AcademicBooks bookmarkedBooks={bookmarkedBooks} toggleBookmark={toggleBookmark}/>}/>
+        <Route path="/display-books/kids" element={<KidsBooks bookmarkedBooks={bookmarkedBooks} toggleBookmark={toggleBookmark} />} />
+        <Route path="/display-books/popular" element={<PopularBooks bookmarkedBooks={bookmarkedBooks} toggleBookmark={toggleBookmark} />} />
+        <Route path="/display-books/academics" element={<AcademicBooks bookmarkedBooks={bookmarkedBooks} toggleBookmark={toggleBookmark} />} />
         <Route path="/display-books/rating" element={<Rating />} />
         <Route path="/my-wishlist" element={<MyWishlist bookmarkedBooks={bookmarkedBooks} toggleBookmark={toggleBookmark} />} />
         <Route path="/user-addbook" element={<BookForm />} />
@@ -81,9 +83,7 @@ function App() {
         <Route path="/help-center" element={<Help />} />
         <Route path="/contactus" element={<Contactus />} />
 
-
-
-        {/* teacher */}
+        {/* Teacher Routes */}
 
         <Route path='/staff-home' element={<Staff_home />} />
         <Route path='/staff-allbooks' element={<All_Books />} />
@@ -100,6 +100,11 @@ function App() {
         <Route path='/userbooks-data' element={<UserBooks />} />
         <Route path='/manageuser-data' element={<ManageUser />} />
         <Route path='/staff-bookreview' element={<BookReview />} />
+
+        {/* Admin Routes */}
+        <Route path='/admin-home' element={<AdminHome />} />
+
+
 
 
       </Routes>
