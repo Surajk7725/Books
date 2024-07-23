@@ -5,7 +5,7 @@ export default function Login() {
   const navigate = useNavigate();
   
     const handleLogin = () => {
-        navigate('/adminhome');
+        navigate('/admin-home');
     };
 
   return (
