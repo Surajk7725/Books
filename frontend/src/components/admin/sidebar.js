@@ -1,10 +1,16 @@
 import React, { useState } from 'react';
 import { Layout, Input, Dropdown, Menu } from 'antd';
-import { BellOutlined, SearchOutlined, UserOutlined, VideoCameraOutlined, UploadOutlined, DashboardOutlined, SettingOutlined, ProfileOutlined, LoginOutlined, LogoutOutlined, BookOutlined } from '@ant-design/icons';
+import { AiOutlineTool } from "react-icons/ai";
+import { GrUserAdmin } from "react-icons/gr";
+import { FcLibrary } from "react-icons/fc";
+import { FaBookBookmark } from "react-icons/fa6";
+import { BellOutlined, SearchOutlined, UserOutlined, VideoCameraOutlined, UploadOutlined, DashboardOutlined, SettingOutlined, ProfileOutlined, LoginOutlined, LogoutOutlined, BookOutlined, PlusOutlined, ReadOutlined } from '@ant-design/icons';
 import 'tailwindcss/tailwind.css';
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
+
+
 
 const notifications = [
   ' Lorem ipsum dolor sit amet.',
@@ -35,6 +41,8 @@ const App = () => {
       <Sider
         breakpoint="lg"
         collapsedWidth="0"
+        width="calc(280px + 1cm)" // Adjusted width here
+        className="px-4" // Added padding to the sider for better spacing
         onBreakpoint={(broken) => {
           console.log(broken);
         }}
@@ -42,22 +50,25 @@ const App = () => {
           console.log(collapsed, type);
         }}
       >
-        <div className="p-4 text-white text-center text-xl">Book Hub</div>
+        <div className="p-4 text-white text-center text-xl mb-4 flex items-center justify-center">
+          <FaBookBookmark className="mr-2" />
+          <span className="ml-2">Book Hub</span>
+        </div>
         <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
-          <Menu.Item key="1" icon={<DashboardOutlined />}>
+          <Menu.Item key="1" icon={<DashboardOutlined />} className="mt-2">
             Dashboard
           </Menu.Item>
           <SubMenu key="sub1" icon={<UserOutlined />} title="User">
-            <Menu.Item key="2">Create</Menu.Item>
-            <Menu.Item key="3">Display</Menu.Item>
+            <Menu.Item key="2" icon={<PlusOutlined />}>Create</Menu.Item>
+            <Menu.Item key="3" icon={<ReadOutlined />}>Display</Menu.Item>
           </SubMenu>
-          <SubMenu key="sub2" icon={<VideoCameraOutlined />} title="Librarian">
-            <Menu.Item key="4">Create</Menu.Item>
-            <Menu.Item key="5">Display</Menu.Item>
+          <SubMenu key="sub2" icon={<FcLibrary />} title="Librarian">
+            <Menu.Item key="4" icon={<PlusOutlined />}>Create</Menu.Item>
+            <Menu.Item key="5" icon={<ReadOutlined />}>Display</Menu.Item>
           </SubMenu>
-          <SubMenu key="sub3" icon={<UploadOutlined />} title="Admin">
-            <Menu.Item key="6">Create</Menu.Item>
-            <Menu.Item key="7">Display</Menu.Item>
+          <SubMenu key="sub3" icon={<GrUserAdmin />} title="Admin">
+            <Menu.Item key="6" icon={<PlusOutlined />}>Create</Menu.Item>
+            <Menu.Item key="7" icon={<ReadOutlined />}>Display</Menu.Item>
           </SubMenu>
           <Menu.Item key="8" icon={<ProfileOutlined />}>
             Profile
@@ -65,7 +76,7 @@ const App = () => {
           <Menu.Item key="9" icon={<SettingOutlined />}>
             Settings
           </Menu.Item>
-          <SubMenu key="sub4" icon={<BookOutlined />} title="Authentication">
+          <SubMenu key="sub4" icon={<AiOutlineTool />} title="Authentication">
             <Menu.Item key="10" icon={<LoginOutlined />}>Login</Menu.Item>
             <Menu.Item key="11" icon={<LogoutOutlined />}>Logout</Menu.Item>
           </SubMenu>
@@ -79,7 +90,7 @@ const App = () => {
               prefix={<SearchOutlined />}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="ml-4 w-64"
+              className="ml-24 w-64"
             />
           </div>
           <div className="flex items-center mr-4">
