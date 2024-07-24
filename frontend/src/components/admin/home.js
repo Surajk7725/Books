@@ -3,11 +3,9 @@ import Sidebar from './sidebar';
 
 
 function AdminHome() {
-    
-
   return (
     <div>
-       
+       <Sidebar />
     </div>
   )
 }
