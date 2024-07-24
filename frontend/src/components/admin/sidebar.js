@@ -1,17 +1,16 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import { Layout, Input, Dropdown, Menu } from 'antd';
+import { Layout, Input, Dropdown, Menu, Avatar } from 'antd';
 import { AiOutlineTool } from "react-icons/ai";
 import { GrUserAdmin } from "react-icons/gr";
 import { FcLibrary } from "react-icons/fc";
 import { FaBookBookmark } from "react-icons/fa6";
 import { BellOutlined, SearchOutlined, UserOutlined, DashboardOutlined, SettingOutlined, ProfileOutlined, LoginOutlined, LogoutOutlined, PlusOutlined, ReadOutlined } from '@ant-design/icons';
 import 'tailwindcss/tailwind.css';
+import UserCreate from './usercreate';
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
-
-
 
 const notifications = [
   ' Lorem ipsum dolor sit amet.',
@@ -37,13 +36,28 @@ const App = () => {
     </Menu>
   );
 
+  const dropdown = (
+    <Menu>
+      <Menu.Item key="1" icon={<ProfileOutlined />}>
+        View Profile
+      </Menu.Item>
+      <Menu.Item key="2" icon={<SettingOutlined />}>
+        Account Settings
+      </Menu.Item>
+      <Menu.Item key="6" icon={<LogoutOutlined />} className="text-red-500">
+        Logout
+      </Menu.Item>
+    </Menu>
+  );
+
   return (
+    
     <Layout className="min-h-screen">
       <Sider
         breakpoint="lg"
         collapsedWidth="0"
-        width="calc(225px + 1cm)" 
-        className="px-4" 
+        width="calc(225px + 1cm)"
+        className="px-4"
         onBreakpoint={(broken) => {
           console.log(broken);
         }}
@@ -60,7 +74,9 @@ const App = () => {
             Dashboard
           </Menu.Item>
           <SubMenu key="sub1" icon={<UserOutlined />} title="User">
-            <Menu.Item key="2" icon={<PlusOutlined />}>Create</Menu.Item>
+            <Menu.Item key="2" icon={<PlusOutlined />}>
+              <Link to="/admin-usercreate">Create</Link>
+            </Menu.Item>
             <Menu.Item key="3" icon={<ReadOutlined />}>Display</Menu.Item>
           </SubMenu>
           <SubMenu key="sub2" icon={<FcLibrary />} title="Librarian">
@@ -72,7 +88,7 @@ const App = () => {
             <Menu.Item key="7" icon={<ReadOutlined />}>Display</Menu.Item>
           </SubMenu>
           <Menu.Item key="8" icon={<UserOutlined />}>
-              <Link to="/profile">Profile</Link>
+            <Link to="/profile">Profile</Link>
           </Menu.Item>
           <Menu.Item key="9" icon={<SettingOutlined />}>
             Settings
@@ -94,20 +110,33 @@ const App = () => {
               className="ml-24 w-64"
             />
           </div>
+
           <div className="flex items-center mr-4">
             <Dropdown overlay={menu} trigger={['click']}>
               <BellOutlined className="text-2xl cursor-pointer" />
             </Dropdown>
+            <div className="w-[1.0cm]"></div>
+            <Dropdown overlay={dropdown} trigger={['click']}>
+              <Avatar src="https://wallpapers.com/images/hd/yuuichi-katagiri-anime-portrait-5xl430n009kmsg7l.jpg" className="cursor-pointer" size="large" />
+            </Dropdown>
           </div>
+
         </Header>
         <Content className="m-6">
-          <div className="p-6 min-h-screen bg-gray-100 rounded-lg">content</div>
+          <div className="p-6 min-h-screen bg-gray-100 rounded-lg">
+            <Routes>
+              <Route path="/" element={<div>Dashboard Content</div>} />
+              <Route path="/admin-usercreate"  element={ <div><UserCreate /> </div>} />
+              <Route path="/login" element={<div>Login Page</div>} />
+            </Routes>
+          </div>
         </Content>
         <Footer className="text-center">
           Book Hub ©{new Date().getFullYear()}
         </Footer>
       </Layout>
     </Layout>
+    
   );
 };
 

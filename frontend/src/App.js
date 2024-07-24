@@ -39,6 +39,10 @@ import PageTitle from './components/pagetitle.js';
 import AdminHome from './components/admin/home.js';
 import UserCreate from './components/admin/usercreate.js';
 import UserEdit from './components/admin/useredit.js';
+import AdminCreate from './components/admin/admincreate.js';
+import AdminEdit from './components/admin/adminedit.js';
+import StaffCreate from './components/admin/staffcreate.js';
+import StaffEdit from './components/admin/staffedit.js';
 
 function App() {
   // Initialize state from localStorage if available
@@ -107,7 +111,10 @@ function App() {
         <Route path='/admin-home' element={<AdminHome />} />
         <Route path='/admin-usercreate' element={<UserCreate />} />
         <Route path='/admin-useredit' element={<UserEdit />} />
-
+        <Route path='/admin-admincreate' element={<AdminCreate />} />
+        <Route path='/admin-adminedit' element={<AdminEdit />} />
+        <Route path='/admin-staffedit' element={<StaffEdit />} />
+        <Route path='/admin-staffcreate' element={<StaffCreate />} />
 
 
 
