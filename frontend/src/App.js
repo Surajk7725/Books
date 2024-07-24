@@ -38,6 +38,7 @@ import BookReview from './components/staff/bookreview.js';
 import PageTitle from './components/pagetitle.js'; 
 import AdminHome from './components/admin/home.js';
 import UserCreate from './components/admin/usercreate.js';
+import UserEdit from './components/admin/useredit.js';
 
 function App() {
   // Initialize state from localStorage if available
@@ -105,6 +106,7 @@ function App() {
         {/* Admin Routes */}
         <Route path='/admin-home' element={<AdminHome />} />
         <Route path='/admin-usercreate' element={<UserCreate />} />
+        <Route path='/admin-useredit' element={<UserEdit />} />
 
 
 
