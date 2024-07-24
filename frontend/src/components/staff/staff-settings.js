@@ -5,6 +5,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLinkedin, faInstagram, faTwitter, faYoutube } from '@fortawesome/free-brands-svg-icons';
 import { Link } from 'react-router-dom';
 import Select from 'react-select';
+import { PlusOutlined } from '@ant-design/icons';
+import { Image, Upload } from 'antd';
 
 
 const Staff_Settings = () => {
@@ -127,7 +129,18 @@ const Staff_Settings = () => {
 
   //Account Details
 
-  const [profileImage, setProfileImage] = useState('');
+  const getBase64 = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+       reader.onerror = (error) => reject(error);
+    });
+
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState('');
+  const [fileList, setFileList] = useState([]);
+  const [profileImage, setProfileImage] = useState(null);
   const [fullName, setFullName] = useState('');
   const [dob, setDob] = useState('');
   const [email, setEmail] = useState('');
@@ -145,25 +158,52 @@ const Staff_Settings = () => {
   const [languagesSpoken, setLanguagesSpoken] = useState('');
   const [computerSkills, setComputerSkills] = useState('');
 
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setProfileImage(reader.result);
-    };
-    reader.readAsDataURL(file);
-  };
-
   const fileInputRef = useRef(null);
 
-  const handleButtonClick = () => {
-    fileInputRef.current.click();
+  const handlePreview = async (file) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj);
+    }
+    setPreviewImage(file.url || file.preview);
+    setPreviewOpen(true);
+  };
+
+  const handleChange = ({ fileList: newFileList }) => {
+    const updatedFileList = newFileList.map(file => {
+      if (file.status === 'error') {
+        return { ...file, status: 'done' };
+      }
+      return file;
+    });
+  
+    setFileList(updatedFileList);
+  
+    if (updatedFileList.length > 0) {
+      setProfileImage(updatedFileList[0].url || updatedFileList[0].thumbUrl);
+    } else {
+      setProfileImage(null);
+    }
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setSocialLinks({ ...socialLinks, [name]: value });
   };
+
+  const uploadButton = (
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '100%'
+      }}
+    >
+      <PlusOutlined />
+      <div style={{ marginTop: 8 }}>Upload</div>
+    </div>
+  );
 
   const languageOptions = [
     { label: 'English', value: 'English' },
@@ -269,35 +309,30 @@ const Staff_Settings = () => {
             <div className="max-w-full mx-4 p-8 bg-white rounded-md shadow-md">
             <h2 className="text-3xl font-bold mb-6">Edit Profile</h2>
             <div className="flex">
-              <div className="flex-shrink-0 mr-6">
-              <div className="relative w-24 h-24">
-                {profileImage ? (
-                  <Link to={`/profile-image-view?image=${encodeURIComponent(profileImage)}`}>
-                    <img
-                      src={profileImage}
-                      alt="Profile"
-                      className="w-24 h-24 rounded-full object-cover shadow-lg transition-transform transform hover:scale-105"
+            <div className="flex-shrink-0 mr-6">
+                <div className="relative w-24 h-24">
+                  <Upload
+                    action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
+                    listType="picture-circle"
+                    fileList={fileList}
+                    onPreview={handlePreview}
+                    onChange={handleChange}
+                  >
+                    {fileList.length >= 1 ? null : uploadButton}
+                  </Upload>
+                  {previewImage && (
+                    <Image
+                      wrapperStyle={{ display: 'none' }}
+                      preview={{
+                        visible: previewOpen,
+                        onVisibleChange: (visible) => setPreviewOpen(visible),
+                        afterOpenChange: (visible) => !visible && setPreviewImage(''),
+                      }}
+                      src={previewImage}
                     />
-                  </Link>
-                ) : (
-                  <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center shadow-lg">
-                    <PhotographIcon className="w-12 h-12 text-gray-500" />
-                  </div>
-                )}
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="absolute inset-0 opacity-0 cursor-pointer"
-                  onChange={handleImageUpload}
-                  ref={fileInputRef}
-                />
+                  )}
+                </div>
               </div>
-              <div className="flex justify-center mt-6">
-                <button onClick={handleButtonClick} className="px-4 py-1 bg-gradient-to-r from-blue-400 to-blue-600 text-white rounded-md shadow-lg transition-colors hover:from-blue-500 hover:to-blue-700">
-                  Upload
-                </button>
-              </div>
-            </div>
      
               <form className="flex-1">
                 <div className="grid grid-cols-2 gap-4 ml-10">

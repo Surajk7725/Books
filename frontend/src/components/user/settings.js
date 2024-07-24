@@ -3,7 +3,8 @@ import { MenuAlt1Icon, UserCircleIcon, LockClosedIcon, BookOpenIcon, DocumentTex
 import Footer from '../footer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLinkedin, faInstagram, faTwitter, faYoutube } from '@fortawesome/free-brands-svg-icons';
-import { Link } from 'react-router-dom';
+import { PlusOutlined } from '@ant-design/icons';
+import { Image, Upload } from 'antd';
 
 const Settings = () => {
   const [selectedSection, setSelectedSection] = useState('account');
@@ -153,6 +154,17 @@ const Settings = () => {
 
   //Account Details
 
+  const getBase64 = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+       reader.onerror = (error) => reject(error);
+    });
+
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState('');
+  const [fileList, setFileList] = useState([]);
   const [profileImage, setProfileImage] = useState(null);
   const [fullName, setFullName] = useState('');
   const [userName, setUserName] = useState('');
@@ -165,26 +177,54 @@ const Settings = () => {
     twitter: '',
     linkedin: ''
   });
+  
+  const fileInputRef = useRef(null);
 
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setProfileImage(reader.result);
-    };
-    reader.readAsDataURL(file);
+  const handlePreview = async (file) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj);
+    }
+    setPreviewImage(file.url || file.preview);
+    setPreviewOpen(true);
   };
+
+  const handleChange = ({ fileList: newFileList }) => {
+    const updatedFileList = newFileList.map(file => {
+      if (file.status === 'error') {
+        return { ...file, status: 'done' };
+      }
+      return file;
+    });
+  
+    setFileList(updatedFileList);
+  
+    if (updatedFileList.length > 0) {
+      setProfileImage(updatedFileList[0].url || updatedFileList[0].thumbUrl);
+    } else {
+      setProfileImage(null);
+    }
+  };
+  
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setSocialLinks({ ...socialLinks, [name]: value });
+    setSocialLinks((prev) => ({ ...prev, [name]: value }));
   };
 
-  const fileInputRef = useRef(null);
-
-  const handleButtonClick = () => {
-    fileInputRef.current.click();
-  };
+  const uploadButton = (
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '100%'
+      }}
+    >
+      <PlusOutlined />
+      <div style={{ marginTop: 8 }}>Upload</div>
+    </div>
+  );
 
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
 
@@ -290,142 +330,137 @@ const Settings = () => {
 
           {selectedSection === 'account' && (
             <div className="max-w-4xl mx-auto p-8 bg-white rounded-md shadow-md">
-              <h2 className="text-3xl font-bold mb-6">Edit Profile</h2>
-              <div className="flex">
-                <div className="flex-shrink-0 mr-6">
-                  <div className="relative w-24 h-24">
-                    {profileImage ? (
-                      <Link to={`/profile-image-view?image=${encodeURIComponent(profileImage)}`}>
-                        <img
-                          src={profileImage}
-                          alt="Profile"
-                          className="w-24 h-24 rounded-full object-cover shadow-lg transition-transform transform hover:scale-105"
-                        />
-                      </Link>
-                    ) : (
-                      <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center shadow-lg">
-                        <PhotographIcon className="w-12 h-12 text-gray-500" />
-                      </div>
-                    )}
+            <h2 className="text-3xl font-bold mb-6">Edit Profile</h2>
+            <div className="flex">
+              <div className="flex-shrink-0 mr-6">
+                <div className="relative w-24 h-24">
+                  <Upload
+                    action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
+                    listType="picture-circle"
+                    fileList={fileList}
+                    onPreview={handlePreview}
+                    onChange={handleChange}
+                  >
+                    {fileList.length >= 1 ? null : uploadButton}
+                  </Upload>
+                  {previewImage && (
+                    <Image
+                      wrapperStyle={{ display: 'none' }}
+                      preview={{
+                        visible: previewOpen,
+                        onVisibleChange: (visible) => setPreviewOpen(visible),
+                        afterOpenChange: (visible) => !visible && setPreviewImage(''),
+                      }}
+                      src={previewImage}
+                    />
+                  )}
+                </div>
+              </div>
+      
+              <form className="flex-1">
+                <div className="grid grid-cols-2 gap-4 ml-10">
+                  <div className="col-span-2 sm:col-span-1">
+                    <label className="block text-gray-700">Full Name</label>
                     <input
-                      type="file"
-                      accept="image/*"
-                      className="absolute inset-0 opacity-0 cursor-pointer"
-                      onChange={handleImageUpload}
-                      ref={fileInputRef}
+                      type="text"
+                      className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
                     />
                   </div>
-                  <div className="flex justify-center mt-6">
-                    <button onClick={handleButtonClick} className="px-4 py-1 bg-gradient-to-r from-blue-400 to-blue-600 text-white rounded-md shadow-lg transition-colors hover:from-blue-500 hover:to-blue-700">
-                      Upload
-                    </button>
+                  <div className="col-span-2 sm:col-span-1">
+                    <label className="block text-gray-700">Username</label>
+                    <input
+                      type="text"
+                      className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
+                      value={userName}
+                      onChange={(e) => setUserName(e.target.value)}
+                    />
+                  </div>
+                  <div className="col-span-2">
+                    <label className="block text-gray-700">Email Address</label>
+                    <input
+                      type="email"
+                      className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
+                  </div>
+                  <div className="col-span-2 sm:col-span-1">
+                    <label className="block text-gray-700">Phone Number</label>
+                    <input
+                      type="text"
+                      className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
+                      value={phoneNumber}
+                      onChange={(e) => setPhoneNumber(e.target.value)}
+                    />
+                  </div>
+                  <div className="col-span-2 sm:col-span-1">
+                    <label className="block text-gray-700">House Address</label>
+                    <input
+                      type="text"
+                      className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
+                      value={houseAddress}
+                      onChange={(e) => setHouseAddress(e.target.value)}
+                    />
                   </div>
                 </div>
-
-                <form className="flex-1">
-                  <div className="grid grid-cols-2 gap-4 ml-10">
-                    <div className="col-span-2 sm:col-span-1">
-                      <label className="block text-gray-700">Full Name</label>
-                      <input
-                        type="text"
-                        className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
-                        value={fullName}
-                        onChange={(e) => setFullName(e.target.value)}
-                      />
-                    </div>
-                    <div className="col-span-2 sm:col-span-1">
-                      <label className="block text-gray-700">Username</label>
-                      <input
-                        type="text"
-                        className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
-                        value={userName}
-                        onChange={(e) => setUserName(e.target.value)}
-                      />
-                    </div>
-                    <div className="col-span-2">
-                      <label className="block text-gray-700">Email Address</label>
-                      <input
-                        type="email"
-                        className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                      />
-                    </div>
-                    <div className="col-span-2 sm:col-span-1">
-                      <label className="block text-gray-700">Phone Number</label>
-                      <input
-                        type="text"
-                        className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
-                        value={phoneNumber}
-                        onChange={(e) => setPhoneNumber(e.target.value)}
-                      />
-                    </div>
-                    <div className="col-span-2 sm:col-span-1">
-                      <label className="block text-gray-700">House Address</label>
-                      <input
-                        type="text"
-                        className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
-                        value={houseAddress}
-                        onChange={(e) => setHouseAddress(e.target.value)}
-                      />
-                    </div>
+                <h3 className="text-xl font-bold mt-6 mb-2 ml-10">Add Your Social Handles below</h3>
+                <div className="grid grid-cols-2 gap-4 ml-10">
+                  <div className="flex items-center space-x-2">
+                    <FontAwesomeIcon icon={faYoutube} className="text-red-600 w-6 h-6" />
+                    <input
+                      type="url"
+                      name="youtube"
+                      placeholder="YouTube"
+                      className="flex-1 px-4 py-2 bg-gray-100 border rounded-md"
+                      value={socialLinks.youtube}
+                      onChange={handleInputChange}
+                    />
                   </div>
-                  <h3 className="text-xl font-bold mt-6 mb-2 ml-10">Add Your Social Handles below</h3>
-                  <div className="grid grid-cols-2 gap-4 ml-10">
-                    <div className="flex items-center space-x-2">
-                      <FontAwesomeIcon icon={faYoutube} className="text-red-600 w-6 h-6" />
-                      <input
-                        type="url"
-                        name="youtube"
-                        placeholder="YouTube"
-                        className="flex-1 px-4 py-2 bg-gray-100 border rounded-md"
-                        value={socialLinks.youtube}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <FontAwesomeIcon icon={faInstagram} className="text-pink-500 w-6 h-6" />
-                      <input
-                        type="url"
-                        name="instagram"
-                        placeholder="Instagram"
-                        className="flex-1 px-4 py-2 bg-gray-100 border rounded-md"
-                        value={socialLinks.instagram}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <FontAwesomeIcon icon={faTwitter} className="text-blue-400 w-6 h-6" />
-                      <input
-                        type="url"
-                        name="twitter"
-                        placeholder="Twitter"
-                        className="flex-1 px-4 py-2 bg-gray-100 border rounded-md"
-                        value={socialLinks.twitter}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <FontAwesomeIcon icon={faLinkedin} className="text-blue-700 w-6 h-6" />
-                      <input
-                        type="url"
-                        name="linkedin"
-                        placeholder="LinkedIn"
-                        className="flex-1 px-4 py-2 bg-gray-100 border rounded-md"
-                        value={socialLinks.linkedin}
-                        onChange={handleInputChange}
-                      />
-                    </div>
+                  <div className="flex items-center space-x-2">
+                    <FontAwesomeIcon icon={faInstagram} className="text-pink-500 w-6 h-6" />
+                    <input
+                      type="url"
+                      name="instagram"
+                      placeholder="Instagram"
+                      className="flex-1 px-4 py-2 bg-gray-100 border rounded-md"
+                      value={socialLinks.instagram}
+                      onChange={handleInputChange}
+                    />
                   </div>
-                  <button
-                    type="submit"
-                    className="mt-6 w-full bg-blue-500 text-white py-2 rounded-md"
-                  >
-                    Update
-                  </button>
-                </form>
-              </div>
+                  <div className="flex items-center space-x-2">
+                    <FontAwesomeIcon icon={faTwitter} className="text-blue-400 w-6 h-6" />
+                    <input
+                      type="url"
+                      name="twitter"
+                      placeholder="Twitter"
+                      className="flex-1 px-4 py-2 bg-gray-100 border rounded-md"
+                      value={socialLinks.twitter}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <FontAwesomeIcon icon={faLinkedin} className="text-blue-700 w-6 h-6" />
+                    <input
+                      type="url"
+                      name="linkedin"
+                      placeholder="LinkedIn"
+                      className="flex-1 px-4 py-2 bg-gray-100 border rounded-md"
+                      value={socialLinks.linkedin}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                </div>
+                <button
+                  type="submit"
+                  className="mt-6 w-full bg-blue-500 text-white py-2 rounded-md"
+                >
+                  Update
+                </button>
+              </form>
             </div>
+          </div>
           )}
 
           {selectedSection === 'security' && (
