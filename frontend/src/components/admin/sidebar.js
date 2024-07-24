@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import { Layout, Input, Dropdown, Menu } from 'antd';
 import { AiOutlineTool } from "react-icons/ai";
 import { GrUserAdmin } from "react-icons/gr";
 import { FcLibrary } from "react-icons/fc";
 import { FaBookBookmark } from "react-icons/fa6";
-import { BellOutlined, SearchOutlined, UserOutlined, VideoCameraOutlined, UploadOutlined, DashboardOutlined, SettingOutlined, ProfileOutlined, LoginOutlined, LogoutOutlined, BookOutlined, PlusOutlined, ReadOutlined } from '@ant-design/icons';
+import { BellOutlined, SearchOutlined, UserOutlined, DashboardOutlined, SettingOutlined, ProfileOutlined, LoginOutlined, LogoutOutlined, PlusOutlined, ReadOutlined } from '@ant-design/icons';
 import 'tailwindcss/tailwind.css';
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -41,8 +42,8 @@ const App = () => {
       <Sider
         breakpoint="lg"
         collapsedWidth="0"
-        width="calc(280px + 1cm)" // Adjusted width here
-        className="px-4" // Added padding to the sider for better spacing
+        width="calc(225px + 1cm)" 
+        className="px-4" 
         onBreakpoint={(broken) => {
           console.log(broken);
         }}
@@ -50,7 +51,7 @@ const App = () => {
           console.log(collapsed, type);
         }}
       >
-        <div className="p-4 text-white text-center text-xl mb-4 flex items-center justify-center">
+        <div className="p-4 text-white text-center text-xl mb-8 flex items-center justify-center">
           <FaBookBookmark className="mr-2" />
           <span className="ml-2">Book Hub</span>
         </div>
@@ -70,8 +71,8 @@ const App = () => {
             <Menu.Item key="6" icon={<PlusOutlined />}>Create</Menu.Item>
             <Menu.Item key="7" icon={<ReadOutlined />}>Display</Menu.Item>
           </SubMenu>
-          <Menu.Item key="8" icon={<ProfileOutlined />}>
-            Profile
+          <Menu.Item key="8" icon={<UserOutlined />}>
+              <Link to="/profile">Profile</Link>
           </Menu.Item>
           <Menu.Item key="9" icon={<SettingOutlined />}>
             Settings
