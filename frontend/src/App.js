@@ -43,6 +43,8 @@ import AdminCreate from './components/admin/admincreate.js';
 import AdminEdit from './components/admin/adminedit.js';
 import StaffCreate from './components/admin/staffcreate.js';
 import StaffEdit from './components/admin/staffedit.js';
+import UserDisplay from './components/admin/userdisplay.js';
+import ProfilePage from './components/admin/adminprofile.js';
 
 function App() {
   // Initialize state from localStorage if available
@@ -115,6 +117,8 @@ function App() {
         <Route path='/admin-adminedit' element={<AdminEdit />} />
         <Route path='/admin-staffedit' element={<StaffEdit />} />
         <Route path='/admin-staffcreate' element={<StaffCreate />} />
+        <Route path='/admin-userdisplay' element={<UserDisplay />} />
+        <Route path='/admin-profile' element={<ProfilePage />} />
 
 
 

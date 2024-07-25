@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Routes, Route, Link } from 'react-router-dom';
 import { Layout, Input, Dropdown, Menu, Avatar } from 'antd';
 import { AiOutlineTool } from "react-icons/ai";
 import { GrUserAdmin } from "react-icons/gr";
@@ -100,7 +100,7 @@ const App = () => {
         </Menu>
       </Sider>
       <Layout>
-        <Header className="flex justify-between items-center bg-white p-0">
+        <Header className="flex justify-between items-center bg-white p-0 h-20">
           <div className="flex items-center">
             <Input
               placeholder="Search..."
