@@ -25,7 +25,7 @@ const notifications = [
   ' Fusce nec tellus sed augue semper porta.',
 ];
 
-const App = () => {
+const Sidebar = () => {
   const [searchTerm, setSearchTerm] = useState('');
 
   const menu = (
@@ -140,4 +140,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default Sidebar;
