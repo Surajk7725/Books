@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { MenuAlt1Icon, UserCircleIcon, LockClosedIcon, BookOpenIcon, DocumentTextIcon, GlobeAltIcon, DesktopComputerIcon, LogoutIcon, PhotographIcon } from '@heroicons/react/outline';
+import { MenuAlt1Icon, UserCircleIcon, LockClosedIcon, BookOpenIcon, DocumentTextIcon, GlobeAltIcon, DesktopComputerIcon, LogoutIcon } from '@heroicons/react/outline';
 import Footer from '../footer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLinkedin, faInstagram, faTwitter, faYoutube } from '@fortawesome/free-brands-svg-icons';
@@ -160,7 +160,7 @@ const Settings = () => {
       reader.readAsDataURL(file);
       reader.onload = () => resolve(reader.result);
        reader.onerror = (error) => reject(error);
-    });
+  });
 
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');

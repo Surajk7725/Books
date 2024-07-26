@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
 import { Layout, Input, Dropdown, Menu, Avatar } from 'antd';
 import { AiOutlineTool } from "react-icons/ai";
 import { GrUserAdmin } from "react-icons/gr";
@@ -7,7 +7,6 @@ import { FcLibrary } from "react-icons/fc";
 import { FaBookBookmark } from "react-icons/fa6";
 import { BellOutlined, SearchOutlined, UserOutlined, DashboardOutlined, SettingOutlined, ProfileOutlined, LoginOutlined, LogoutOutlined, PlusOutlined, ReadOutlined } from '@ant-design/icons';
 import 'tailwindcss/tailwind.css';
-import UserCreate from './usercreate';
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -51,7 +50,6 @@ const Sidebar = () => {
   );
 
   return (
-    
     <Layout className="min-h-screen">
       <Sider
         breakpoint="lg"
@@ -71,31 +69,45 @@ const Sidebar = () => {
         </div>
         <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
           <Menu.Item key="1" icon={<DashboardOutlined />} className="mt-2">
-            Dashboard
+            <Link to="/admin/home">Dashboard</Link>
           </Menu.Item>
           <SubMenu key="sub1" icon={<UserOutlined />} title="User">
             <Menu.Item key="2" icon={<PlusOutlined />}>
-              <Link to="/admin-usercreate">Create</Link>
+              <Link to="/admin/user-create">Create</Link>
             </Menu.Item>
-            <Menu.Item key="3" icon={<ReadOutlined />}>Display</Menu.Item>
+            <Menu.Item key="3" icon={<ReadOutlined />}>
+              <Link to="/admin/user-display">Display</Link>
+            </Menu.Item>
           </SubMenu>
           <SubMenu key="sub2" icon={<FcLibrary />} title="Librarian">
-            <Menu.Item key="4" icon={<PlusOutlined />}>Create</Menu.Item>
-            <Menu.Item key="5" icon={<ReadOutlined />}>Display</Menu.Item>
+            <Menu.Item key="4" icon={<PlusOutlined />}>
+              <Link to="/admin/staff-create">Create</Link>
+            </Menu.Item>
+            <Menu.Item key="5" icon={<ReadOutlined />}>
+              <Link to="/admin/staff-display">Display</Link>
+            </Menu.Item>
           </SubMenu>
           <SubMenu key="sub3" icon={<GrUserAdmin />} title="Admin">
-            <Menu.Item key="6" icon={<PlusOutlined />}>Create</Menu.Item>
-            <Menu.Item key="7" icon={<ReadOutlined />}>Display</Menu.Item>
+            <Menu.Item key="6" icon={<PlusOutlined />}>
+              <Link to="/admin/admin-create">Create</Link>
+            </Menu.Item>
+            <Menu.Item key="7" icon={<ReadOutlined />}>
+              <Link to="/admin/admin-display">Display</Link>
+            </Menu.Item>
           </SubMenu>
-          <Menu.Item key="8" icon={<UserOutlined />}>
-            <Link to="/profile">Profile</Link>
+          <Menu.Item key="8" icon={<UserOutlined />} title="Profile">
+            <Link to="/admin/profile">Profile</Link>
           </Menu.Item>
           <Menu.Item key="9" icon={<SettingOutlined />}>
-            Settings
+            <Link to="/admin/settings">Settings</Link>
           </Menu.Item>
           <SubMenu key="sub4" icon={<AiOutlineTool />} title="Authentication">
-            <Menu.Item key="10" icon={<LoginOutlined />}>Login</Menu.Item>
-            <Menu.Item key="11" icon={<LogoutOutlined />}>Logout</Menu.Item>
+            <Menu.Item key="10" icon={<LoginOutlined />}>
+              <Link to="/login">Login</Link>
+            </Menu.Item>
+            <Menu.Item key="11" icon={<LogoutOutlined />}>
+              <Link to="/">Logout</Link>
+            </Menu.Item>
           </SubMenu>
         </Menu>
       </Sider>
@@ -120,15 +132,10 @@ const Sidebar = () => {
               <Avatar src="https://wallpapers.com/images/hd/yuuichi-katagiri-anime-portrait-5xl430n009kmsg7l.jpg" className="cursor-pointer" size="large" />
             </Dropdown>
           </div>
-
         </Header>
-        <Content className="m-6">
-          <div className="p-6 min-h-screen bg-gray-100 rounded-lg">
-            <Routes>
-              <Route path="/" element={<div>Dashboard Content</div>} />
-              <Route path="/admin-usercreate"  element={ <div><UserCreate /> </div>} />
-              <Route path="/login" element={<div>Login Page</div>} />
-            </Routes>
+        <Content className="m-4">
+          <div className="p-2 min-h-screen bg-gray-100 rounded-lg">
+            <Outlet />
           </div>
         </Content>
         <Footer className="text-center">
@@ -136,8 +143,15 @@ const Sidebar = () => {
         </Footer>
       </Layout>
     </Layout>
-    
   );
 };
 
 export default Sidebar;
+
+
+
+
+
+
+
+

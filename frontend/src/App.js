@@ -45,6 +45,8 @@ import StaffCreate from './components/admin/staffcreate.js';
 import StaffEdit from './components/admin/staffedit.js';
 import UserDisplay from './components/admin/userdisplay.js';
 import ProfilePage from './components/admin/adminprofile.js';
+import AdminSidebar from './components/admin/sidebar.js';
+import SettingsPage from './components/admin/settings.js';
 
 
 function App() {
@@ -71,6 +73,7 @@ function App() {
     <Router>
       <PageTitle title="Book Hub" /> {/* Set the title for all pages */}
       <Routes>
+
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
@@ -111,17 +114,21 @@ function App() {
         <Route path='/staff-bookreview' element={<BookReview />} />
 
         {/* Admin Routes */}
-        <Route path='/admin-home' element={<AdminHome />} />
-        <Route path='/admin-usercreate' element={<UserCreate />} />
-        <Route path='/admin-useredit' element={<UserEdit />} />
-        <Route path='/admin-admincreate' element={<AdminCreate />} />
-        <Route path='/admin-adminedit' element={<AdminEdit />} />
-        <Route path='/admin-staffedit' element={<StaffEdit />} />
-        <Route path='/admin-staffcreate' element={<StaffCreate />} />
-        <Route path='/admin-userdisplay' element={<UserDisplay />} />
-        <Route path='/admin-profile' element={<ProfilePage />} />
-       
 
+        <Route path="/admin/*" element={<AdminSidebar />}>
+          <Route path='home' element={<AdminHome />} />
+          <Route path='user-create' element={<UserCreate />} />
+          <Route path='user-edit' element={<UserEdit />} />
+          <Route path='admin-create' element={<AdminCreate />} />
+          <Route path='admin-edit' element={<AdminEdit />} />
+          <Route path='staff-edit' element={<StaffEdit />} />
+          <Route path='staff-create' element={<StaffCreate />} />
+          <Route path='user-display' element={<UserDisplay />} />
+          <Route path='profile' element={<ProfilePage />} />
+          <Route path='settings' element={<SettingsPage />} />
+
+          
+        </Route>
 
 
       </Routes>

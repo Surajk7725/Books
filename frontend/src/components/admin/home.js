@@ -1,11 +1,10 @@
-import React, {useState} from 'react';
-import Sidebar from './sidebar';
+import React from 'react';
 
 
 function AdminHome() {
   return (
     <div>
-       <Sidebar />
+      
     </div>
   )
 }

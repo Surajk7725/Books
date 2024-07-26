@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Upload, Button, Image } from 'antd';
+import { Upload, Button } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { FaYoutube, FaInstagram, FaTwitter, FaLinkedin } from 'react-icons/fa';
 
@@ -14,8 +14,6 @@ const getBase64 = (file) =>
 const ProfilePage = () => {
   const [coverImage, setCoverImage] = useState('https://img.freepik.com/free-photo/painting-mountain-lake-with-mountain-background_188544-9126.jpg');
   const [profileImage, setProfileImage] = useState('https://wallpapers.com/images/hd/yuuichi-katagiri-anime-portrait-5xl430n009kmsg7l.jpg');
-  const [previewOpen, setPreviewOpen] = useState(false);
-  const [previewImage, setPreviewImage] = useState('');
 
   const handleCoverChange = async (info) => {
     if (info.file.status === 'done' || info.file.status === 'uploading') {
@@ -31,20 +29,13 @@ const ProfilePage = () => {
     }
   };
 
-  const handlePreview = async (file) => {
-    if (!file.url && !file.preview) {
-      file.preview = await getBase64(file.originFileObj);
-    }
-    setPreviewImage(file.url || file.preview);
-    setPreviewOpen(true);
-  };
 
   return (
-    <div className="w-full min-h-screen bg-gray-100 p-8">
+    <div className="w-full min-h-screen bg-gray-100 p-2">
       <div className="max-w-5xl mx-auto bg-white shadow-lg overflow-hidden ml-52">
         {/* Cover Image Section */}
         <div className="relative h-72 bg-cover bg-center" style={{ backgroundImage: `url(${coverImage})` }}>
-          <Upload accept="image/*" showUploadList={false} onChange={handleCoverChange} onPreview={handlePreview}>
+          <Upload accept="image/*" showUploadList={false} onChange={handleCoverChange}>
             <Button icon={<UploadOutlined />} className="absolute right-4 top-4"></Button>
           </Upload>
         </div>
@@ -52,7 +43,7 @@ const ProfilePage = () => {
         {/* Profile Picture and Details Section */}
         <div className="text-center mt-[-50px]">
           <div className="inline-block relative">
-            <Upload accept="image/*" showUploadList={false} onChange={handleProfileChange} onPreview={handlePreview}>
+            <Upload accept="image/*" showUploadList={false} onChange={handleProfileChange}>
               <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-white">
                 <img src={profileImage} alt="Profile" className="w-full h-full object-cover" />
               </div>
