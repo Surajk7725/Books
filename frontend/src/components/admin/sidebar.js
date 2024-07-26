@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import { Layout, Input, Dropdown, Menu, Avatar } from 'antd';
 import { AiOutlineTool } from "react-icons/ai";
 import { GrUserAdmin } from "react-icons/gr";
