@@ -47,6 +47,8 @@ import UserDisplay from './components/admin/userdisplay.js';
 import ProfilePage from './components/admin/adminprofile.js';
 import AdminSidebar from './components/admin/sidebar.js';
 import SettingsPage from './components/admin/settings.js';
+import Contactresolve from './components/admin/contactresolve.js';
+import SecurityPage from './components/admin/security.js';
 
 
 function App() {
@@ -126,6 +128,8 @@ function App() {
           <Route path='user-display' element={<UserDisplay />} />
           <Route path='profile' element={<ProfilePage />} />
           <Route path='settings' element={<SettingsPage />} />
+          <Route path='contact-resolve' element={<Contactresolve />} />
+          <Route path='security' element={<SecurityPage />} />
 
           
         </Route>

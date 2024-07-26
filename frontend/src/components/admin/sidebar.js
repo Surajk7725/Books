@@ -5,7 +5,7 @@ import { AiOutlineTool } from "react-icons/ai";
 import { GrUserAdmin } from "react-icons/gr";
 import { FcLibrary } from "react-icons/fc";
 import { FaBookBookmark } from "react-icons/fa6";
-import { BellOutlined, SearchOutlined, UserOutlined, DashboardOutlined, SettingOutlined, ProfileOutlined, LoginOutlined, LogoutOutlined, PlusOutlined, ReadOutlined } from '@ant-design/icons';
+import { BellOutlined, SearchOutlined, UserOutlined, DashboardOutlined, SettingOutlined, ProfileOutlined, LoginOutlined, LogoutOutlined, PlusOutlined, ReadOutlined, FacebookOutlined, LockOutlined, DesktopOutlined } from '@ant-design/icons';
 import 'tailwindcss/tailwind.css';
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -38,13 +38,10 @@ const Sidebar = () => {
   const dropdown = (
     <Menu>
       <Menu.Item key="1" icon={<ProfileOutlined />}>
-        View Profile
+        <Link to="/admin/profile"> View Profile</Link>
       </Menu.Item>
-      <Menu.Item key="2" icon={<SettingOutlined />}>
-        Account Settings
-      </Menu.Item>
-      <Menu.Item key="6" icon={<LogoutOutlined />} className="text-red-500">
-        Logout
+      <Menu.Item key="2" icon={<LogoutOutlined />} className="text-red-500">
+        <Link to="/">Logout</Link>
       </Menu.Item>
     </Menu>
   );
@@ -75,7 +72,7 @@ const Sidebar = () => {
             <Menu.Item key="2" icon={<PlusOutlined />}>
               <Link to="/admin/user-create">Create</Link>
             </Menu.Item>
-            <Menu.Item key="3" icon={<ReadOutlined />}>
+            <Menu.Item key="3" icon={<DesktopOutlined />}>
               <Link to="/admin/user-display">Display</Link>
             </Menu.Item>
           </SubMenu>
@@ -83,7 +80,7 @@ const Sidebar = () => {
             <Menu.Item key="4" icon={<PlusOutlined />}>
               <Link to="/admin/staff-create">Create</Link>
             </Menu.Item>
-            <Menu.Item key="5" icon={<ReadOutlined />}>
+            <Menu.Item key="5" icon={<DesktopOutlined />}>
               <Link to="/admin/staff-display">Display</Link>
             </Menu.Item>
           </SubMenu>
@@ -91,21 +88,31 @@ const Sidebar = () => {
             <Menu.Item key="6" icon={<PlusOutlined />}>
               <Link to="/admin/admin-create">Create</Link>
             </Menu.Item>
-            <Menu.Item key="7" icon={<ReadOutlined />}>
+            <Menu.Item key="7" icon={<DesktopOutlined />}>
               <Link to="/admin/admin-display">Display</Link>
             </Menu.Item>
           </SubMenu>
-          <Menu.Item key="8" icon={<UserOutlined />} title="Profile">
+          <Menu.Item key="8" icon={<ReadOutlined />} title="Books">
+            <Link to="/admin/books">Books</Link>
+          </Menu.Item>
+          <Menu.Item key="9" icon={<UserOutlined />} title="Profile">
             <Link to="/admin/profile">Profile</Link>
           </Menu.Item>
-          <Menu.Item key="9" icon={<SettingOutlined />}>
-            <Link to="/admin/settings">Settings</Link>
-          </Menu.Item>
-          <SubMenu key="sub4" icon={<AiOutlineTool />} title="Authentication">
-            <Menu.Item key="10" icon={<LoginOutlined />}>
+
+          <SubMenu key="sub4" icon={<SettingOutlined />} title="Settings">
+            <Menu.Item key="10" icon={<UserOutlined />}>
+              <Link to="/admin/settings">Personal Information</Link>
+            </Menu.Item>
+            <Menu.Item key="11" icon={<LockOutlined />}>
+              <Link to="/admin/security">Security</Link>
+            </Menu.Item>
+          </SubMenu>
+
+          <SubMenu key="sub5" icon={<AiOutlineTool />} title="Authentication">
+            <Menu.Item key="13" icon={<LoginOutlined />}>
               <Link to="/login">Login</Link>
             </Menu.Item>
-            <Menu.Item key="11" icon={<LogoutOutlined />}>
+            <Menu.Item key="14" icon={<LogoutOutlined />}>
               <Link to="/">Logout</Link>
             </Menu.Item>
           </SubMenu>
