@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Upload, Button } from 'antd';
+import { Upload, Button, Tooltip } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import { FaYoutube, FaInstagram, FaTwitter, FaLinkedin } from 'react-icons/fa';
+import { FaYoutube, FaInstagram, FaTwitter, FaLinkedin, FaEnvelope, FaPhone } from 'react-icons/fa';
 
 const getBase64 = (file) =>
   new Promise((resolve, reject) => {
@@ -14,6 +14,8 @@ const getBase64 = (file) =>
 const ProfilePage = () => {
   const [coverImage, setCoverImage] = useState('https://img.freepik.com/free-photo/painting-mountain-lake-with-mountain-background_188544-9126.jpg');
   const [profileImage, setProfileImage] = useState('https://wallpapers.com/images/hd/yuuichi-katagiri-anime-portrait-5xl430n009kmsg7l.jpg');
+  const email = "yuuichikatagiri78@gmail.com";
+  const phone = "(+91) 8978787652";
 
   const handleCoverChange = async (info) => {
     if (info.file.status === 'done' || info.file.status === 'uploading') {
@@ -30,9 +32,14 @@ const ProfilePage = () => {
   };
 
 
-  return (
+  return  (
     <div className="w-full min-h-screen bg-gray-100 p-2">
-      <div className="max-w-5xl mx-auto bg-white shadow-lg overflow-hidden ml-52">
+        <div className="text-start -mt-4 mb-8">
+          <h1 className="text-3xl font-bold text-gray-800 ml-4">Profile</h1>
+        </div>
+      <div className="max-w-5xl mx-auto bg-white shadow-lg overflow-hidden">
+
+
         {/* Cover Image Section */}
         <div className="relative h-72 bg-cover bg-center" style={{ backgroundImage: `url(${coverImage})` }}>
           <Upload accept="image/*" showUploadList={false} onChange={handleCoverChange}>
@@ -51,22 +58,27 @@ const ProfilePage = () => {
             </Upload>
           </div>
           <h1 className="mt-4 text-xl font-bold text-black">Yuuichi Katagiri</h1>
-          <p className="text-gray-600">Super Admin</p>
+          <p className="text-gray-600 bg-yellow-200 px-4 py-2 rounded-lg shadow-lg font-semibold inline-block transform transition duration-500 hover:scale-105 mt-2">Super Admin</p>
         </div>
 
-        {/* Contact Details Section */}
-        <div className="p-4">
+        {/* Animated Buttons with Tooltips */}
+        <div className="p-4 text-center">
           <div className="flex justify-center space-x-8">
-            <div>
-              <h2 className="font-bold text-gray-700 text-center">Email</h2>
-              <p className="text-gray-600">yuuichikatagiri78@gmail.com</p>
-            </div>
-            <div>
-              <h2 className="font-bold text-gray-700 text-center">Phone</h2>
-              <p className="text-gray-600">(+91) 8978787652 </p>
-            </div>
+            <Tooltip title={email}>
+              <button className="flex items-center space-x-2 bg-blue-500 text-white px-4 py-2 rounded-full transform transition duration-500 hover:scale-105">
+                <FaEnvelope />
+                <span>Email Us</span>
+              </button>
+            </Tooltip>
+            <Tooltip title={phone}>
+              <button className="flex items-center space-x-2 bg-green-500 text-white px-4 py-2 rounded-full transform transition duration-500 hover:scale-105">
+                <FaPhone />
+                <span>Call Us</span>
+              </button>
+            </Tooltip>
           </div>
         </div>
+
 
         {/* Follow Me On Section */}
         <div className="p-4 text-center">

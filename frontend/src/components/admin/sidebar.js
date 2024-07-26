@@ -5,7 +5,7 @@ import { AiOutlineTool } from "react-icons/ai";
 import { GrUserAdmin } from "react-icons/gr";
 import { FcLibrary } from "react-icons/fc";
 import { FaBookBookmark } from "react-icons/fa6";
-import { BellOutlined, SearchOutlined, UserOutlined, DashboardOutlined, SettingOutlined, ProfileOutlined, LoginOutlined, LogoutOutlined, PlusOutlined, ReadOutlined, FacebookOutlined, LockOutlined, DesktopOutlined } from '@ant-design/icons';
+import { BellOutlined, SearchOutlined, UserOutlined, DashboardOutlined, SettingOutlined, ProfileOutlined, LoginOutlined, LogoutOutlined, PlusOutlined, ReadOutlined, CustomerServiceOutlined, LockOutlined, DesktopOutlined } from '@ant-design/icons';
 import 'tailwindcss/tailwind.css';
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -92,18 +92,21 @@ const Sidebar = () => {
               <Link to="/admin/admin-display">Display</Link>
             </Menu.Item>
           </SubMenu>
-          <Menu.Item key="8" icon={<ReadOutlined />} title="Books">
+          <Menu.Item key="8" icon={<CustomerServiceOutlined />} title="Resolve">
+            <Link to="/admin/contact-resolve">Resolve</Link>
+          </Menu.Item>
+          <Menu.Item key="9" icon={<ReadOutlined />} title="Books">
             <Link to="/admin/books">Books</Link>
           </Menu.Item>
-          <Menu.Item key="9" icon={<UserOutlined />} title="Profile">
+          <Menu.Item key="10" icon={<UserOutlined />} title="Profile">
             <Link to="/admin/profile">Profile</Link>
           </Menu.Item>
 
           <SubMenu key="sub4" icon={<SettingOutlined />} title="Settings">
-            <Menu.Item key="10" icon={<UserOutlined />}>
+            <Menu.Item key="11" icon={<UserOutlined />}>
               <Link to="/admin/settings">Personal Information</Link>
             </Menu.Item>
-            <Menu.Item key="11" icon={<LockOutlined />}>
+            <Menu.Item key="12" icon={<LockOutlined />}>
               <Link to="/admin/security">Security</Link>
             </Menu.Item>
           </SubMenu>
@@ -140,7 +143,7 @@ const Sidebar = () => {
             </Dropdown>
           </div>
         </Header>
-        <Content className="m-4">
+        <Content className="m-4 mt-12">
           <div className="p-2 min-h-screen bg-gray-100 rounded-lg">
             <Outlet />
           </div>

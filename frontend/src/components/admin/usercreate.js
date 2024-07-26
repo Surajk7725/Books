@@ -11,7 +11,7 @@ const UserCreate = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen mt-20 mb-20">
+    <div className="justify-center items-center min-h-screen mb-2 ml-12">
       <Card className="w-full max-w-4xl p-8">
         <h2 className="text-2xl font-semibold text-center mb-6">User Creation Form</h2>
         <Form form={form} layout="vertical" onFinish={handleFinish}>
