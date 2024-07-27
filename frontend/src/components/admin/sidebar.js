@@ -7,33 +7,22 @@ import { FcLibrary } from "react-icons/fc";
 import { FaBookBookmark } from "react-icons/fa6";
 import { BellOutlined, SearchOutlined, UserOutlined, DashboardOutlined, SettingOutlined, ProfileOutlined, LoginOutlined, LogoutOutlined, PlusOutlined, ReadOutlined, CustomerServiceOutlined, LockOutlined, DesktopOutlined } from '@ant-design/icons';
 import 'tailwindcss/tailwind.css';
+import NotificationCard from './notification';
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 
-const notifications = [
-  ' Lorem ipsum dolor sit amet.',
-  ' Consectetur adipiscing elit.',
-  ' Integer nec odio.',
-  ' Praesent libero.',
-  ' Sed cursus ante dapibus diam.',
-  ' Sed nisi.',
-  ' Nulla quis sem at nibh elementum imperdiet.',
-  ' Duis sagittis ipsum.',
-  'Praesent mauris.',
-  ' Fusce nec tellus sed augue semper porta.',
-];
+
 
 const Sidebar = () => {
   const [searchTerm, setSearchTerm] = useState('');
 
   const menu = (
-    <Menu className="max-h-48 overflow-y-auto">
-      {notifications.map((notification, index) => (
-        <Menu.Item key={index}>{notification}</Menu.Item>
-      ))}
-    </Menu>
+    <div className="max-h-48">
+      <NotificationCard />
+    </div>
   );
+
 
   const dropdown = (
     <Menu>

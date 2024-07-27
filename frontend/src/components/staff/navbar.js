@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import Notification from './notification';
+import {  Dropdown } from 'antd';
+import { BellOutlined } from '@ant-design/icons';
 import { ChevronDownIcon, BookOpenIcon, PencilIcon, MailIcon, UserCircleIcon, CogIcon, QuestionMarkCircleIcon, LogoutIcon, UserIcon } from '@heroicons/react/outline'; // Import required icons
 
 export default function NavBar() {
@@ -9,7 +12,12 @@ export default function NavBar() {
     const [novelsDropdownOpen, setNovelsDropdownOpen] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false); // State for mobile menu toggle
     const [displayDropdownOpen, setDisplayDropdownOpen] = useState(false);
-
+    
+    const menu = (
+        <div className="max-h-48">
+          <Notification />
+        </div>
+    );
 
     return (
         <div className="bg-transparent-800 text-black rounded-lg shadow-md">
@@ -117,7 +125,9 @@ export default function NavBar() {
 
                 {/* Profile dropdown */}
                 <div className="relative flex items-center">
-
+                    <Dropdown overlay={menu} trigger={['click']}>
+                        <BellOutlined className="text-2xl cursor-pointer" />
+                    </Dropdown>
                     <div className="relative ml-6">
                         <button
                             onClick={() => setDropdownOpen(!dropdownOpen)}
