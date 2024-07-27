@@ -107,7 +107,7 @@ function App() {
         <Route path='/staff-allbooks' element={<All_Books />} />
         <Route path='/staff-allbooks/kids' element={<Kids_Books />} />
         <Route path='/staff-allbooks/popular' element={<Popular_Books />} />
-        <Route path='/staff-allbooks/academic' element={<Academic_Books />} />
+        <Route path='/staff-allbooks/academics' element={<Academic_Books />} />
         <Route path='/staff-addbook' element={<AddBook />} />
         <Route path='/staff-editbook' element={<EditBook />} />
         <Route path='/staff-allbooks/description' element={<Book_Description />} />

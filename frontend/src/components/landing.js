@@ -4,7 +4,7 @@ import Slide4 from './images/slide4.jpg';
 import Slide5 from './images/slide5.jpg';
 import Slide6 from './images/slide6.jpg';
 import Slide7 from './images/slide7.jpg';
-import Footer from './footer';
+import Footer from './user/footer';
 
 function ImageSlider() {
   const images = [Slide4, Slide5, Slide6, Slide7];

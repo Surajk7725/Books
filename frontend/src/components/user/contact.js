@@ -1,7 +1,7 @@
 import React from 'react';
 import NavBar from '../navbar';
 import { Link } from 'react-router-dom';
-import Footer from '../footer';
+import Footer from './footer';
 
 const ContactUs = () => {
   return (

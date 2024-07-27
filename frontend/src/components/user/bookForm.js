@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { PlusCircleIcon } from '@heroicons/react/outline';
 import NavBar from '../navbar';
-import Footer from '../footer';
+import Footer from './footer';
 
 function BookForm() {
     const [authors, setAuthors] = useState(['']);

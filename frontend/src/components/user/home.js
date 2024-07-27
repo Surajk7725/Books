@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import NavBar from '../navbar';
-import Footer from '../footer';
+import Footer from './footer';
 
 function Discounts()  {
   // Sample data for Best Sellers, Recommended Reads, and Author Spotlight

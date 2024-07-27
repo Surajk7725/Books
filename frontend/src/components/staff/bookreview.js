@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Table } from 'antd';
 import NavBar from './navbar';
-import Footer from '../footer';
+import Footer from './footer';
 
 // Sample data for demonstration purposes
 const sampleData = [

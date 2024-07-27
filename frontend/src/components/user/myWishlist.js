@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { HeartIcon as HeartIconSolid } from '@heroicons/react/solid';
 import { SearchIcon } from '@heroicons/react/outline';
 import NavBar from '../navbar';
-import Footer from '../footer';
+import Footer from './footer';
 import { booksData } from './allBooks';
 import { kidsData } from './kidsBooks';
 import { popularData } from './popularBooks';

@@ -19,10 +19,10 @@ export default function CommentCard() {
   };
 
   return (
-    <section className="min-h-screen bg-gray-200" style={{ padding: "2cm 0 2cm 0" }}>
+    <section className="min-h-screen bg-gray-200" style={{ padding: "2cm 0" }}>
       <div className="py-5 max-w-7xl mx-auto">
         <div className="flex justify-center">
-          <div className="w-full">
+          <div className="w-full" style={{ margin: "0 2cm" }}>
             <div className="bg-white shadow-md rounded-lg">
               <div className="p-6">
                 {/* Section for number of comments */}

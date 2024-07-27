@@ -15,16 +15,13 @@ function Footer() {
             <h3 className="text-md font-semibold">Navigation</h3>
             <ul className="mt-2 space-y-2">
               <li>
-                <a href="/" className="hover:text-gray-400 transition-colors duration-200 hover:bg-gray-200 text-base rounded-lg py-1 px-2 block shadow-md">Home</a>
+                <a href="/staff-home" className="hover:text-gray-400 transition-colors duration-200 hover:bg-gray-200 text-base rounded-lg py-1 px-2 block shadow-md">Home</a>
               </li>
               <li>
-                <a href="/books" className="hover:text-gray-400 transition-colors duration-200 hover:bg-gray-200 text-base rounded-lg py-1 px-2 block shadow-md">Books</a>
+                <a href="/staff-allbooks" className="hover:text-gray-400 transition-colors duration-200 hover:bg-gray-200 text-base rounded-lg py-1 px-2 block shadow-md">Books</a>
               </li>
               <li>
-                <a href="/write-a-note" className="hover:text-gray-400 transition-colors duration-200 hover:bg-gray-200 text-base rounded-lg py-1 px-2 block shadow-md">Write A Note</a>
-              </li>
-              <li>
-                <a href="/contact-us" className="hover:text-gray-400 transition-colors duration-200 hover:bg-gray-200 text-base rounded-lg py-1 px-2 block shadow-md">Contact Us</a>
+                <a href="/staff-contact" className="hover:text-gray-400 transition-colors duration-200 hover:bg-gray-200 text-base rounded-lg py-1 px-2 block shadow-md">Contact Us</a>
               </li>
             </ul>
           </div>
@@ -33,13 +30,13 @@ function Footer() {
             <h3 className="text-md font-semibold">Popular Categories</h3>
             <ul className="mt-2 space-y-2">
               <li>
-                <a href="/books/kids" className="hover:text-gray-400 transition-colors duration-200 hover:bg-gray-200 text-base rounded-lg py-1 px-2 block shadow-md">Kids</a>
+                <a href="/staff-allbooks/kids" className="hover:text-gray-400 transition-colors duration-200 hover:bg-gray-200 text-base rounded-lg py-1 px-2 block shadow-md">Kids</a>
               </li>
               <li>
-                <a href="/books/popular" className="hover:text-gray-400 transition-colors duration-200 hover:bg-gray-200 text-base rounded-lg py-1 px-2 block shadow-md">Popular</a>
+                <a href="/staff-allbooks/popular" className="hover:text-gray-400 transition-colors duration-200 hover:bg-gray-200 text-base rounded-lg py-1 px-2 block shadow-md">Popular</a>
               </li>
               <li>
-                <a href="/books/recommendations" className="hover:text-gray-400 transition-colors duration-200 hover:bg-gray-200 text-base rounded-lg py-1 px-2 block shadow-md">Recommendations</a>
+                <a href="/staff-allbooks/academics" className="hover:text-gray-400 transition-colors duration-200 hover:bg-gray-200 text-base rounded-lg py-1 px-2 block shadow-md">Academics</a>
               </li>
             </ul>
           </div>
@@ -47,8 +44,8 @@ function Footer() {
           <div className="border border-gray-700 p-4 rounded-lg">
             <h3 className="text-md font-semibold">Contact Us</h3>
             <ul className="mt-2 space-y-2">
-              <li className="text-gray-400">Address: 123 Book St, Library City</li>
-              <li className="text-gray-400">Phone: (123) 456-7890</li>
+              <li className="text-gray-400">Address: KLEF, Vaddeswaram</li>
+              <li className="text-gray-400">Phone: (+91) 8530527876</li>
               <li className="text-gray-400">Email: info@bookhub.com</li>
             </ul>
           </div>

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Table, Image, Button } from 'antd';
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import NavBar from './navbar';
-import Footer from '../footer';
+import Footer from './footer';
 import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';

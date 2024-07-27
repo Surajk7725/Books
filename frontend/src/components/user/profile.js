@@ -1,6 +1,6 @@
 import React from 'react';
 import NavBar from '../navbar';
-import Footer from '../footer';
+import Footer from './footer';
 import { Link } from 'react-router-dom';
 import { FaTwitter, FaLinkedin, FaInstagram, FaYoutube } from 'react-icons/fa';
 import {MailIcon,PhoneIcon, LocationMarkerIcon, UserIcon }   from '@heroicons/react/outline';

@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { PlusCircleIcon } from '@heroicons/react/outline';
 import NavBar from '../staff/navbar';
-import Footer from '../footer';
+import Footer from './footer';
 
-// Add a Category Field
 
 function EditBook({ match }) {
     const [authors, setAuthors] = useState(['']);
     const [title, setTitle] = useState('');
     const [genre, setGenre] = useState('');
+    const [category, setCategory] = useState('');
     const [coverImage, setCoverImage] = useState(null);
     const [coverImageUrl, setCoverImageUrl] = useState('');
     const [bookFile, setBookFile] = useState(null);
@@ -67,7 +67,7 @@ function EditBook({ match }) {
     const handleFormSubmit = (e) => {
         e.preventDefault();
         // Handle form submission logic
-        console.log({ title, authors, genre,  coverImage, coverImageUrl, bookFile, isbn, publisher, language, bookDescription });
+        console.log({ title, authors, genre, category,  coverImage, coverImageUrl, bookFile, isbn, publisher, language, bookDescription });
     };
 
     return (
@@ -138,6 +138,24 @@ function EditBook({ match }) {
                             </select>
                         </div>
 
+                        <div className="mb-4">
+                            <label className="block text-gray-700 font-bold mb-2" htmlFor="genre">
+                                Genre
+                            </label>
+                            <select
+                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                id="category"
+                                value={category}
+                                onChange={(e) => setCategory(e.target.value)}
+                            >
+                                <option value="">Select a category</option>
+                                <option value="Fantasy">Kids</option>
+                                <option value="Romance">Popular</option>
+                                <option value="Biography">Academics</option>
+                            </select>
+                        </div>
+
+                        
                         <div className="mb-4">
                             <label className="block text-gray-700 font-bold mb-2" htmlFor="isbn">
                                 ISBN 

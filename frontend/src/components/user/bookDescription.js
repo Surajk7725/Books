@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import NavBar from '../navbar';
-import Footer from '../footer';
+import Footer from './footer';
 import RelatedBooks from './relatedBooks';
 import { HeartIcon as HeartIconSolid } from '@heroicons/react/solid';
 import { HeartIcon, UserIcon, GlobeAltIcon, DocumentTextIcon } from '@heroicons/react/outline';

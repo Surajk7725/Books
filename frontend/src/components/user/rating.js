@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StarIcon } from '@heroicons/react/solid'; // Assuming a star icon is available
-import Footer from '../footer';
+import Footer from './footer';
 import NavBar from '../navbar';
 
 // Define a sample book for demonstration

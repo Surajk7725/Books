@@ -6,7 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import NavBar from '../navbar';
-import Footer from '../footer';
+import Footer from './footer';
 import NoteDetail from './noteDetails';
 
 const formatDate = (dateString) => {
@@ -179,7 +179,7 @@ const Notes = () => {
             {filteredNotes.map((note, index) => (
               <div 
                 key={index} 
-                className="rounded w-full h-auto flex flex-col justify-between bg-white dark:bg-gray-800 rounded-lg border dark:border-gray-700 mb-6 py-5 px-4 shadow-md relative min-h-[300px]"
+                className="w-full h-auto flex flex-col justify-between bg-white dark:bg-gray-800 rounded-lg border dark:border-gray-700 mb-6 py-5 px-4 shadow-md relative min-h-[300px]"
               >
                 <button
                   onClick={(e) => {

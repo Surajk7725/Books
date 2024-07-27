@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { MenuAlt1Icon, UserCircleIcon, LockClosedIcon, BookOpenIcon, LogoutIcon } from '@heroicons/react/outline';
-import Footer from '../footer';
+import Footer from './footer';
 import { FaLinkedin, FaInstagram, FaTwitter, FaYoutube } from 'react-icons/fa';
 import { PlusOutlined } from '@ant-design/icons';
 import { Image, Upload, DatePicker, Select } from 'antd';
