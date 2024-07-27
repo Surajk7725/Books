@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Card, Input, Upload, Button, Image, Row, Col, Typography } from 'antd';
+import { Link } from 'react-router-dom';
+import { Card, Input, Upload, Button, Image, Row, Col, Typography, Breadcrumb } from 'antd';
 import {
     UserOutlined,
     PhoneOutlined,
@@ -69,9 +70,16 @@ const SettingsPage = () => {
 
     return (
         <div className="justify-center items-center bg-gray-100 min-h-screen ml-12 mb-2">
-        <div className="bg-white p-4 rounded-lg shadow-md mb-6">
-            <h1 className="text-3xl font-bold mb-2">Settings</h1>
-            </div>
+        <div className="text-start -mt-4 mb-8">
+        <div className="bg-white p-4 rounded-lg shadow-md mb-6 flex justify-between items-center">
+          <h1 className="text-3xl font-bold text-gray-800 ml-4">Settings</h1>
+          <Breadcrumb>
+            <Breadcrumb.Item><Link to="/admin/home">Dashboard</Link></Breadcrumb.Item>
+            <Breadcrumb.Item>Settings</Breadcrumb.Item>
+          </Breadcrumb>
+        </div>
+      </div>
+
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
                 {/* Personal Information Section */}

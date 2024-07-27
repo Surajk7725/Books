@@ -3,10 +3,10 @@ import { MenuAlt1Icon, UserCircleIcon, LockClosedIcon, BookOpenIcon, LogoutIcon 
 import Footer from '../footer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLinkedin, faInstagram, faTwitter, faYoutube } from '@fortawesome/free-brands-svg-icons';
-import Select from 'react-select';
 import { PlusOutlined } from '@ant-design/icons';
-import { Image, Upload } from 'antd';
+import { Image, Upload, DatePicker, Select } from 'antd';
 
+const { Option } = Select;
 
 const Staff_Settings = () => {
   const [selectedSection, setSelectedSection] = useState('account');
@@ -141,21 +141,34 @@ const Staff_Settings = () => {
   const [fileList, setFileList] = useState([]);
   const [profileImage, setProfileImage] = useState(null);
   const [fullName, setFullName] = useState('');
-  const [dob, setDob] = useState('');
+  const [userName, setUserName] = useState('');
+  const [dob, setDob] = useState(null);
   const [email, setEmail] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [houseAddress, setHouseAddress] = useState('');
   const [socialLinks, setSocialLinks] = useState({ youtube: '', instagram: '', twitter: '', linkedin: '' });
   const [jobTitle, setJobTitle] = useState('');
-  const [startDate, setStartDate] = useState('');
+  const [startDate, setStartDate] = useState(null);
   const [employeeID, setEmployeeID] = useState('');
   const [highestEducation, setHighestEducation] = useState('');
   const [degrees, setDegrees] = useState('');
   const [affiliations, setAffiliations] = useState('');
   const [workExperience, setWorkExperience] = useState('');
   const [yearsExperience, setYearsExperience] = useState('');
-  const [languagesSpoken, setLanguagesSpoken] = useState('');
-  const [computerSkills, setComputerSkills] = useState('');
+  const [languagesSpoken, setLanguagesSpoken] = useState([]);
+  const [computerSkills, setComputerSkills] = useState([]);
+
+  const onChange = (date, dateString) => {
+    setDob(date);
+    console.log(date, dateString);
+  };
+
+  const startChange = (date, dateString) => {
+    setStartDate(date);
+    console.log(date, dateString);
+  };
+  
+
 
   const fileInputRef = useRef(null);
 
@@ -233,29 +246,15 @@ const Staff_Settings = () => {
     { label: 'Database Management', value: 'Database Management' },
     { label: 'Other', value: 'Other' }
   ];
-  
 
-  const customStyles = {
-    multiValue: (provided, state) => ({
-      ...provided,
-      backgroundColor: '#f0f0f0',
-      borderRadius: '20px',
-      padding: '2px 8px',
-      margin: '2px',
-    }),
-    multiValueLabel: (provided, state) => ({
-      ...provided,
-      color: '#333',
-    }),
-    multiValueRemove: (provided, state) => ({
-      ...provided,
-      color: '#999',
-      ':hover': {
-        backgroundColor: '#e0e0e0',
-        color: '#666',
-      },
-    }),
+  const handleLanguageChange = (value) => {
+    setLanguagesSpoken(value);
   };
+
+  const handleSkillChange = (value) => {
+    setComputerSkills(value);
+  };
+  
 
 
   return (
@@ -345,15 +344,19 @@ const Staff_Settings = () => {
                     />
                   </div>
                   <div className="col-span-2 sm:col-span-1">
-                    <label className="block text-gray-700">Date of Birth</label>
+                    <label className="block text-gray-700">User Name</label>
                     <input
-                      type="date"
+                      type="text"
                       className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
-                      value={dob}
-                      onChange={(e) => setDob(e.target.value)}
+                      value={userName}
+                      onChange={(e) => setUserName(e.target.value)}
                     />
                   </div>
-                  <div className="col-span-2">
+                  <div className="col-span-2 sm:col-span-1">
+                    <label className="block text-gray-700">Date of Birth</label>
+                    <DatePicker onChange={onChange} value={dob} className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md" />
+                  </div>
+                  <div className="col-span-2 sm:col-span-1">
                     <label className="block text-gray-700">Email Address</label>
                     <input
                       type="email"
@@ -395,12 +398,7 @@ const Staff_Settings = () => {
                   </div>
                   <div className="col-span-2 sm:col-span-1">
                     <label className="block text-gray-700">Start Date</label>
-                    <input
-                      type="date"
-                      className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
-                      value={startDate}
-                      onChange={(e) => setStartDate(e.target.value)}
-                    />
+                    <DatePicker onChange={startChange} value={startDate} className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md" />
                   </div>
                   <div className="col-span-2 sm:col-span-1">
                     <label className="block text-gray-700">Employee ID or Code</label>
@@ -485,28 +483,41 @@ const Staff_Settings = () => {
                 </div>
       
                 <h3 className="text-xl font-bold mt-6 mb-2 ml-10">Skills and Competencies</h3>
-                <div className="grid grid-cols-2 gap-4 ml-10">
-                  <div className="col-span-2 sm:col-span-1">
-                    <label className="block text-gray-700">Languages Spoken</label>
-                    <Select
-                      options={languageOptions}
-                      isMulti
-                      onChange={(selected) => setLanguagesSpoken(selected ? selected.map(option => option.value) : [])}
-                      value={languageOptions.filter(option => languagesSpoken.includes(option.value))}
-                      styles={customStyles}
-                    />
+                  <div className="grid grid-cols-2 gap-4 ml-10">
+                    <div className="col-span-2 sm:col-span-1">
+                      <label className="block text-gray-700">Languages Spoken</label>
+                      <Select
+                        mode="multiple"
+                        allowClear
+                        placeholder="Please select"
+                        value={languagesSpoken}
+                        onChange={handleLanguageChange}
+                        className="mt-1 block w-full"
+                      >
+                        {languageOptions.map((option) => (
+                          <Option key={option.value}>{option.label}
+                          </Option>
+                        ))}
+                      </Select>
+                    </div>
+                    <div className="col-span-2 sm:col-span-1">
+                      <label className="block text-gray-700">Computer Skills</label>
+                      <Select
+                        mode="multiple"
+                        allowClear
+                        placeholder="Please select"
+                        value={computerSkills}
+                        onChange={handleSkillChange}
+                        className="mt-1 block w-full"
+                      >
+                        {computerSkillOptions.map((option) => (
+                          <Option key={option.value} value={option.value}>
+                            {option.label}
+                          </Option>
+                        ))}
+                      </Select>
+                    </div>
                   </div>
-                  <div className="col-span-2 sm:col-span-1">
-                    <label className="block text-gray-700">Computer Skills</label>
-                    <Select
-                      options={computerSkillOptions}
-                      isMulti
-                      onChange={(selected) => setComputerSkills(selected ? selected.map(option => option.value) : [])}
-                      value={computerSkillOptions.filter(option => computerSkills.includes(option.value))}
-                      styles={customStyles}
-                    />
-                  </div>
-                </div>
 
                 <h3 className="text-xl font-bold mt-6 mb-2 ml-10">Add Your Social Handles below</h3>
                 <div className="grid grid-cols-2 gap-4 ml-10">

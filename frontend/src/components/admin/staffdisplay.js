@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import {
     DownloadOutlined,
     RotateLeftOutlined,
@@ -8,7 +9,7 @@ import {
     ZoomInOutlined,
     ZoomOutOutlined,
   } from '@ant-design/icons';
-  import { Table, Button, Space, Image } from 'antd';
+  import { Table, Button, Space, Image, Breadcrumb } from 'antd';
   import { useNavigate } from 'react-router-dom';
   import { toast, ToastContainer } from 'react-toastify';
   import 'react-toastify/dist/ReactToastify.css';
@@ -180,11 +181,15 @@ import {
   
     return (
       <div>
-        <div className="text-start -mt-4 mb-8">
-        <div className="bg-white p-4 rounded-lg shadow-md mb-6">
+       <div className="text-start -mt-4 mb-8">
+        <div className="bg-white p-4 rounded-lg shadow-md mb-6 flex justify-between items-center">
           <h1 className="text-3xl font-bold text-gray-800 ml-4">Staff Display</h1>
-          </div>
+          <Breadcrumb>
+            <Breadcrumb.Item><Link to="/admin/home">Dashboard</Link></Breadcrumb.Item>
+            <Breadcrumb.Item>Staff Display</Breadcrumb.Item>
+          </Breadcrumb>
         </div>
+      </div>
         <Table columns={columns} dataSource={data} onChange={onChange} pagination={{ pageSize: 5 }} />
         <ToastContainer />
       </div>

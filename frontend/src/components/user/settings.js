@@ -4,7 +4,8 @@ import Footer from '../footer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLinkedin, faInstagram, faTwitter, faYoutube } from '@fortawesome/free-brands-svg-icons';
 import { PlusOutlined } from '@ant-design/icons';
-import { Image, Upload } from 'antd';
+import { Image, Upload, DatePicker } from 'antd';
+
 
 const Settings = () => {
   const [selectedSection, setSelectedSection] = useState('account');
@@ -161,6 +162,13 @@ const Settings = () => {
       reader.onload = () => resolve(reader.result);
        reader.onerror = (error) => reject(error);
   });
+  
+  const [dob, setDob] = useState(null);
+
+  const onChange = (date, dateString) => {
+    setDob(date);
+    console.log(date, dateString);
+  };
 
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
@@ -377,7 +385,7 @@ const Settings = () => {
                       onChange={(e) => setUserName(e.target.value)}
                     />
                   </div>
-                  <div className="col-span-2">
+                  <div className="col-span-2 sm:col-span-1">
                     <label className="block text-gray-700">Email Address</label>
                     <input
                       type="email"
@@ -385,6 +393,10 @@ const Settings = () => {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                     />
+                  </div>
+                  <div className="col-span-2 sm:col-span-1">
+                    <label className="block text-gray-700">Date of Birth</label>
+                    <DatePicker onChange={onChange} value={dob} className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md" />
                   </div>
                   <div className="col-span-2 sm:col-span-1">
                     <label className="block text-gray-700">Phone Number</label>

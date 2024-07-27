@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Table, Button, Space } from 'antd';
+import { Link } from 'react-router-dom';
+import { Table, Button, Space, Breadcrumb } from 'antd';
 import { MailOutlined, PhoneOutlined, CheckOutlined } from '@ant-design/icons';
 
 const formatDate = (dateString) => {
@@ -126,9 +127,13 @@ const Contactresolve = () => {
   return (
     <div>
       <div className="text-start -mt-4 mb-8">
-      <div className="bg-white p-4 rounded-lg shadow-md mb-6">
-          <h1 className="text-3xl font-bold text-gray-800 ml-4">Contacts Resolve</h1>
-          </div>
+        <div className="bg-white p-4 rounded-lg shadow-md mb-6 flex justify-between items-center">
+          <h1 className="text-3xl font-bold text-gray-800 ml-4">Resolve</h1>
+          <Breadcrumb>
+            <Breadcrumb.Item><Link to="/admin/home">Dashboard</Link></Breadcrumb.Item>
+            <Breadcrumb.Item>Resolve</Breadcrumb.Item>
+          </Breadcrumb>
+        </div>
       </div>
       <Table dataSource={dataSource} columns={columns} />
     </div>

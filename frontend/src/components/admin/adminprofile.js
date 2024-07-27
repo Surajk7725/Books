@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Upload, Button, Tooltip } from 'antd';
+import { Upload, Button, Tooltip, Breadcrumb } from 'antd';
+import { Link } from 'react-router-dom';
 import { UploadOutlined } from '@ant-design/icons';
 import { FaYoutube, FaInstagram, FaTwitter, FaLinkedin, FaEnvelope, FaPhone } from 'react-icons/fa';
 
@@ -28,10 +29,15 @@ const ProfilePage = () => {
   return  (
     <div className="w-full min-h-screen bg-gray-100 p-2">
         <div className="text-start -mt-4 mb-8">
-        <div className="bg-white p-4 rounded-lg shadow-md mb-6">
+        <div className="bg-white p-4 rounded-lg shadow-md mb-6 flex justify-between items-center">
           <h1 className="text-3xl font-bold text-gray-800 ml-4">Profile</h1>
-          </div>
+          <Breadcrumb>
+            <Breadcrumb.Item><Link to="/admin/home">Dashboard</Link></Breadcrumb.Item>
+            <Breadcrumb.Item>Profile</Breadcrumb.Item>
+          </Breadcrumb>
         </div>
+      </div>
+
       <div className="max-w-5xl mx-auto bg-white shadow-lg overflow-hidden">
 
 

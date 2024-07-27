@@ -1,4 +1,6 @@
 import React, { useState, useMemo } from 'react';
+import { Breadcrumb } from 'antd';
+import { Link } from 'react-router-dom';
 import { SearchIcon } from '@heroicons/react/outline';
 
 // Sample books data
@@ -48,12 +50,18 @@ const Books = () => {
   return (
     <div className="container -mt-8 mb-8  mx-auto px-4 py-6 relative">
       {/* Heading */}
-      <div className="bg-white p-4 rounded-lg shadow-md mb-6">
-        <h1 className="text-3xl font-bold text-black">Books</h1>
+      <div className="text-start -mt-4 mb-8">
+        <div className="bg-white p-4 rounded-lg shadow-md mb-6 flex justify-between items-center">
+          <h1 className="text-3xl font-bold text-gray-800 ml-4">Books</h1>
+          <Breadcrumb>
+            <Breadcrumb.Item><Link to="/admin/home">Dashboard</Link></Breadcrumb.Item>
+            <Breadcrumb.Item>Books</Breadcrumb.Item>
+          </Breadcrumb>
+        </div>
       </div>
 
       {/* Search bar */}
-      <div className="absolute  mt-24 top-4 right-4 flex items-center space-x-2">
+      <div className="absolute mt-24 top-4 right-4 flex items-center space-x-2">
         <input
           type="text"
           placeholder="Search books..."
@@ -64,7 +72,7 @@ const Books = () => {
         <SearchIcon className="h-6 w-6 text-gray-500" />
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-20">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-24">
         {/* Render books */}
         {currentBooks.map(book => (
           <div key={book.id} className="max-w-sm rounded-lg overflow-hidden shadow-lg">
