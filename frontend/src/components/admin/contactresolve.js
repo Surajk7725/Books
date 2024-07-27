@@ -126,7 +126,9 @@ const Contactresolve = () => {
   return (
     <div>
       <div className="text-start -mt-4 mb-8">
+      <div className="bg-white p-4 rounded-lg shadow-md mb-6">
           <h1 className="text-3xl font-bold text-gray-800 ml-4">Contacts Resolve</h1>
+          </div>
       </div>
       <Table dataSource={dataSource} columns={columns} />
     </div>

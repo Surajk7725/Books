@@ -69,7 +69,9 @@ const SettingsPage = () => {
 
     return (
         <div className="justify-center items-center bg-gray-100 min-h-screen ml-12 mb-2">
-            <h1 className="text-3xl font-bold mb-8">Settings</h1>
+        <div className="bg-white p-4 rounded-lg shadow-md mb-6">
+            <h1 className="text-3xl font-bold mb-2">Settings</h1>
+            </div>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
                 {/* Personal Information Section */}

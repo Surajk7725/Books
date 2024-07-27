@@ -171,7 +171,9 @@ const UserDisplay = () => {
   return (
     <div>
       <div className="text-start -mt-4 mb-8">
+      <div className="bg-white p-4 rounded-lg shadow-md mb-6">
         <h1 className="text-3xl font-bold text-gray-800 ml-4">User Display</h1>
+        </div>
       </div>
       <Table columns={columns} dataSource={data} onChange={onChange} pagination={{ pageSize: 5 }} />
       <ToastContainer />

@@ -51,6 +51,7 @@ import Contactresolve from './components/admin/contactresolve.js';
 import SecurityPage from './components/admin/security.js';
 import AdminDisplay from './components/admin/admindisplay.js';
 import StaffDisplay from './components/admin/staffdisplay.js';
+import Books from './components/admin/books.js';
 
 
 function App() {
@@ -134,7 +135,7 @@ function App() {
           <Route path='security' element={<SecurityPage />} />
           <Route path='admin-display' element={<AdminDisplay />} />
           <Route path='staff-display' element={<StaffDisplay />} />
-          
+          <Route path='books' element={<Books />} />
  
         </Route>
 

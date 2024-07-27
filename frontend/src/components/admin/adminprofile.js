@@ -28,7 +28,9 @@ const ProfilePage = () => {
   return  (
     <div className="w-full min-h-screen bg-gray-100 p-2">
         <div className="text-start -mt-4 mb-8">
+        <div className="bg-white p-4 rounded-lg shadow-md mb-6">
           <h1 className="text-3xl font-bold text-gray-800 ml-4">Profile</h1>
+          </div>
         </div>
       <div className="max-w-5xl mx-auto bg-white shadow-lg overflow-hidden">
 
