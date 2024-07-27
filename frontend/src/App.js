@@ -49,6 +49,8 @@ import AdminSidebar from './components/admin/sidebar.js';
 import SettingsPage from './components/admin/settings.js';
 import Contactresolve from './components/admin/contactresolve.js';
 import SecurityPage from './components/admin/security.js';
+import AdminDisplay from './components/admin/admindisplay.js';
+import StaffDisplay from './components/admin/staffdisplay.js';
 
 
 function App() {
@@ -130,7 +132,8 @@ function App() {
           <Route path='settings' element={<SettingsPage />} />
           <Route path='contact-resolve' element={<Contactresolve />} />
           <Route path='security' element={<SecurityPage />} />
-
+          <Route path='admin-display' element={<AdminDisplay />} />
+          <Route path='staff-display' element={<StaffDisplay />} />
           
         </Route>
 

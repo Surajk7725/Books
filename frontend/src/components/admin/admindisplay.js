@@ -1,4 +1,4 @@
-// import React from 'react';
+import React from 'react';
 import {
   DownloadOutlined,
   RotateLeftOutlined,
@@ -28,7 +28,7 @@ const onDownload = (imgUrl) => {
     });
 };
 
-const UserDisplay = () => {
+const AdminDisplay = () => {
   const navigate = useNavigate();
 
   const handleEdit = (key) => {
@@ -97,6 +97,12 @@ const UserDisplay = () => {
       sorter: (a, b) => a.userName.localeCompare(b.userName),
     },
     {
+        title: 'Role',
+        dataIndex: 'userRole',
+        key: 'userRole',
+        sorter: (a, b) => a.userRole.localeCompare(b.userRole),
+    },
+    {
       title: 'Email',
       dataIndex: 'email',
       key: 'email',
@@ -118,65 +124,61 @@ const UserDisplay = () => {
         </Space>
       ),
     },
-    {
-      title: 'Display',
-      key: 'display',
-      render: (_, record) => (
-        <Space size="middle">
-          <Button type="default" style={{ backgroundColor: 'green', color: 'white' }} onClick={() => console.log(`Display user ${record.key}`)}>View</Button>
-        </Space>
-      ),
-    },
   ];
 
   const data = [
     {
-      key: '1',
-      srNo: 1,
-      image: 'https://wallpapers.com/images/hd/yuuichi-katagiri-anime-portrait-5xl430n009kmsg7l.jpg',
-      fullName: 'John Brown',
-      userName: 'johnbrown',
-      email: 'john.brown@example.com',
-      phoneNumber: '123-456-7890',
-    },
-    {
-      key: '2',
-      srNo: 2,
-      image: 'https://i.pinimg.com/originals/84/d3/fa/84d3fa68414aecbc3172909302cb5144.jpg',
-      fullName: 'Jim Green',
-      userName: 'jimgreen',
-      email: 'jim.green@example.com',
-      phoneNumber: '123-456-7891',
-    },
-    {
-      key: '3',
-      srNo: 3,
-      image: 'https://i.pinimg.com/736x/b3/ec/2c/b3ec2c350eafdab61055934f47f05b02.jpg',
-      fullName: 'Joe Black',
-      userName: 'joeblack',
-      email: 'joe.black@example.com',
-      phoneNumber: '123-456-7892',
-    },
-    {
-      key: '4',
-      srNo: 4,
-      image: 'https://dthezntil550i.cloudfront.net/ec/latest/ec2305160145567360024742816/1280_960/33c8e334-53bd-4beb-8ef4-8873b4468ce2.png',
-      fullName: 'Jim Red',
-      userName: 'jimred',
-      email: 'jim.red@example.com',
-      phoneNumber: '123-456-7893',
-    },
+        key: '1',
+        srNo: 1,
+        image: 'https://wallpapers.com/images/hd/yuuichi-katagiri-anime-portrait-5xl430n009kmsg7l.jpg',
+        fullName: 'John Brown',
+        userName: 'johnbrown',
+        userRole: 'Owner',
+        email: 'john.brown@example.com',
+        phoneNumber: '123-456-7890',
+      },
+      {
+        key: '2',
+        srNo: 2,
+        image: 'https://i.pinimg.com/originals/84/d3/fa/84d3fa68414aecbc3172909302cb5144.jpg',
+        fullName: 'Jim Green',
+        userName: 'jimgreen',
+        userRole: 'CFO',
+        email: 'jim.green@example.com',
+        phoneNumber: '123-456-7891',
+      },
+      {
+        key: '3',
+        srNo: 3,
+        image: 'https://i.pinimg.com/736x/b3/ec/2c/b3ec2c350eafdab61055934f47f05b02.jpg',
+        fullName: 'Joe Black',
+        userName: 'joeblack',
+        userRole: 'CEO',
+        email: 'joe.black@example.com',
+        phoneNumber: '123-456-7892',
+      },
+      {
+        key: '4',
+        srNo: 4,
+        image: 'https://dthezntil550i.cloudfront.net/ec/latest/ec2305160145567360024742816/1280_960/33c8e334-53bd-4beb-8ef4-8873b4468ce2.png',
+        fullName: 'Jim Red',
+        userName: 'jimred',
+        userRole: 'Assistant',
+        email: 'jim.red@example.com',
+        phoneNumber: '123-456-7893',
+      },
   ];
 
   return (
     <div>
-      <div className="text-start -mt-4 mb-8">
-        <h1 className="text-3xl font-bold text-gray-800 ml-4">User Display</h1>
-      </div>
+        <div className="text-start -mt-4 mb-8">
+          <h1 className="text-3xl font-bold text-gray-800 ml-4">Admin Display</h1>
+        </div>
       <Table columns={columns} dataSource={data} onChange={onChange} pagination={{ pageSize: 5 }} />
       <ToastContainer />
     </div>
   );
 };
 
-export default UserDisplay;
+export default AdminDisplay;
+
