@@ -8,7 +8,7 @@ import Update from './components/updatePassword';
 import Home from './components/user/home';
 import Settings from './components/user/settings';
 import Help from './components/help';
-import Contactus from './components/contact';
+import Contactus from './components/user/contact.js';
 import Profile from './components/user/profile';
 import BookForm from './components/user/bookForm';
 import AllBooks from './components/user/allBooks';
@@ -35,6 +35,7 @@ import NovelData from './components/staff/novelData';
 import UserBooks from './components/staff/userbooks.js';
 import ManageUser from './components/staff/manageuser.js';
 import BookReview from './components/staff/bookreview.js';
+import ContactUsR from './components/staff/contact.js';
 import PageTitle from './components/pagetitle.js'; 
 import AdminHome from './components/admin/home.js';
 import UserCreate from './components/admin/usercreate.js';
@@ -117,6 +118,7 @@ function App() {
         <Route path='/userbooks-data' element={<UserBooks />} />
         <Route path='/manageuser-data' element={<ManageUser />} />
         <Route path='/staff-bookreview' element={<BookReview />} />
+        <Route path='/staff-contact' element={<ContactUsR />} />
 
         {/* Admin Routes */}
 

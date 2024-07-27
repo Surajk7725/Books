@@ -8,6 +8,8 @@ import {
   UndoOutlined,
   ZoomInOutlined,
   ZoomOutOutlined,
+  EditOutlined, 
+  DeleteOutlined,
 } from '@ant-design/icons';
 import { Table, Button, Space, Image, Breadcrumb } from 'antd';
 import { useNavigate } from 'react-router-dom';
@@ -33,7 +35,7 @@ const UserDisplay = () => {
   const navigate = useNavigate();
 
   const handleEdit = (key) => {
-    navigate(`/admin-useredit/${key}`);
+    navigate(`/admin/user-edit/${key}`);
   };
 
   const handleDelete = (key) => {
@@ -113,10 +115,24 @@ const UserDisplay = () => {
       title: 'Actions',
       key: 'actions',
       render: (_, record) => (
-        <Space size="middle">
-          <Button type="primary" onClick={() => handleEdit(record.key)}>Edit</Button>
-          <Button type="danger" onClick={() => handleDelete(record.key)}>Delete</Button>
-        </Space>
+          <div className="flex flex-col space-y-2">
+              <Button
+                  type="primary"
+                  onClick={() => handleEdit(record.key)}
+                  className="flex items-center space-x-2"
+              >
+                  <EditOutlined />
+                  <span>Edit</span>
+              </Button>
+              <Button
+                  type="danger"
+                  onClick={() => handleDelete(record.key)}
+                  className="flex items-center space-x-2"
+              >
+                  <DeleteOutlined />
+                  <span>Delete</span>
+              </Button>
+          </div>
       ),
     },
     {
@@ -173,10 +189,11 @@ const UserDisplay = () => {
     <div>
       <div className="text-start -mt-4 mb-8">
         <div className="bg-white p-4 rounded-lg shadow-md mb-6 flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-gray-800 ml-4">User Display</h1>
+          <h1 className="text-2xl font-bold text-gray-800 ml-4">Display User</h1>
           <Breadcrumb>
             <Breadcrumb.Item><Link to="/admin/home">Dashboard</Link></Breadcrumb.Item>
-            <Breadcrumb.Item>User Display</Breadcrumb.Item>
+            <Breadcrumb.Item>User</Breadcrumb.Item>
+            <Breadcrumb.Item>Display User</Breadcrumb.Item>
           </Breadcrumb>
         </div>
       </div>

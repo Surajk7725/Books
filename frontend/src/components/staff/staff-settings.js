@@ -1,8 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { MenuAlt1Icon, UserCircleIcon, LockClosedIcon, BookOpenIcon, LogoutIcon } from '@heroicons/react/outline';
 import Footer from '../footer';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLinkedin, faInstagram, faTwitter, faYoutube } from '@fortawesome/free-brands-svg-icons';
+import { FaLinkedin, FaInstagram, FaTwitter, FaYoutube } from 'react-icons/fa';
 import { PlusOutlined } from '@ant-design/icons';
 import { Image, Upload, DatePicker, Select } from 'antd';
 
@@ -522,7 +521,7 @@ const Staff_Settings = () => {
                 <h3 className="text-xl font-bold mt-6 mb-2 ml-10">Add Your Social Handles below</h3>
                 <div className="grid grid-cols-2 gap-4 ml-10">
                   <div className="flex items-center space-x-2">
-                    <FontAwesomeIcon icon={faYoutube} className="text-red-600 w-6 h-6" />
+                  <FaYoutube className="text-red-600 h-6 w-6" />
                     <input
                       type="url"
                       name="youtube"
@@ -533,7 +532,7 @@ const Staff_Settings = () => {
                     />
                   </div>
                   <div className="flex items-center space-x-2">
-                    <FontAwesomeIcon icon={faInstagram} className="text-pink-500 w-6 h-6" />
+                  <FaInstagram className="text-pink-600 h-6 w-6" />
                     <input
                       type="url"
                       name="instagram"
@@ -544,7 +543,7 @@ const Staff_Settings = () => {
                     />
                   </div>
                   <div className="flex items-center space-x-2">
-                    <FontAwesomeIcon icon={faTwitter} className="text-blue-400 w-6 h-6" />
+                  <FaTwitter className="text-blue-400 h-6 w-6" />
                     <input
                       type="url"
                       name="twitter"
@@ -555,7 +554,7 @@ const Staff_Settings = () => {
                     />
                   </div>
                   <div className="flex items-center space-x-2">
-                    <FontAwesomeIcon icon={faLinkedin} className="text-blue-700 w-6 h-6" />
+                    <FaLinkedin className="text-blue-700 h-6 w-6" />
                     <input
                       type="url"
                       name="linkedin"

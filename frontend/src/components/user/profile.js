@@ -56,10 +56,10 @@ const ProfileCard = () => {
               </div>
 
               <div className="flex items-center mt-6 text-gray-500">
-                <FaTwitter className="hover:text-gray-800 mr-2 md:mr-4" />
-                <FaLinkedin className="hover:text-gray-800 mx-4 md:mx-6" />
-                <FaInstagram className="hover:text-gray-800 mx-4 md:mx-6" />
-                <FaYoutube className="hover:text-gray-800 ml-4 md:ml-6" />
+                <FaTwitter className="hover:text-blue-400 mr-2 md:mr-4 h-6 w-6" />
+                <FaLinkedin className="hover:text-blue-700 mx-4 md:mx-6 h-6 w-6" />
+                <FaInstagram className="hover:text-pink-600 mx-4 md:mx-6 h-6 w-6" />
+                <FaYoutube className="hover:text-red-600 ml-4 md:ml-6 h-6 w-6" />
               </div>
 
 

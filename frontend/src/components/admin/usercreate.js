@@ -1,5 +1,6 @@
 import React from 'react';
-import { Card, Input, Button, Upload, Form } from 'antd';
+import {Link} from 'react-router-dom';
+import { Card, Input, Button, Upload, Form, Breadcrumb } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { FaLinkedin, FaInstagram, FaTwitter, FaYoutube } from 'react-icons/fa';
 
@@ -12,7 +13,17 @@ const UserCreate = () => {
 
   return (
     <div className="justify-center items-center min-h-screen mb-2 ml-12">
-      <Card className="w-full max-w-4xl p-8">
+      <div className="text-start -mt-4 mb-8">
+        <div className="bg-white p-4 rounded-lg shadow-md mb-6 flex justify-between items-center">
+          <h1 className="text-2xl font-bold text-gray-800 ml-4">Create User</h1>
+          <Breadcrumb>
+            <Breadcrumb.Item><Link to="/admin/home">Dashboard</Link></Breadcrumb.Item>
+            <Breadcrumb.Item>User</Breadcrumb.Item>
+            <Breadcrumb.Item>Create User</Breadcrumb.Item>
+          </Breadcrumb>
+        </div>
+      </div>
+      <Card className="w-full max-w-6xl p-8">
         <h2 className="text-2xl font-semibold text-center mb-6">User Creation Form</h2>
         <Form form={form} layout="vertical" onFinish={handleFinish}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

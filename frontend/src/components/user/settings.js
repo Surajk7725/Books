@@ -1,10 +1,9 @@
 import React, { useState, useRef } from 'react';
 import { MenuAlt1Icon, UserCircleIcon, LockClosedIcon, BookOpenIcon, DocumentTextIcon, GlobeAltIcon, DesktopComputerIcon, LogoutIcon } from '@heroicons/react/outline';
 import Footer from '../footer';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLinkedin, faInstagram, faTwitter, faYoutube } from '@fortawesome/free-brands-svg-icons';
+import { FaLinkedin, FaInstagram, FaTwitter, FaYoutube } from 'react-icons/fa';
 import { PlusOutlined } from '@ant-design/icons';
-import { Image, Upload, DatePicker } from 'antd';
+import { Image, Upload, DatePicker, Table, Button  } from 'antd';
 
 
 const Settings = () => {
@@ -137,21 +136,40 @@ const Settings = () => {
     { id: 12, bookName: 'Alice\'s Adventures in Wonderland', authorName: 'Lewis Carroll', timestamp: '2024-06-26 14:15:00' },
   ];
 
-  // Pagination Logicre
-  const itemsPerPage = 10;
-
   const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(5);
 
-  const totalPages = Math.ceil(tableData.length / itemsPerPage);
+  const columns = [
+    {
+      title: 'Sr.No',
+      dataIndex: 'id',
+      sorter: (a, b) => a.id - b.id,
+      key: 'id',
+    },
+    {
+      title: 'Book Name',
+      dataIndex: 'bookName',
+      sorter: (a, b) => a.bookName.localeCompare(b.bookName),
+      key: 'bookName',
+    },
+    {
+      title: 'Author Name',
+      dataIndex: 'authorName',
+      sorter: (a, b) => a.authorName.localeCompare(b.authorName),
+      key: 'authorName',
+    },
+    {
+      title: 'Timestamp',
+      dataIndex: 'timestamp',
+      sorter: (a, b) => new Date(a.timestamp) - new Date(b.timestamp),
+      key: 'timestamp',
+    },
+  ];
 
-  const handlePrevPage = () => {
-    setCurrentPage((prev) => Math.max(prev - 1, 1));
+  const handleTableChange = (pagination, filters, sorter) => {
+    setCurrentPage(pagination.current);
+    setPageSize(pagination.pageSize);
   };
-
-  const handleNextPage = () => {
-    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
-  };
-
 
   //Account Details
 
@@ -234,44 +252,7 @@ const Settings = () => {
     </div>
   );
 
-  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
-
-  const handleSort = (key) => {
-    let direction = 'ascending';
-    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
-      direction = 'descending';
-    }
-    setSortConfig({ key, direction });
-  };
-
-  const sortedData = React.useMemo(() => {
-    let sortableItems = [...tableData];
-    if (sortConfig.key !== null) {
-      sortableItems.sort((a, b) => {
-        if (a[sortConfig.key] < b[sortConfig.key]) {
-          return sortConfig.direction === 'ascending' ? -1 : 1;
-        }
-        if (a[sortConfig.key] > b[sortConfig.key]) {
-          return sortConfig.direction === 'ascending' ? 1 : -1;
-        }
-        return 0;
-      });
-    }
-    return sortableItems;
-  }, [tableData, sortConfig]);
-
-  const paginatedData = sortedData.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
-
-  const SortIcon = ({ field }) => (
-    <span onClick={() => handleSort(field)} className="cursor-pointer ml-2">
-      {sortConfig.key === field ? (sortConfig.direction === 'ascending' ? '↑' : '↓') : '↕'}
-    </span>
-  );
-
-
+  
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
       <div className="flex flex-col lg:flex-row">
@@ -420,7 +401,7 @@ const Settings = () => {
                 <h3 className="text-xl font-bold mt-6 mb-2 ml-10">Add Your Social Handles below</h3>
                 <div className="grid grid-cols-2 gap-4 ml-10">
                   <div className="flex items-center space-x-2">
-                    <FontAwesomeIcon icon={faYoutube} className="text-red-600 w-6 h-6" />
+                  <FaYoutube className="text-red-600 h-6 w-6" />
                     <input
                       type="url"
                       name="youtube"
@@ -431,7 +412,7 @@ const Settings = () => {
                     />
                   </div>
                   <div className="flex items-center space-x-2">
-                    <FontAwesomeIcon icon={faInstagram} className="text-pink-500 w-6 h-6" />
+                  <FaInstagram className="text-pink-600 h-6 w-6" />
                     <input
                       type="url"
                       name="instagram"
@@ -442,7 +423,7 @@ const Settings = () => {
                     />
                   </div>
                   <div className="flex items-center space-x-2">
-                    <FontAwesomeIcon icon={faTwitter} className="text-blue-400 w-6 h-6" />
+                    <FaTwitter className="text-blue-400 h-6 w-6" />
                     <input
                       type="url"
                       name="twitter"
@@ -453,7 +434,7 @@ const Settings = () => {
                     />
                   </div>
                   <div className="flex items-center space-x-2">
-                    <FontAwesomeIcon icon={faLinkedin} className="text-blue-700 w-6 h-6" />
+                    <FaLinkedin className="text-blue-700 h-6 w-6" />
                     <input
                       type="url"
                       name="linkedin"
@@ -598,65 +579,23 @@ const Settings = () => {
 
           {selectedSection === 'readingHistory' && (
             <main className="flex-grow mt-8 mb-8">
-              <div className="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md">
-                <h3 className="text-2xl font-bold mb-6 text-gray-800">Reading History</h3>
-                <div className="bg-white shadow-md rounded my-6 overflow-x-auto">
-                  <table className="min-w-full bg-white">
-                    <thead>
-                      <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
-                        <th className="py-3 px-6 text-left">
-                          Sr.No
-                          <SortIcon field="id" />
-                        </th>
-                        <th className="py-3 px-6 text-left">
-                          Book Name
-                          <SortIcon field="bookName" />
-                        </th>
-                        <th className="py-3 px-6 text-left">
-                          Author Name
-                          <SortIcon field="authorName" />
-                        </th>
-                        <th className="py-3 px-6 text-left">
-                          Timestamp
-                          <SortIcon field="timestamp" />
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="text-gray-600 text-sm font-light">
-                      {paginatedData.map((row) => (
-                        <tr key={row.id} className="border-b border-gray-200 hover:bg-gray-100">
-                          <td className="py-3 px-6 text-left whitespace-nowrap">{row.id}</td>
-                          <td className="py-3 px-6 text-left">{row.bookName}</td>
-                          <td className="py-3 px-6 text-left">{row.authorName}</td>
-                          <td className="py-3 px-6 text-left">{row.timestamp}</td>
-                        </tr>
-
-                      ))}
-                    </tbody>
-                  </table>
-
-                </div>
-                <div className="flex justify-between items-center py-2">
-                  <button
-                    onClick={handlePrevPage}
-                    className="bg-blue-500 text-white px-4 py-2 rounded disabled:bg-gray-400"
-                    disabled={currentPage === 1}
-                  >
-                    Previous
-                  </button>
-                  <span>
-                    Page {currentPage} of {totalPages}
-                  </span>
-                  <button
-                    onClick={handleNextPage}
-                    className="bg-blue-500 text-white px-4 py-2 rounded disabled:bg-gray-400"
-                    disabled={currentPage === totalPages}
-                  >
-                    Next
-                  </button>
-                </div>
-              </div>
-            </main>
+            <div className="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md">
+              <h3 className="text-2xl font-bold mb-6 text-gray-800">Reading History</h3>
+              <Table
+                columns={columns}
+                dataSource={tableData}
+                pagination={{
+                  current: currentPage,
+                  pageSize: pageSize,
+                  total: tableData.length,
+                  showSizeChanger: true,
+                }}
+                onChange={handleTableChange}
+                rowKey="id"
+                className="bg-white shadow-md rounded my-6 overflow-x-auto"
+              />
+            </div>
+          </main>
 
           )}
 

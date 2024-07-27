@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import Notifications from './user/notification';
 import {  Dropdown } from 'antd';
 import { BellOutlined } from '@ant-design/icons';
-import { ChevronDownIcon, BookOpenIcon, ClipboardCheckIcon, PencilIcon, MailIcon, UserCircleIcon, CogIcon, QuestionMarkCircleIcon, LogoutIcon, StarIcon } from '@heroicons/react/outline'; // Import required icons
+import { ChevronDownIcon, BookOpenIcon, ClipboardCheckIcon, PencilIcon, MailIcon, UserCircleIcon, CogIcon, QuestionMarkCircleIcon, LogoutIcon, StarIcon } from '@heroicons/react/outline'; 
 
 export default function NavBar() {
     const [dropdownOpen, setDropdownOpen] = useState(false);

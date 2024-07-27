@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
-import { Card, Input, Button, Upload, Form, Select } from 'antd';
+import { Card, Input, Button, Upload, Form, Select, Breadcrumb } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
+import {Link} from 'react-router-dom';
 import { FaLinkedin, FaInstagram, FaTwitter, FaYoutube } from 'react-icons/fa';
 
 const { Option } = Select;
@@ -18,8 +19,19 @@ const AdminEdit = ({ adminData }) => {
 
   return (
     <div className="justify-center items-center min-h-screen mb-2 ml-12">
-      <Card className="w-full max-w-4xl p-8">
-        <h2 className="text-2xl font-semibold text-center mb-6">Edit Admin</h2>
+      <div className="text-start -mt-4 mb-8">
+        <div className="bg-white p-4 rounded-lg shadow-md mb-6 flex justify-between items-center">
+          <h1 className="text-2xl font-bold text-gray-800 ml-4">Edit Admin</h1>
+          <Breadcrumb>
+            <Breadcrumb.Item><Link to="/admin/home">Dashboard</Link></Breadcrumb.Item>
+            <Breadcrumb.Item>Admin</Breadcrumb.Item>
+            <Breadcrumb.Item>Edit Admin</Breadcrumb.Item>
+          </Breadcrumb>
+        </div>
+      </div>
+
+      <Card className="w-full max-w-6xl p-8">
+        
         <Form form={form} layout="vertical" onFinish={handleFinish}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Form.Item label="Full Name" name="fullName" rules={[{ required: true, message: 'Please enter your full name' }]}>

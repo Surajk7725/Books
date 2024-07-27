@@ -3,11 +3,12 @@ import { PlusCircleIcon } from '@heroicons/react/outline';
 import NavBar from '../staff/navbar';
 import Footer from '../footer';
 
+// Add Category Field
+
 function AddBook() {
     const [authors, setAuthors] = useState(['']);
     const [title, setTitle] = useState('');
     const [genre, setGenre] = useState('');
-    const [description, setDescription] = useState('');
     const [coverImage, setCoverImage] = useState(null);
     const [coverImageUrl, setCoverImageUrl] = useState('');
     const [bookFile, setBookFile] = useState(null);
@@ -34,7 +35,7 @@ function AddBook() {
     const handleFormSubmit = (e) => {
         e.preventDefault();
         // Handle form submission logic
-        console.log({ title, authors, genre, description, coverImage, coverImageUrl, bookFile, isbn, publisher, language, bookDescription });
+        console.log({ title, authors, genre, coverImage, coverImageUrl, bookFile, isbn, publisher, language, bookDescription });
     };
 
     return (
@@ -106,22 +107,8 @@ function AddBook() {
                         </div>
 
                         <div className="mb-4">
-                            <label className="block text-gray-700 font-bold mb-2" htmlFor="description">
-                                Description
-                            </label>
-                            <textarea
-                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                id="description"
-                                rows="3"
-                                value={description}
-                                onChange={(e) => setDescription(e.target.value)}
-                                placeholder="Enter short description"
-                            ></textarea>
-                        </div>
-
-                        <div className="mb-4">
                             <label className="block text-gray-700 font-bold mb-2" htmlFor="isbn">
-                                ISBN <span className="text-red-500">*</span>
+                                ISBN 
                             </label>
                             <input
                                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -136,7 +123,7 @@ function AddBook() {
 
                         <div className="mb-4">
                             <label className="block text-gray-700 font-bold mb-2" htmlFor="publisher">
-                                Publisher <span className="text-red-500">*</span>
+                                Publisher
                             </label>
                             <input
                                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -166,7 +153,7 @@ function AddBook() {
 
                         <div className="mb-4">
                             <label className="block text-gray-700 font-bold mb-2" htmlFor="bookDescription">
-                                Book Description
+                                Book Description <span className="text-red-500">*</span>
                             </label>
                             <textarea
                                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -180,7 +167,7 @@ function AddBook() {
 
                         <div className="mb-4">
                             <label className="block text-gray-700 font-bold mb-2" htmlFor="cover-image">
-                                Cover Image
+                                Cover Image <span className="text-red-500">*</span>
                             </label>
                             <div className="flex items-center">
                                 <input

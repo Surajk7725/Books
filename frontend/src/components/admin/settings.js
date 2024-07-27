@@ -72,10 +72,11 @@ const SettingsPage = () => {
         <div className="justify-center items-center bg-gray-100 min-h-screen ml-12 mb-2">
         <div className="text-start -mt-4 mb-8">
         <div className="bg-white p-4 rounded-lg shadow-md mb-6 flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-gray-800 ml-4">Settings</h1>
+          <h1 className="text-2xl font-bold text-gray-800 ml-4">Settings</h1>
           <Breadcrumb>
             <Breadcrumb.Item><Link to="/admin/home">Dashboard</Link></Breadcrumb.Item>
             <Breadcrumb.Item>Settings</Breadcrumb.Item>
+            <Breadcrumb.Item>Personal Info</Breadcrumb.Item>
           </Breadcrumb>
         </div>
       </div>
@@ -188,14 +189,14 @@ const SettingsPage = () => {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label className="block text-lg font-thin mb-1" htmlFor="instagram">
-                                    <InstagramOutlined className="mr-2" />
+                                    <InstagramOutlined className="mr-2 text-pink-600 h-6 w-6" />
                                     Instagram
                                 </label>
                                 <Input id="instagram" placeholder="Instagram" className="w-full p-4 rounded-md bg-gray-100" />
                             </div>
                             <div>
                                 <label className="block text-lg font-thin mb-1" htmlFor="youtube">
-                                    <YoutubeOutlined className="mr-2" />
+                                    <YoutubeOutlined className="mr-2 text-red-600 h-6 w-6" />
                                     YouTube
                                 </label>
                                 <Input id="youtube" placeholder="YouTube" className="w-full p-4 rounded-md bg-gray-100" />
@@ -204,14 +205,14 @@ const SettingsPage = () => {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label className="block text-lg font-thin mb-1" htmlFor="linkedin">
-                                    <LinkedinOutlined className="mr-2" />
+                                    <LinkedinOutlined className="mr-2 text-blue-400 h-6 w-6" />
                                     LinkedIn
                                 </label>
                                 <Input id="linkedin" placeholder="LinkedIn" className="w-full p-4 rounded-md bg-gray-100" />
                             </div>
                             <div>
                                 <label className="block text-lg font-thin mb-1" htmlFor="twitter">
-                                    <TwitterOutlined className="mr-2" />
+                                    <TwitterOutlined className="mr-2 text-blue-700 h-6 w-6" />
                                     Twitter
                                 </label>
                                 <Input id="twitter" placeholder="Twitter" className="w-full p-4 rounded-md bg-gray-100" />

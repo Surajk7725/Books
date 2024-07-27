@@ -172,12 +172,13 @@ const AdminDisplay = () => {
 
   return (
     <div>
-        <div className="text-start -mt-4 mb-8">
+      <div className="text-start -mt-4 mb-8">
         <div className="bg-white p-4 rounded-lg shadow-md mb-6 flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-gray-800 ml-4">Admin Display</h1>
+          <h1 className="text-2xl font-bold text-gray-800 ml-4">Admin Display</h1>
           <Breadcrumb>
             <Breadcrumb.Item><Link to="/admin/home">Dashboard</Link></Breadcrumb.Item>
-            <Breadcrumb.Item>Admin Display</Breadcrumb.Item>
+            <Breadcrumb.Item>Admin</Breadcrumb.Item>
+            <Breadcrumb.Item>Display Admin</Breadcrumb.Item>
           </Breadcrumb>
         </div>
       </div>

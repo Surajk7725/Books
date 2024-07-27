@@ -52,7 +52,7 @@ const Books = () => {
       {/* Heading */}
       <div className="text-start -mt-4 mb-8">
         <div className="bg-white p-4 rounded-lg shadow-md mb-6 flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-gray-800 ml-4">Books</h1>
+          <h1 className="text-2xl font-bold text-gray-800 ml-4">Books</h1>
           <Breadcrumb>
             <Breadcrumb.Item><Link to="/admin/home">Dashboard</Link></Breadcrumb.Item>
             <Breadcrumb.Item>Books</Breadcrumb.Item>

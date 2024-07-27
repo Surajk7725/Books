@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import Notification from './notification';
 import {  Dropdown } from 'antd';
 import { BellOutlined } from '@ant-design/icons';
-import { ChevronDownIcon, BookOpenIcon, PencilIcon, MailIcon, UserCircleIcon, CogIcon, QuestionMarkCircleIcon, LogoutIcon, UserIcon } from '@heroicons/react/outline'; // Import required icons
+import { ChevronDownIcon, BookOpenIcon, PencilIcon, MailIcon, UserCircleIcon, CogIcon, QuestionMarkCircleIcon, LogoutIcon, UserIcon } from '@heroicons/react/outline'; 
 
 export default function NavBar() {
     const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -118,7 +118,7 @@ export default function NavBar() {
                         )}
                     </div>
 
-                    <Link to="/contactus" className="text-gray-700 hover:text-gray-300 transition duration-300 ease-in-out"><span className="flex items-center">
+                    <Link to="/staff-contact" className="text-gray-700 hover:text-gray-300 transition duration-300 ease-in-out"><span className="flex items-center">
                         <MailIcon className="h-5 w-5" /> Contact Us</span>
                     </Link>
                 </div>
@@ -254,7 +254,7 @@ export default function NavBar() {
 
 
 
-                    <Link to="/contactus" className="block py-2 bg-white text-black hover:text-gray-300"><span className="flex items-center">
+                    <Link to="/staff-contact" className="block py-2 bg-white text-black hover:text-gray-300"><span className="flex items-center">
                         <MailIcon className="h-5 w-5" /> Contact Us</span>
                     </Link>
                 </div>
