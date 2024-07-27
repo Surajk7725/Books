@@ -1,9 +1,8 @@
 import React, { useState, useRef } from 'react';
-import { MenuAlt1Icon, UserCircleIcon, LockClosedIcon, BookOpenIcon, LogoutIcon, PhotographIcon } from '@heroicons/react/outline';
+import { MenuAlt1Icon, UserCircleIcon, LockClosedIcon, BookOpenIcon, LogoutIcon } from '@heroicons/react/outline';
 import Footer from '../footer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLinkedin, faInstagram, faTwitter, faYoutube } from '@fortawesome/free-brands-svg-icons';
-import { Link } from 'react-router-dom';
 import Select from 'react-select';
 import { PlusOutlined } from '@ant-design/icons';
 import { Image, Upload } from 'antd';

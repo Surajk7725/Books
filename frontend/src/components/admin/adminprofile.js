@@ -24,13 +24,6 @@ const ProfilePage = () => {
     }
   };
 
-  const handleProfileChange = async (info) => {
-    if (info.file.status === 'done' || info.file.status === 'uploading') {
-      const imageUrl = await getBase64(info.file.originFileObj);
-      setProfileImage(imageUrl);
-    }
-  };
-
 
   return  (
     <div className="w-full min-h-screen bg-gray-100 p-2">
@@ -50,12 +43,11 @@ const ProfilePage = () => {
         {/* Profile Picture and Details Section */}
         <div className="text-center mt-[-50px]">
           <div className="inline-block relative">
-            <Upload accept="image/*" showUploadList={false} onChange={handleProfileChange}>
+           
               <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-white">
                 <img src={profileImage} alt="Profile" className="w-full h-full object-cover" />
               </div>
-              <Button icon={<UploadOutlined />} className="absolute bottom-0 right-0 transform translate-x-1/2 translate-y-1/2"></Button>
-            </Upload>
+             
           </div>
           <h1 className="mt-4 text-xl font-bold text-black">Yuuichi Katagiri</h1>
           <p className="text-gray-600 bg-yellow-200 px-4 py-2 rounded-lg shadow-lg font-semibold inline-block transform transition duration-500 hover:scale-105 mt-2">Super Admin</p>

@@ -1,11 +1,20 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import Notifications from './user/notification';
+import {  Dropdown } from 'antd';
+import { BellOutlined } from '@ant-design/icons';
 import { ChevronDownIcon, BookOpenIcon, ClipboardCheckIcon, PencilIcon, MailIcon, UserCircleIcon, CogIcon, QuestionMarkCircleIcon, LogoutIcon, StarIcon } from '@heroicons/react/outline'; // Import required icons
 
 export default function NavBar() {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [booksDropdownOpen, setBooksDropdownOpen] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false); // State for mobile menu toggle
+
+    const menu = (
+        <div className="max-h-48">
+          <Notifications />
+        </div>
+      );
 
     return (
         <div className="bg-transparent-800 text-black rounded-lg shadow-md">
@@ -60,9 +69,9 @@ export default function NavBar() {
 
                 {/* Profile dropdown */}
                 <div className="relative flex items-center">
-                    <button id="notification-bell" className="text-gray-500 hover:text-gray-700 focus:outline-none ml-6">
-                        <span className="text-2xl">🔔</span>
-                    </button>
+                    <Dropdown overlay={menu} trigger={['click']}>
+                        <BellOutlined className="text-2xl cursor-pointer" />
+                    </Dropdown>
                     <Link to="/user-addbook" className="text-white-700 hover:text-gray-300 transition duration-300 ease-in-out text-2xl ml-6">+</Link>
                     <div className="relative ml-6">
                         <button

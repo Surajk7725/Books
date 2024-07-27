@@ -130,8 +130,7 @@ function App() {
           <Route path='settings' element={<SettingsPage />} />
           <Route path='contact-resolve' element={<Contactresolve />} />
           <Route path='security' element={<SecurityPage />} />
-
-          
+ 
         </Route>
 
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Table, Button, Space } from 'antd';
-import { MailOutlined, PhoneOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
+import { MailOutlined, PhoneOutlined, CheckOutlined } from '@ant-design/icons';
 
 const formatDate = (dateString) => {
   const date = new Date(dateString);
@@ -117,10 +117,6 @@ const Contactresolve = () => {
           <Button
             icon={<CheckOutlined />}
             onClick={() => handleStatusChange(record.key, 'solved')}
-          />
-          <Button
-            icon={<CloseOutlined />}
-            onClick={() => handleStatusChange(record.key, 'unsolved')}
           />
         </Space>
       ),

@@ -1,8 +1,10 @@
 import React, { useState, useRef } from 'react';
 import Sidebar from '../staff/sidebar';
-import Modal from 'react-modal';
-import { StarIcon, XIcon } from '@heroicons/react/solid';
+import { Modal, Button, Rate, Input } from 'antd';
+import { StarFilled, CloseOutlined } from '@ant-design/icons';
 import html2pdf from 'html2pdf.js';
+
+const { TextArea } = Input;
 
 const defaultDescription = [
   "Gulliver's Travels is a satirical novel by Jonathan Swift, first published in 1726. It is a critique of human nature and the 'travellers' tales' literary subgenre. The narrative follows Lemuel Gulliver's voyages to four remote nations, beginning with Lilliput, inhabited by tiny people, then Brobdingnag, a land of giants. The novel's enduring popularity is due in part to its richness in symbolic content and satirical intent, critiquing both the politics of its day and broader aspects of human nature. Throughout his journeys, Gulliver encounters diverse societies that expose the follies and vices of contemporary civilization. The detailed and imaginative descriptions of these societies continue to capture the readers' imaginations.",
@@ -134,55 +136,37 @@ const UserContent = () => {
       </div>
 
       <Modal
-        isOpen={isModalOpen}
-        onRequestClose={() => setIsModalOpen(false)}
-        className="flex justify-center items-center"
-        overlayClassName="fixed inset-0 bg-black bg-opacity-50"
+        title="Provide Feedback"
+        visible={isModalOpen}
+        onCancel={() => setIsModalOpen(false)}
+        footer={null}
+        closeIcon={<CloseOutlined />}
       >
-        <div className="bg-white p-8 rounded-lg shadow-lg max-w-lg w-full relative">
-          <button onClick={() => setIsModalOpen(false)} className="absolute top-2 right-2">
-            <XIcon className="h-6 w-6 text-gray-600 hover:text-gray-800" />
-          </button>
-          <h2 className="text-2xl font-semibold mb-6 text-center text-gray-800">Provide Feedback</h2>
-          <div className="mb-6">
-            <p className="mb-2 text-gray-700 font-medium">Stars:</p>
-            <div className="flex space-x-1">
-              {Array.from({ length: 5 }, (_, i) => (
-                <StarIcon
-                  key={i}
-                  className={`h-6 w-6 cursor-pointer ${i < stars ? 'text-yellow-400' : 'text-gray-300'}`}
-                  onClick={() => setStars(i + 1)}
-                />
-              ))}
-            </div>
-          </div>
-          <div className="mb-6">
-            <label htmlFor="comment" className="block text-gray-700 font-medium mb-2">
-              Comment:
-            </label>
-            <textarea
-              id="comment"
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
-              className="border border-gray-300 rounded-lg px-3 py-2 w-full"
-              rows="4"
-              placeholder="Enter your comment"
-            ></textarea>
-          </div>
-          <div className="flex justify-end space-x-4">
-            <button
-              onClick={() => setIsModalOpen(false)}
-              className="bg-gray-300 text-gray-700 px-4 py-2 rounded"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={handleSubmit}
-              className="bg-blue-500 text-white px-4 py-2 rounded"
-            >
-              Submit
-            </button>
-          </div>
+        <div className="mb-6">
+          <p className="mb-2 text-gray-700 font-medium">Stars:</p>
+          <Rate
+            count={5}
+            value={stars}
+            onChange={(value) => setStars(value)}
+            character={<StarFilled />}
+            className="text-yellow-400"
+          />
+        </div>
+        <div className="mb-6">
+          <label htmlFor="comment" className="block text-gray-700 font-medium mb-2">
+            Comment:
+          </label>
+          <TextArea
+            id="comment"
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+            rows={4}
+            placeholder="Enter your comment"
+          />
+        </div>
+        <div className="flex justify-end space-x-4">
+          <Button onClick={() => setIsModalOpen(false)}>Cancel</Button>
+          <Button type="primary" onClick={handleSubmit}>Submit</Button>
         </div>
       </Modal>
     </div>
