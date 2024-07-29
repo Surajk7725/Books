@@ -53,6 +53,7 @@ import SecurityPage from './components/admin/security.js';
 import AdminDisplay from './components/admin/admindisplay.js';
 import StaffDisplay from './components/admin/staffdisplay.js';
 import Books from './components/admin/books.js';
+import ViewBook from './components/admin/viewbook.js';
 
 
 function App() {
@@ -138,6 +139,7 @@ function App() {
           <Route path='admin-display' element={<AdminDisplay />} />
           <Route path='staff-display' element={<StaffDisplay />} />
           <Route path='books' element={<Books />} />
+          <Route path='books/view' element={<ViewBook />} />
  
         </Route>
 

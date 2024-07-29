@@ -20,6 +20,7 @@ const AdminCreate = () => {
           <h1 className="text-2xl font-bold text-gray-800 ml-4">Create Admin</h1>
           <Breadcrumb>
             <Breadcrumb.Item><Link to="/admin/home">Dashboard</Link></Breadcrumb.Item>
+            <Breadcrumb.Item>Admin</Breadcrumb.Item>
             <Breadcrumb.Item>Create Admin</Breadcrumb.Item>
           </Breadcrumb>
         </div>

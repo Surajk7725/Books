@@ -1,10 +1,14 @@
 import React, {useState} from 'react';
 import { Card,Table, Progress, Button } from 'antd';
 import { UserOutlined, TeamOutlined, ReadOutlined, CrownOutlined } from '@ant-design/icons';
+import { Bar, Pie } from 'react-chartjs-2';
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement } from 'chart.js';
 import Book1 from '../images/book-1.jpg';
 import Book2 from '../images/book-2.jpg';
 import Book3 from '../images/book-3.jpg';
 import Book4 from '../images/book-4.jpg';
+
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement);
 
 const data = [
   {
@@ -115,6 +119,102 @@ function getProgressColor(progress) {
   return 'green';
 }
 
+// Sample data for Bar Chart
+const barData = {
+  labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+  datasets: [
+    {
+      label: 'Books Added',
+      data: [12, 19, 3, 5, 2, 3, 15, 8, 4, 10, 9, 6],
+      backgroundColor: [
+        '#FF6384', // Red
+          '#36A2EB', // Blue
+          '#FFCE56', // Yellow
+          '#4BC0C0', // Teal
+          '#9966FF', // Purple
+          '#FF9F40', // Orange
+          '#FF6384', // Red
+          '#36A2EB', // Blue
+          '#FFCE56', // Yellow
+          '#4BC0C0', // Teal
+          '#9966FF', // Purple
+          '#FF9F40', // Orange
+      ],
+      borderColor: [
+        '#FF6384',
+        '#36A2EB',
+        '#FFCE56',
+        '#4BC0C0',
+        '#9966FF',
+        '#FF9F40',
+        '#FF6384',
+        '#36A2EB',
+        '#FFCE56',
+        '#4BC0C0',
+        '#9966FF',
+        '#FF9F40',
+      ],
+      borderWidth: 1,
+    },
+  ],
+};
+
+// Sample data for Pie Chart
+const pieData = {
+  labels: ['Fiction', 'Non-Fiction', 'Mystery', 'Science Fiction', 'Fantasy', 'Biography'],
+  datasets: [
+    {
+      data: [30, 15, 10, 20, 15, 10],
+      backgroundColor: [
+        '#FF6384', // Red
+          '#36A2EB', // Blue
+          '#FFCE56', // Yellow
+          '#4BC0C0', // Teal
+          '#9966FF', // Purple
+          '#FF9F40', // Orange
+      ],
+      borderColor: [
+        '#FF6384',
+          '#36A2EB',
+          '#FFCE56',
+          '#4BC0C0',
+          '#9966FF',
+          '#FF9F40',
+      ],
+      borderWidth: 1,
+    },
+  ],
+};
+
+// Options for Bar Chart
+const barOptions = {
+  responsive: true,
+  maintainAspectRatio: false,
+  scales: {
+    y: {
+      beginAtZero: true,
+    },
+  },
+  plugins: {
+    legend: {
+      display: true,
+    },
+  },
+  height: 400, // Increase height here
+};
+
+// Options for Pie Chart
+const pieOptions = {
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: {
+    legend: {
+      display: true,
+    },
+  },
+  radius: '85%', // Adjust radius here
+};
+
 function AdminHome() {
 
   const [books, setBooks] = useState(sampleBooks);
@@ -172,7 +272,6 @@ function AdminHome() {
    // Function to handle "View Book" button click
    const handleViewBook = (key) => {
     console.log('Viewing book with key:', key);
-    // Implement your logic to view the book details here
   };
 
   return (
@@ -198,6 +297,24 @@ function AdminHome() {
             </Card>
           ))}
         </div>
+
+        <div className="p-8">
+      <h1 className="text-2xl font-semibold mb-4 text-center">Book Analysis</h1>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <Card className="bg-white shadow-lg rounded-lg">
+          <h2 className="text-lg font-semibold mb-2 text-center">Books Added Per Month</h2>
+          <div style={{ height: '400px' }}>
+              <Bar data={barData} options={barOptions} />
+            </div>
+        </Card>
+        <Card className="bg-white shadow-lg rounded-lg">
+          <h2 className="text-lg font-semibold mb-2 text-center">Books by Genre</h2>
+          <div style={{ height: '400px' }}>
+              <Pie data={pieData} options={pieOptions} />
+            </div>
+        </Card>
+      </div>
+    </div>
 
         <div className="bg-white p-8 rounded-lg shadow-lg">
           <h1 className="text-2xl font-semibold mb-4">Recently Added Books</h1>
