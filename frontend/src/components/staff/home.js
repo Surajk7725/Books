@@ -1,33 +1,63 @@
 import React, { useState, useEffect } from 'react';
-import NavBar from '../staff/navbar';
+import NavBar from '../navbar';
 import Footer from './footer';
+import Icon1 from '../images/Books-icon.png';
+import Icon2 from '../images/Magnifier-icon.png';
+import Icon3 from '../images/Rating-icon.png';
+import Icon4 from '../images/Reading-icon.png';
+import Icon5 from '../images/Literacy-icon.png';
+import Icon6 from '../images/Global-icon.png';
+import Novel16 from '../images/The Book of Doing and Being.jpg';
+import Novel17 from '../images/The compound Effect.jpg';
+import Novel18 from '../images/The MiddleMan Economy.jpg';
+import Novel19 from '../images/The One Thing.jpg';
+import Novel20 from '../images/The personal MBA.jpg';
+import Novel21 from '../images/The Phychology Of Money.jpg';
+import Novel22 from '../images/The Prosperity Paradox.jpg';
+import Novel23 from '../images/The Secret Manual.jpg';
+import Novel24 from '../images/Think Like Da Vinci.jpg';
+import Novel1 from '../images/A Little History Economics.jpg';
+import Novel2 from '../images/Bad days in History.jpg';
+import Novel3 from '../images/Black code.jpg';
+import Novel4 from '../images/Book Mock UP.jpg';
+import Novel5 from '../images/Boys Beasts & Men.jpg';
+import Novel6 from '../images/Burning Of Books.jpg';
+import Novel7 from '../images/Elon Musk.jpg';
+import Novel8 from '../images/Excutive Impact And Influence.jpg';
+import Novel9 from '../images/How they Got into harverd.jpg';
+import Novel10 from '../images/Lawyers as Leaders.jpg';
+import Novel11 from '../images/Learn To think In Systems.jpg';
+import Novel12 from '../images/Market Mind Games.jpg';
+import Novel13 from '../images/More More Time.jpg';
 
-function Discounts()  {
+
+
+function Discounts() {
   // Sample data for Best Sellers, Recommended Reads, and Author Spotlight
   const bestSellers = [
     {
       title: "Best Seller Title 1",
       author: "Author Name 1",
-      price: 24.99,
-      imageUrl: "https://placehold.co/400x400"
+     
+      imageUrl: Novel21
     },
     {
       title: "Best Seller Title 1",
       author: "Author Name 1",
-      price: 24.99,
-      imageUrl: "https://placehold.co/400x400"
+     
+      imageUrl: Novel22
     },
     {
       title: "Best Seller Title 1",
       author: "Author Name 1",
-      price: 24.99,
-      imageUrl: "https://placehold.co/400x400"
+     
+      imageUrl: Novel23
     },
     {
       title: "Best Seller Title 1",
       author: "Author Name 1",
-      price: 24.99,
-      imageUrl: "https://placehold.co/400x400"
+     
+      imageUrl: Novel24
     },
     // Add more books as needed
   ];
@@ -36,26 +66,26 @@ function Discounts()  {
     {
       title: "Recommended Read Title 1",
       author: "Author Name 1",
-      price: 29.99,
-      imageUrl: "https://placehold.co/400x400"
+     
+      imageUrl: Novel1
     },
     {
       title: "Recommended Read Title 1",
       author: "Author Name 1",
-      price: 29.99,
-      imageUrl: "https://placehold.co/400x400"
+      
+      imageUrl: Novel2
     },
     {
       title: "Recommended Read Title 1",
       author: "Author Name 1",
-      price: 29.99,
-      imageUrl: "https://placehold.co/400x400"
+      
+      imageUrl: Novel3
     },
     {
       title: "Recommended Read Title 1",
       author: "Author Name 1",
-      price: 29.99,
-      imageUrl: "https://placehold.co/400x400"
+      
+      imageUrl: Novel6
     },
     // Add more recommended reads as needed
   ];
@@ -66,28 +96,28 @@ function Discounts()  {
     books: [
       {
         title: "Book Title by Jane Doe",
-        price: 34.99,
-        imageUrl: "https://placehold.co/400x400"
+        
+        imageUrl: Novel5
       },
       {
         title: "Book Title by Jane Doe",
-        price: 34.99,
-        imageUrl: "https://placehold.co/400x400"
+       
+        imageUrl: Novel4
       },
       {
         title: "Book Title by Jane Doe",
-        price: 34.99,
-        imageUrl: "https://placehold.co/400x400"
+       
+        imageUrl: Novel7
       },
       {
         title: "Book Title by Jane Doe",
-        price: 34.99,
-        imageUrl: "https://placehold.co/400x400"
+       
+        imageUrl: Novel8
       },
-      
+
       // Add more books by Jane Doe as needed
     ]
-    
+
   };
 
   return (
@@ -115,7 +145,7 @@ function Discounts()  {
       <div className="bg-white py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="lg:text-center">
-            <h2 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">Amazing Discounts on Books</h2>
+            <h2 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">Amazing  Books</h2>
             <p className="mt-4 max-w-2xl text-xl text-gray-500 lg:mx-auto">Save big on your favorite books at Amazon's book sale. Explore our collection of discounted titles across various genres.</p>
           </div>
 
@@ -172,101 +202,101 @@ function Discounts()  {
           </div>
 
           <div className="mt-10">
-  <h3 className="text-2xl font-semibold text-gray-900">Featured Deals</h3>
-  <div className="mt-4 grid grid-cols-1 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
-    {/* First Featured Deal */}
-    <div className="relative">
-      <div className="w-full min-h-80 bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75 lg:h-80 lg:aspect-none">
-        <img
-          src="https://placehold.co/400x400"
-          alt="A hardcover book with a colorful abstract design on the cover, featuring swirls of blue, green, and yellow colors, giving it a vibrant and eye-catching appearance."
-          className="w-full h-full object-center object-cover lg:w-full lg:h-full"
-        />
-      </div>
-      <div className="mt-4 flex justify-between">
-        <div>
-          <h3 className="text-sm text-gray-700">
-            <a href="#">
-              <span aria-hidden="true" className="absolute inset-0"></span>
-              The Art of Mindfulness
-            </a>
-          </h3>
-          <p className="mt-1 text-sm text-gray-500">Sarah Williams</p>
-        </div>
-        <p className="text-sm font-medium text-gray-900">$19.99</p>
-      </div>
-    </div>
+            <h3 className="text-2xl font-semibold text-gray-900">Featured Deals</h3>
+            <div className="mt-4 grid grid-cols-1 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
+              {/* First Featured Deal */}
+              <div className="relative">
+                <div className="w-full min-h-80 bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75 lg:h-80 lg:aspect-none">
+                  <img
+                    src= {Novel9}
+                    alt="A hardcover book with a colorful abstract design on the cover, featuring swirls of blue, green, and yellow colors, giving it a vibrant and eye-catching appearance."
+                    className="w-full h-full object-contain lg:w-full lg:h-full"
+                  />
+                </div>
+                <div className="mt-4 flex justify-between">
+                  <div>
+                    <h3 className="text-sm text-gray-700">
+                      <a href="#">
+                        <span aria-hidden="true" className="absolute inset-0"></span>
+                        The Art of Mindfulness
+                      </a>
+                    </h3>
+                    <p className="mt-1 text-sm text-gray-500">Sarah Williams</p>
+                  </div>
+                  
+                </div>
+              </div>
 
-    {/* Second Featured Deal */}
-    <div className="relative">
-      <div className="w-full min-h-80 bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75 lg:h-80 lg:aspect-none">
-        <img
-          src="https://placehold.co/400x400"
-          alt="Another book description"
-          className="w-full h-full object-center object-cover lg:w-full lg:h-full"
-        />
-      </div>
-      <div className="mt-4 flex justify-between">
-        <div>
-          <h3 className="text-sm text-gray-700">
-            <a href="#">
-              <span aria-hidden="true" className="absolute inset-0"></span>
-              Book Title 2
-            </a>
-          </h3>
-          <p className="mt-1 text-sm text-gray-500">Author Name 2</p>
-        </div>
-        <p className="text-sm font-medium text-gray-900">$24.99</p>
-      </div>
-    </div>
+              {/* Second Featured Deal */}
+              <div className="relative">
+                <div className="w-full min-h-80 bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75 lg:h-80 lg:aspect-none">
+                  <img
+                    src= {Novel10}
+                    alt="Another book description"
+                    className="w-full h-full object-contain lg:w-full lg:h-full"
+                  />
+                </div>
+                <div className="mt-4 flex justify-between">
+                  <div>
+                    <h3 className="text-sm text-gray-700">
+                      <a href="#">
+                        <span aria-hidden="true" className="absolute inset-0"></span>
+                        Book Title 2
+                      </a>
+                    </h3>
+                    <p className="mt-1 text-sm text-gray-500">Author Name 2</p>
+                  </div>
+                 
+                </div>
+              </div>
 
-    {/* Third Featured Deal */}
-    <div className="relative">
-      <div className="w-full min-h-80 bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75 lg:h-80 lg:aspect-none">
-        <img
-          src="https://placehold.co/400x400"
-          alt="Another book description"
-          className="w-full h-full object-center object-cover lg:w-full lg:h-full"
-        />
-      </div>
-      <div className="mt-4 flex justify-between">
-        <div>
-          <h3 className="text-sm text-gray-700">
-            <a href="#">
-              <span aria-hidden="true" className="absolute inset-0"></span>
-              Book Title 3
-            </a>
-          </h3>
-          <p className="mt-1 text-sm text-gray-500">Author Name 3</p>
-        </div>
-        <p className="text-sm font-medium text-gray-900">$29.99</p>
-      </div>
-    </div>
+              {/* Third Featured Deal */}
+              <div className="relative">
+                <div className="w-full min-h-80 bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75 lg:h-80 lg:aspect-none">
+                  <img
+                    src= {Novel11}
+                    alt="Another book description"
+                    className="w-full h-full object-contain lg:w-full lg:h-full"
+                  />
+                </div>
+                <div className="mt-4 flex justify-between">
+                  <div>
+                    <h3 className="text-sm text-gray-700">
+                      <a href="#">
+                        <span aria-hidden="true" className="absolute inset-0"></span>
+                        Book Title 3
+                      </a>
+                    </h3>
+                    <p className="mt-1 text-sm text-gray-500">Author Name 3</p>
+                  </div>
+                 
+                </div>
+              </div>
 
-    {/* Fourth Featured Deal */}
-    <div className="relative">
-      <div className="w-full min-h-80 bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75 lg:h-80 lg:aspect-none">
-        <img
-          src="https://placehold.co/400x400"
-          alt="Another book description"
-          className="w-full h-full object-center object-cover lg:w-full lg:h-full"
-        />
-      </div>
-      <div className="mt-4 flex justify-between">
-        <div>
-          <h3 className="text-sm text-gray-700">
-            <a href="#">
-              <span aria-hidden="true" className="absolute inset-0"></span>
-              Book Title 4
-            </a>
-          </h3>
-          <p className="mt-1 text-sm text-gray-500">Author Name 4</p>
-        </div>
-        <p className="text-sm font-medium text-gray-900">$34.99</p>
-      </div>
-    </div>
-  </div>
-</div>
+              {/* Fourth Featured Deal */}
+              <div className="relative">
+                <div className="w-full min-h-80 bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75 lg:h-80 lg:aspect-none">
+                  <img
+                    src= {Novel12}
+                    alt="Another book description"
+                    className="w-full h-full object-contain lg:w-full lg:h-full"
+                  />
+                </div>
+                <div className="mt-4 flex justify-between">
+                  <div>
+                    <h3 className="text-sm text-gray-700">
+                      <a href="#">
+                        <span aria-hidden="true" className="absolute inset-0"></span>
+                        Book Title 4
+                      </a>
+                    </h3>
+                    <p className="mt-1 text-sm text-gray-500">Author Name 4</p>
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+          </div>
 
 
           <div className="mt-10">
@@ -275,10 +305,10 @@ function Discounts()  {
               {bestSellers.map((book, index) => (
                 <div key={index} className="relative">
                   <div className="w-full min-h-80 bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75 lg:h-80 lg:aspect-none">
-                    <img src={book.imageUrl} alt={book.title} className="w-full h-full object-center object-cover lg:w-full lg:h-full" />
+                    <img src={book.imageUrl} alt={book.title} className="w-full h-full object-contain  lg:w-full lg:h-full" />
                   </div>
                   <div className="mt-4 flex justify-between">
-                    <div>
+                    <div>                                       
                       <h3 className="text-sm text-gray-700">
                         <a href="#">
                           <span aria-hidden="true" className="absolute inset-0"></span>
@@ -287,7 +317,7 @@ function Discounts()  {
                       </h3>
                       <p className="mt-1 text-sm text-gray-500">{book.author}</p>
                     </div>
-                    <p className="text-sm font-medium text-gray-900">${book.price.toFixed(2)}</p>
+                
                   </div>
                 </div>
               ))}
@@ -300,9 +330,9 @@ function Discounts()  {
               {recommendedReads.map((book, index) => (
                 <div key={index} className="relative">
                   <div className="w-full min-h-80 bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75 lg:h-80 lg:aspect-none">
-                    <img src={book.imageUrl} alt={book.title} className="w-full h-full object-center object-cover lg:w-full lg:h-full" />
+                    <img src={book.imageUrl} alt={book.title} className="w-full h-full object-contain lg:w-full lg:h-full" />
                   </div>
-                  <div className="mt-4 flex justify-between">
+                  <div className="mt-4 flex justify-between">   
                     <div>
                       <h3 className="text-sm text-gray-700">
                         <a href="#">
@@ -312,7 +342,7 @@ function Discounts()  {
                       </h3>
                       <p className="mt-1 text-sm text-gray-500">{book.author}</p>
                     </div>
-                    <p className="text-sm font-medium text-gray-900">${book.price.toFixed(2)}</p>
+                    
                   </div>
                 </div>
               ))}
@@ -326,7 +356,7 @@ function Discounts()  {
               {authorSpotlight.books.map((book, index) => (
                 <div key={index} className="relative">
                   <div className="w-full min-h-80 bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75 lg:h-80 lg:aspect-none">
-                    <img src={book.imageUrl} alt={book.title} className="w-full h-full object-center object-cover lg:w-full lg:h-full" />
+                    <img src={book.imageUrl} alt={book.title} className="w-full h-full object-contain lg:w-full lg:h-full" />
                   </div>
                   <div className="mt-4 flex justify-between">
                     <div>
@@ -338,18 +368,18 @@ function Discounts()  {
                       </h3>
                       <p className="mt-1 text-sm text-gray-500">{authorSpotlight.name}</p>
                     </div>
-                    <p className="text-sm font-medium text-gray-900">${book.price.toFixed(2)}</p>
+                   
                   </div>
                 </div>
               ))}
             </div>
           </div>
 
-         
+
         </div>
       </div>
     </div>
-    
+
   );
 }
 function ImageSlider() {
@@ -388,42 +418,42 @@ function Home() {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           <div className="bg-white rounded-lg shadow-md overflow-hidden">
             <div className="p-4">
-              <img alt="A logo featuring an open book with a green leaf, symbolizing knowledge and growth through reading" className="w-16 h-16 object-cover rounded-full mx-auto mb-4" src="https://placehold.co/100x100" />
+              <img alt="Book Explorer logo" className="w-16 h-16 object-cover rounded-full mx-auto mb-4" src= {Icon1} />
               <h3 className="text-xl font-semibold text-gray-800 mb-2 text-center">Book Explorer</h3>
               <p className="text-gray-600">Discover a world of knowledge with our comprehensive library management system. Browse, borrow, and explore a vast collection of books tailored to your interests.</p>
             </div>
           </div>
           <div className="bg-white rounded-lg shadow-md overflow-hidden">
             <div className="p-4">
-              <img alt="A logo featuring a stack of books with a magnifying glass, representing the ability to search and find specific titles" className="w-16 h-16 object-cover rounded-full mx-auto mb-4" src="https://placehold.co/100x100" />
+              <img alt="BookFinder logo" className="w-16 h-16 object-cover rounded-full mx-auto mb-4" src={Icon2} />
               <h3 className="text-xl font-semibold text-gray-800 mb-2 text-center">BookFinder</h3>
               <p className="text-gray-600">Effortlessly navigate our extensive library catalog with our powerful search and filtering tools. Find the perfect book for your reading journey.</p>
             </div>
           </div>
           <div className="bg-white rounded-lg shadow-md overflow-hidden">
             <div className="p-4">
-              <img alt="A logo featuring a book with a heart, symbolizing the love and passion for reading" className="w-16 h-16 object-cover rounded-full mx-auto mb-4" src="https://placehold.co/100x100" />
+              <img alt="Literary Escapes logo" className="w-16 h-16 object-cover rounded-full mx-auto mb-4" src={Icon5}/>
               <h3 className="text-xl font-semibold text-gray-800 mb-2 text-center">Literary Escapes</h3>
               <p className="text-gray-600">Immerse yourself in the world of literature with our intuitive library management system. Track your reading journey effortlessly and uncover captivating literary treasures.</p>
             </div>
           </div>
           <div className="bg-white rounded-lg shadow-md overflow-hidden">
             <div className="p-4">
-              <img alt="A logo featuring an open book with a globe, representing the vast and diverse collection of books from around the world" className="w-16 h-16 object-cover rounded-full mx-auto mb-4" src="https://placehold.co/100x100" />
+              <img alt="Global Reads logo" className="w-16 h-16 object-cover rounded-full mx-auto mb-4" src={Icon6} />
               <h3 className="text-xl font-semibold text-gray-800 mb-2 text-center">Global Reads</h3>
               <p className="text-gray-600">Embark on a voyage through the realms of storytelling with our richly diverse library collection. Explore narratives that span continents, cultures, and centuries.</p>
             </div>
           </div>
           <div className="bg-white rounded-lg shadow-md overflow-hidden">
             <div className="p-4">
-              <img alt="A logo featuring a book with a clock, symbolizing the ability to manage and track book loans and due dates" className="w-16 h-16 object-cover rounded-full mx-auto mb-4" src="https://placehold.co/100x100" />
+              <img alt="Reading Organizer logo" className="w-16 h-16 object-cover rounded-full mx-auto mb-4" src={Icon4} />
               <h3 className="text-xl font-semibold text-gray-800 mb-2 text-center">Reading Organizer</h3>
               <p className="text-gray-600">Streamline your reading experience with our efficient library management tools. From managing loans to tracking due dates, stay organized and focused on your literary adventures.</p>
             </div>
           </div>
           <div className="bg-white rounded-lg shadow-md overflow-hidden">
             <div className="p-4">
-              <img alt="A logo featuring a book with a star, representing the ability to rate and review books" className="w-16 h-16 object-cover rounded-full mx-auto mb-4" src="https://placehold.co/100x100" />
+              <img alt="BookRatings logo" className="w-16 h-16 object-cover rounded-full mx-auto mb-4" src={Icon3}/>
               <h3 className="text-xl font-semibold text-gray-800 mb-2 text-center">BookRatings</h3>
               <p className="text-gray-600">Share your thoughts and discover new literary gems with our interactive library management system. Rate, review, and recommend books to fellow readers.</p>
             </div>
@@ -431,26 +461,27 @@ function Home() {
         </div>
       </div>
 
+
       <div>
         <section className="bg-gray-200 py-16 text-center">
           <h1 className="text-4xl font-semibold">Different – Thought Provoking – Fresh – Thoroughly Entertaining</h1>
           <p className="mt-4 text-lg text-gray-700">If you’re tired of reading the same stories over and over, and are open to something a little different, Mark Lages might be the author you’re looking for.</p>
           <div className="mt-8 flex justify-center space-x-4">
-            <img src="https://lh3.googleusercontent.com/proxy/X22_rGDzqg3c9yLWfyvxo_mpI3q7ZakAv8kAc1vHY1yPj8XUNYf1GKxPDhS0WPR8pzhxAdUyRGk-fUbjxf79R0L3VuHaiR5kjyW1sS_7Qy4hLbQ" alt="Book 1" className="h-80" />
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0j4ZQYO2JFoKkSbmG5aa_tO0yBhWl0YtcLUCz5DapnDGpYZnzEIg9EITL_s9FT8WpLgg&usqp=CAU" alt="Book 2" className="h-80" />
-            <img src="https://i.pinimg.com/736x/2c/f5/a6/2cf5a651f2e28832bce684326d0dd6a5.jpg" alt="Book 3" className="h-80" />
-            <img src="https://i.pinimg.com/474x/c6/b9/cb/c6b9cb9f4cc619d59386f3237e975b1b.jpg" alt="Book 4" className="h-80" />
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKdqMLjqBdOWwD7Rh4TYvA9P46oxG3HNdjC7RlMLejyYUPEacaA2jlQmOANfnr4UxjjD0&usqp=CAU" alt="Book 5" className="h-80" />
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsj2ePyvZiZC3ZY5EWRYZKnvMTcsczQ-LEsA&s" alt="Book 6" className="h-80" />
+            <img  alt="Book 1" className="h-80" src= {Novel16}/>
+            <img  alt="Book 2" className="h-80" src= {Novel17} />
+            <img  alt="Book 3" className="h-80" src= {Novel18} />
+            <img  alt="Book 4" className="h-80" src= {Novel19} />
+            <img  alt="Book 5" className="h-80" src= {Novel20} />
+            <img  alt="Book 6" className="h-80" src= {Novel21}/>
           </div>
         </section>
       </div>
 
       <Discounts />
 
-      
 
-      
+
+
 
 
 
