@@ -81,54 +81,55 @@ const data = {
 
 function ViewUser() {
   return (
+    
+
     <div className="justify-center items-center min-h-screen mb-2 ml-10">
 
-      <div className="text-start -mt-4 mb-8">
-        <div className="bg-white p-4 rounded-lg shadow-md mb-6 flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-gray-800 ml-4">User Analysis</h1>
-          <Breadcrumb>
-            <Breadcrumb.Item><Link to="/admin/home">Dashboard</Link></Breadcrumb.Item>
-            <Breadcrumb.Item><Link to="/admin/user-display">User Display</Link></Breadcrumb.Item>
-            <Breadcrumb.Item>User Analysis</Breadcrumb.Item>
-          </Breadcrumb>
+    <div className="text-start -mt-4 mb-8">
+        <div className="bg-white p-4 rounded-lg shadow-md mb-6 flex flex-col md:flex-row justify-between items-start md:items-center">
+            <h1 className="text-2xl font-bold text-gray-800 mb-2 md:mb-0 ml-4">User Analysis</h1>
+            <Breadcrumb className="ml-4 md:ml-0">
+                <Breadcrumb.Item><Link to="/admin/home">Dashboard</Link></Breadcrumb.Item>
+                <Breadcrumb.Item><Link to="/admin/user-display">User Display</Link></Breadcrumb.Item>
+                <Breadcrumb.Item>User Analysis</Breadcrumb.Item>
+            </Breadcrumb>
         </div>
-      </div>
+    </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4  mt-[1cm]">
-        <Card className="bg-white shadow-lg rounded-lg" style={{ height: '500px' }}>
-          <h2 className="text-lg font-semibold mb-2 text-center">User Activity Trends</h2>
-          <div style={{ height: '400px' }}>
-            <Line data={data} options={options} />
-          </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+        <Card className="bg-white shadow-lg rounded-lg" >
+            <h2 className="text-lg font-semibold mb-2 text-center">User Activity Trends</h2>
+            <div className="h-64 md:h-96">
+                <Line data={data} options={options} />
+            </div>
         </Card>
-        <Card className="bg-white shadow-lg rounded-lg">
-          <h2 className="text-lg font-semibold mb-2 text-center">User Books Interaction</h2>
-          <div style={{ height: '400px' }}>
-            <Bar data={barData} options={options} />
-          </div>
+        <Card className="bg-white shadow-lg rounded-lg" >
+            <h2 className="text-lg font-semibold mb-2 text-center">User Books Interaction</h2>
+            <div className="h-64 md:h-96">
+                <Bar data={barData} options={options} />
+            </div>
         </Card>
-      </div>
+    </div>
 
-      <div className="bg-white p-8 rounded-lg shadow-md mt-8">
-      <h2 className="text-xl font-semibold mb-6">Top Books Read</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-      {topBooks.map((book, index) => (
-        <div key={index} className="bg-gray-100 p-4 rounded-lg shadow-lg flex flex-col items-center">
-          <div className="w-24 h-36 mb-2 flex items-center justify-center">
-            {typeof book.cover === 'string' ? (
-              <img src={book.cover} alt={book.title} className="w-full h-full object-cover" />
-            ) : (
-              book.cover
-            )}
-          </div>
-          <h3 className="text-lg font-medium">{book.title}</h3>
+    <div className="bg-white p-8 rounded-lg shadow-md mt-8">
+        <h2 className="text-xl font-semibold mb-6">Top Books Read</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            {topBooks.map((book, index) => (
+                <div key={index} className="bg-gray-100 p-4 rounded-lg shadow-lg flex flex-col items-center">
+                    <div className="w-24 h-36 mb-2 flex items-center justify-center">
+                        {typeof book.cover === 'string' ? (
+                            <img src={book.cover} alt={book.title} className="w-full h-full object-cover" />
+                        ) : (
+                            book.cover
+                        )}
+                    </div>
+                    <h3 className="text-lg font-medium text-center">{book.title}</h3>
+                </div>
+            ))}
         </div>
-      ))}
     </div>
-    </div>
+</div>
 
-
-    </div>
   )
 }
 

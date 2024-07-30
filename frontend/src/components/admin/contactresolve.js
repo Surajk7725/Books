@@ -125,7 +125,8 @@ const Contactresolve = () => {
   ];
 
   return (
-    <div>
+    <div className="flex justify-center  items-center min-h-screen overflow-hidden bg-gray-100">
+    <div className="w-full max-w-6xl px-4">
       <div className="text-start -mt-4 mb-8">
         <div className="bg-white p-4 rounded-lg shadow-md mb-6 flex justify-between items-center">
           <h1 className="text-2xl font-bold text-gray-800 ml-4">Resolve</h1>
@@ -135,7 +136,10 @@ const Contactresolve = () => {
           </Breadcrumb>
         </div>
       </div>
+      <div className="overflow-x-auto bg-white rounded-lg shadow-md">
       <Table dataSource={dataSource} columns={columns} />
+      </div>
+    </div>
     </div>
   );
 };

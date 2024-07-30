@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import {Link} from 'react-router-dom';
-import { Input, Button, Card, Breadcrumb} from 'antd';
+import { Link } from 'react-router-dom';
+import { Input, Button, Card, Breadcrumb } from 'antd';
 
 const SecurityPage = () => {
   const [formData, setFormData] = useState({
@@ -58,9 +58,9 @@ const SecurityPage = () => {
   };
 
   return (
-    <div className="justify-center ml-18 items-center min-h-screen bg-gray-100 mb-2">
-      <div className="text-start -mt-4 mb-8">
-        <div className="bg-white p-4 rounded-lg shadow-md mb-6 flex justify-between items-center ml-3">
+    <div className="justify-center items-center bg-gray-100 min-h-screen ml-4 lg:ml-12 mb-2">
+      <div className="text-start -mt-4 mb-8 px-4">
+        <div className="bg-white p-4 rounded-lg shadow-md mb-6 flex flex-col lg:flex-row justify-between items-start lg:items-center">
           <h1 className="text-2xl font-bold text-gray-800 ml-4">Security</h1>
           <Breadcrumb>
             <Breadcrumb.Item><Link to="/admin/home">Dashboard</Link></Breadcrumb.Item>

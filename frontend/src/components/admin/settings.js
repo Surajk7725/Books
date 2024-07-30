@@ -69,19 +69,20 @@ const SettingsPage = () => {
     );
 
     return (
-        <div className="justify-center items-center bg-gray-100 min-h-screen ml-12 mb-2">
-        <div className="text-start -mt-4 mb-8">
-        <div className="bg-white p-4 rounded-lg shadow-md mb-6 flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-gray-800 ml-4">Settings</h1>
-          <Breadcrumb>
-            <Breadcrumb.Item><Link to="/admin/home">Dashboard</Link></Breadcrumb.Item>
-            <Breadcrumb.Item>Settings</Breadcrumb.Item>
-            <Breadcrumb.Item>Personal Info</Breadcrumb.Item>
-          </Breadcrumb>
-        </div>
-      </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="justify-center items-center bg-gray-100 min-h-screen ml-4 lg:ml-12 mb-2">
+            <div className="text-start -mt-4 mb-8 px-4">
+                <div className="bg-white p-4 rounded-lg shadow-md mb-6 flex flex-col lg:flex-row justify-between items-start lg:items-center">
+                    <h1 className="text-2xl font-bold text-gray-800 mb-4 lg:mb-0 ml-4">Settings</h1>
+                    <Breadcrumb>
+                        <Breadcrumb.Item><Link to="/admin/home">Dashboard</Link></Breadcrumb.Item>
+                        <Breadcrumb.Item>Settings</Breadcrumb.Item>
+                        <Breadcrumb.Item>Personal Info</Breadcrumb.Item>
+                    </Breadcrumb>
+                </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 px-4">
 
                 {/* Personal Information Section */}
                 <Card title="Personal Information" className="shadow-md col-span-1 lg:col-span-2">
@@ -120,33 +121,30 @@ const SettingsPage = () => {
                     </div>
 
                     <div className="flex justify-end mt-6 space-x-4">
-                        <Button className="bg-gray-300 text-gray-700 hover:bg-gray-400 h-10" >Cancel</Button>
-                        <Button type="primary h-10">Submit</Button>
+                        <Button className="bg-gray-300 text-gray-700 hover:bg-gray-400 h-10">Cancel</Button>
+                        <Button type="primary" className="h-10">Submit</Button>
                     </div>
-
                 </Card>
 
                 <div className="col-span-1 space-y-8">
-
                     {/* Your Photo Section */}
                     <Card title="Your Photo" className="shadow-md">
                         <Row>
-                            <Col span={8}>
+                            <Col span={24} className="flex flex-col items-center">
                                 <div className="mt-2 flex flex-col items-center">
                                     <Image
                                         src="https://wallpapers.com/images/hd/yuuichi-katagiri-anime-portrait-5xl430n009kmsg7l.jpg"
                                         width={64}
                                         height={64}
-                                        style={{ borderRadius: '50%' }}
+                                        className="rounded-full"
                                     />
-                                    <div className="mt-4 ml-36"> {/* Add margin-top for gap */}
+                                    <div className="mt-4 flex justify-center">
                                         <Upload
                                             action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
                                             listType="picture-circle"
                                             fileList={fileList}
                                             onPreview={handlePreview}
                                             onChange={handleChange}
-                                            className="flex justify-center"
                                         >
                                             {fileList.length >= 1 ? null : uploadButton}
                                         </Upload>
@@ -166,22 +164,21 @@ const SettingsPage = () => {
                                     )}
                                 </div>
                             </Col>
-                            <Typography.Title level={5} style={{ marginTop: 24 }}>
+                            <Typography.Title level={5} className="mt-6 text-center lg:mt-0 lg:ml-18">
                                 Edit your Picture
                             </Typography.Title>
-                            <Col span={24} className="flex justify-end items-center mt-12">
-
-                                <Button type="default" style={{ marginRight: 8 }}>Cancel</Button>
+                            <Col span={24} className="flex justify-center items-center mt-12 lg:mt-12">
+                                <Button type="default" className="mr-4">Cancel</Button>
                                 <Button type="primary">Save</Button>
                             </Col>
                         </Row>
                     </Card>
-
                 </div>
+
             </div>
 
             {/* Add gap here */}
-            <div className="mt-12">
+            <div className="mt-12 w-full px-4">
 
                 {/* Social Media Section */}
                 <Card title="Social Media" className="shadow-md col-span-1 lg:col-span-2">
@@ -222,12 +219,13 @@ const SettingsPage = () => {
 
                     <div className="flex justify-end mt-6 space-x-4">
                         <Button className="bg-gray-300 text-gray-700 hover:bg-gray-400 h-10">Cancel</Button>
-                        <Button type="primary h-10">Submit</Button>
+                        <Button type="primary" className="h-10">Submit</Button>
                     </div>
                 </Card>
 
             </div>
         </div>
+
     );
 };
 

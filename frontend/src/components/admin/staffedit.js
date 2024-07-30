@@ -30,7 +30,7 @@ const StaffEdit = ({ staffData }) => {
         </div>
       </div>
       <Card className="w-full max-w-6xl p-8">
-        <h2 className="text-2xl font-semibold text-center mb-6">Edit Staff</h2>
+       
         <Form form={form} layout="vertical" onFinish={handleFinish}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Form.Item label="Full Name" name="fullName" rules={[{ required: true, message: 'Please enter the full name' }]}>
