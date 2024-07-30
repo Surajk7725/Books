@@ -247,7 +247,7 @@ const topUsers = [
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4  mt-[2cm]">
         <Card className="bg-white shadow-lg rounded-lg" style={{ height: '500px' }}>
-          <h2 className="text-lg font-semibold mb-2 text-center">Books Added Per Month</h2>
+          <h2 className="text-lg font-semibold mb-2 text-center">Books Read Per Month</h2>
           <div style={{ height: '400px' }}>
               <Bar data={data} options={options} />
           </div>

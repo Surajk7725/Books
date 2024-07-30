@@ -275,79 +275,86 @@ function AdminHome() {
   };
 
   return (
-    <div className="justify-center items-center min-h-screen mb-2">
-      <div className="container mx-auto">
-        <div className="flex justify-between space-x-4 mb-8">
-          {data.map((item) => (
-            <Card key={item.title} className="w-1/3 bg-white shadow-lg p-4">
-              <div className="flex flex-col">
-                <div className="flex items-center justify-between">
-                  <div className="bg-gray-100 rounded-full p-3 w-fit">
-                    {item.icon}
-                  </div>
-                  <h2 className="text-2xl font-bold">{item.value}</h2>
-                </div>
-                <div className="flex justify-between items-center mt-2">
-                  <p className="text-gray-500">{item.title}</p>
-                  <p className={`text-sm ${item.changeType === 'up' ? 'text-green-500' : item.changeType === 'down' ? 'text-red-500' : 'text-gray-500'}`}>
-                    {item.change} {item.changeType === 'up' ? '▲' : item.changeType === 'down' ? '▼' : ''}
-                  </p>
-                </div>
+    <div className="flex flex-col justify-center items-center min-h-screen mb-2 px-4 overflow-x-hidden">
+  <div className="container mx-auto">
+    <div className="flex flex-col md:flex-row justify-between space-y-4 md:space-y-0 md:space-x-4 mb-8">
+      {data.map((item) => (
+        <Card key={item.title} className="w-full md:w-1/3 bg-white shadow-lg p-4">
+          <div className="flex flex-col">
+            <div className="flex items-center justify-between">
+              <div className="bg-gray-100 rounded-full p-3 w-fit">
+                {item.icon}
               </div>
-            </Card>
-          ))}
-        </div>
+              <h2 className="text-2xl font-bold">{item.value}</h2>
+            </div>
+            <div className="flex justify-between items-center mt-2">
+              <p className="text-gray-500">{item.title}</p>
+              <p className={`text-sm ${item.changeType === 'up' ? 'text-green-500' : item.changeType === 'down' ? 'text-red-500' : 'text-gray-500'}`}>
+                {item.change} {item.changeType === 'up' ? '▲' : item.changeType === 'down' ? '▼' : ''}
+              </p>
+            </div>
+          </div>
+        </Card>
+      ))}
+    </div>
 
-        <div className="p-8">
+    <div className="p-4 md:p-8">
       <h1 className="text-2xl font-semibold mb-4 text-center">Book Analysis</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <Card className="bg-white shadow-lg rounded-lg">
           <h2 className="text-lg font-semibold mb-2 text-center">Books Added Per Month</h2>
-          <div style={{ height: '400px' }}>
-              <Bar data={barData} options={barOptions} />
-            </div>
+          <div className="h-64 md:h-96">
+            <Bar data={barData} options={barOptions} />
+          </div>
         </Card>
         <Card className="bg-white shadow-lg rounded-lg">
           <h2 className="text-lg font-semibold mb-2 text-center">Books by Genre</h2>
-          <div style={{ height: '400px' }}>
-              <Pie data={pieData} options={pieOptions} />
-            </div>
+          <div className="h-64 md:h-96">
+            <Pie data={pieData} options={pieOptions} />
+          </div>
         </Card>
       </div>
     </div>
 
-        <div className="bg-white p-8 rounded-lg shadow-lg">
-          <h1 className="text-2xl font-semibold mb-4">Recently Added Books</h1>
-          <Table
-            columns={columns}
-            dataSource={books}
-            pagination={{ pageSize: 5 }}
-            className="rounded-lg shadow-md"
-          />
-        </div>
-
-        <div className="bg-white p-8 rounded-lg shadow-lg mt-12">
-          <h2 className="text-2xl font-semibold mb-6">My Library</h2>
-          <div className="flex flex-wrap justify-between -mx-4">
-            {book.map((bookk, index) => (
-              <div key={index} className="w-1/4 p-4">
-                <div className="bg-transparent rounded-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300">
-                  <img src={bookk.image} alt={bookk.title} className="w-full h-60 object-cover" />
-                  <div className="p-4">
-                    <h3 className="text-xl mb-2 font-bold">{bookk.title}</h3>
-                    <p className="text-sm text-gray-500 truncate">{bookk.author}</p>
-                    <div className="mt-2">
-                      <Progress percent={bookk.progress} status="active" strokeColor={getProgressColor(book.progress)} />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
+    <div className="bg-white p-4 md:p-8 rounded-lg shadow-lg">
+      <h1 className="text-2xl font-semibold mb-4">Recently Added Books</h1>
+      <div className="overflow-x-auto">
+        <Table
+          columns={columns}
+          dataSource={books}
+          pagination={{ pageSize: 5 }}
+          className="rounded-lg shadow-md w-full"
+        />
       </div>
     </div>
+
+
+    <div className="bg-white p-4 md:p-8 rounded-lg shadow-lg mt-8 md:mt-12">
+      <h2 className="text-2xl font-semibold mb-6">My Library</h2>
+      <div className="flex flex-wrap justify-center md:justify-between -mx-4">
+        {book.map((bookk, index) => (
+          <div key={index} className="w-full sm:w-1/2 md:w-1/4 p-4">
+            <div className="bg-transparent rounded-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300">
+              <img src={bookk.image} alt={bookk.title} className="w-full h-60 object-cover" />
+              <div className="p-4">
+                <h3 className="text-xl mb-2 font-bold">{bookk.title}</h3>
+                <p className="text-sm text-gray-500 truncate">{bookk.author}</p>
+                <div className="mt-2">
+                  <Progress percent={bookk.progress} status="active" strokeColor={getProgressColor(bookk.progress)} />
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+
+
   );
 }
 

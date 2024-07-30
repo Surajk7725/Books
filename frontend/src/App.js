@@ -54,6 +54,8 @@ import AdminDisplay from './components/admin/admindisplay.js';
 import StaffDisplay from './components/admin/staffdisplay.js';
 import Books from './components/admin/books.js';
 import ViewBook from './components/admin/viewbook.js';
+import ViewUser from './components/admin/viewuser.js';
+import ViewStaff from './components/admin/viewstaff.js';
 
 
 function App() {
@@ -140,6 +142,8 @@ function App() {
           <Route path='staff-display' element={<StaffDisplay />} />
           <Route path='books' element={<Books />} />
           <Route path='books/view' element={<ViewBook />} />
+          <Route path='user-display/view' element={<ViewUser />} />
+          <Route path='staff-display/view' element={<ViewStaff />} />
  
         </Route>
 

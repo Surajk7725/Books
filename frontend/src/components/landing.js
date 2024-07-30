@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, memo, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Slide4 from './images/slide4.jpg';
 import Slide5 from './images/slide5.jpg';
@@ -8,15 +8,6 @@ import Footer from './user/footer';
 import Novel1 from './images/A Little History Economics.jpg';
 import Novel2 from './images/Bad days in History.jpg';
 import Novel3 from './images/Black code.jpg';
-import Novel4 from './images/Book Mock UP.jpg';
-import Novel5 from './images/Boys Beasts & Men.jpg';
-import Novel6 from './images/Burning Of Books.jpg';
-import Novel7 from './images/Elon Musk.jpg';
-import Novel8 from './images/Excutive Impact And Influence.jpg';
-import Novel9 from './images/How they Got into harverd.jpg';
-import Novel10 from './images/Lawyers as Leaders.jpg';
-import Novel11 from './images/Learn To think In Systems.jpg';
-import Novel12 from './images/Market Mind Games.jpg';
 import Novel13 from './images/More More Time.jpg';
 import Novel14 from './images/Quantative Aptitufe.jpg';
 import Novel15 from './images/Stone oF Time.jpg';
@@ -25,33 +16,85 @@ import Author2 from './images/Carol.png';
 import Author3 from './images/Colson-Whitehead.png'; 
 
 
-
-
-function ImageSlider() {
+const ImageSlider = memo(() =>  {
   const images = [Slide4, Slide5, Slide6, Slide7];
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [loaded, setLoaded] = useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const intervalId = setInterval(() => {
-      setCurrentIndex((currentIndex + 1) % images.length);
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
     }, 8000);
 
     return () => clearInterval(intervalId);
-  }, [currentIndex, images.length]);
+  }, [images.length]);
+
 
   return (
-    <div className='h-[500px] bg-center bg-cover transition-all duration-500 relative' style={{ backgroundImage: `url(${images[currentIndex]})` }}>
+    <div className='h-[500px] bg-center bg-cover transition-all duration-500 relative'>
+    {!loaded && (
+      <div className="absolute inset-0 flex items-center justify-center bg-gray-200">
+        <span>Loading...</span>
+      </div>
+    )}
+    <img
+      src={images[currentIndex]}
+      srcSet={`${images[currentIndex]} 320w, ${images[currentIndex]} 480w, ${images[currentIndex]} 800w`}
+      sizes="(max-width: 320px) 280px, (max-width: 480px) 440px, 800px"
+      alt="Slider"
+      className="h-full w-full object-cover"
+      onLoad={() => setLoaded(true)}
+      style={{ display: loaded ? 'block' : 'none' }}
+    />
+    {loaded && (
       <div className="absolute inset-0 flex items-center justify-center">
-        <h1 className="text-4xl font-bold text-white bg-black bg-opacity-50 p-4 rounded-lg shadow-lg">
+        <h1 className="text-2xl md:text-4xl font-bold text-white bg-black bg-opacity-50 p-2 md:p-4 rounded-lg shadow-lg text-center">
           Explore a World of Books
         </h1>
       </div>
+    )}
+  </div>
+);
+});
+
+const BookCard = memo(({ image, title, description }) => (
+  <div className='bg-white rounded-lg shadow-md overflow-hidden'>
+    <img className='h-96 w-full object-contain' src={image} alt={title} loading="lazy" />
+    <div className='p-4'>
+      <h3 className='text-xl font-semibold mb-2'>{title}</h3>
+      <p className='text-gray-700 text-justify'>{description}</p>
     </div>
-  );
-}
+  </div>
+));
+
+const AuthorCard = memo(({ img, name }) => (
+  <div className='bg-white rounded-lg shadow-md overflow-hidden'>
+    <img className='h-48 w-full object-contain' src={img} alt={name} loading="lazy" />
+    <div className='p-4'>
+      <h3 className='text-xl font-semibold mb-2'>{name}</h3>
+      <p className='text-gray-700 text-justify'>A brief bio of {name}.</p>
+    </div>
+  </div>
+));
+
 
 export default function Landing() {
   const navigate = useNavigate();
+
+  const categories = useMemo(() => ['Fiction', 'Non-Fiction', 'Fantasy', 'Science Fiction', 'Mystery', 'Educational'], []);
+
+  const featuredBooks = useMemo(() => [
+    { image: Novel1, title: 'A Little History Economics', description: 'A brief description of A Little History Economics.' },
+    { image: Novel2, title: 'Bad days in History', description: 'A brief description of Bad days in History.' },
+    { image: Novel3, title: 'Black code', description: 'A brief description of Black code.' }
+  ], []);
+
+  const authors = useMemo(() => [
+    { name: 'Colson Whitehead', img: Author3 },
+    { name: 'Carol Roh Spaulding', img: Author2 },
+    { name: 'Barnes & Noble Press Author', img: Author1 }
+  ], []);
+
 
   return (
     <div className="flex flex-col min-h-screen relative">
@@ -104,7 +147,14 @@ export default function Landing() {
         <ImageSlider />
 
         <section className='flex flex-col md:flex-row items-center my-12 px-4'>
-          <img src='https://images.pexels.com/photos/159866/books-book-pages-read-literature-159866.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1' className='w-full md:w-1/3 rounded' alt='Library' />
+        <img 
+            src='https://images.pexels.com/photos/159866/books-book-pages-read-literature-159866.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1' 
+            srcSet='https://images.pexels.com/photos/159866/books-book-pages-read-literature-159866.jpeg?auto=compress&cs=tinysrgb&w=320&h=240&dpr=1 320w, https://images.pexels.com/photos/159866/books-book-pages-read-literature-159866.jpeg?auto=compress&cs=tinysrgb&w=480&h=360&dpr=1 480w, https://images.pexels.com/photos/159866/books-book-pages-read-literature-159866.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&dpr=1 800w'
+            sizes='(max-width: 320px) 280px, (max-width: 480px) 440px, 800px'
+            className='w-full md:w-1/3 rounded' 
+            alt='Library' 
+            loading="lazy" 
+          />
           <div className='mt-4 md:mt-0 md:ml-8 text-justify'>
             <h2 className='text-2xl font-bold'>About Us</h2>
             <p className='mt-4 text-gray-700'>
@@ -120,91 +170,23 @@ export default function Landing() {
         </section>
 
 
-        <section className='my-12 px-4'>
-          <h2 className='text-2xl font-bold text-center mb-8'>Book Categories</h2>
-          <div className='flex flex-wrap justify-center gap-4'>
-            {['Fiction', 'Non-Fiction', 'Fantasy', 'Science Fiction', 'Mystery', 'Educational'].map(category => (
-              <button key={category} className='px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors duration-300'>{category}</button>
+        <section className='my-12'>
+          <h2 className='text-2xl md:text-3xl font-semibold text-center mb-6'>Book Categories</h2>
+          <div className='flex flex-wrap justify-center'>
+            {categories.map((category) => (
+              <button key={category} className='m-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300'>
+                {category}
+              </button>
             ))}
           </div>
         </section>
 
-        <section className='my-12 px-4'>
+
+        <section className='my-12'>
           <h2 className='text-2xl font-bold text-center mb-8'>Featured Books</h2>
-          <div className='grid grid-cols-1 md:grid-cols-3 gap-8'>
-            {[
-              {
-                image: Novel1,
-                title: 'A Little History Economics'
-              },
-              {
-                image: Novel2,
-                title: 'Bad days in History'
-              },
-              {
-                image: Novel3,
-                title: 'Black code'
-              },
-              {
-                image: Novel4,
-                title: 'Book Mock'
-              },
-              {
-                image: Novel5,
-                title: 'Boys Beasts & Men'
-              },
-              {
-                image: Novel6,
-                title: 'Burning of Books'
-              }
-            ].map((book, index) => (
-              <div key={index} className='bg-white rounded-lg shadow-md overflow-hidden'>
-                <img className='w-full h-96 object-contain' src={book.image} alt={book.title} />
-                <div className='p-4'>
-                  <h3 className='text-xl font-semibold mb-2'>{book.title}</h3>
-                  <p className='text-gray-700 text-justify'>A brief description of {book.title}.</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section className='my-12 px-4'>
-          <h2 className='text-2xl font-bold text-center mb-8'>Recommended Books</h2>
-          <div className='grid grid-cols-1 md:grid-cols-3 gap-8'>
-            {[
-              {
-                image: Novel7,
-                title: 'Elon Musk'
-              },
-              {
-                image: Novel8,
-                title: 'Executive Impact And Influence'
-              },
-              {
-                image: Novel9,
-                title: 'How they Got into harverd'
-              },
-              {
-                image: Novel10,
-                title: 'Lawyers as Leaders'
-              },
-              {
-                image: Novel11,
-                title: 'Learn To think In Systems'
-              },
-              {
-                image: Novel12,
-                title: 'Market Mind Games'
-              }
-            ].map((book, index) => (
-              <div key={index} className='bg-white rounded-lg shadow-md overflow-hidden'>
-                <img className='w-full h-96 object-contain' src={book.image} alt={book.title} />
-                <div className='p-4'>
-                  <h3 className='text-xl font-semibold mb-2'>{book.title}</h3>
-                  <p className='text-gray-700 text-justify'>A brief description of {book.title}.</p>
-                </div>
-              </div>
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-4'>
+            {featuredBooks.map((book, index) => (
+              <BookCard key={index} image={book.image} title={book.title} description={book.description} />
             ))}
           </div>
         </section>
@@ -247,24 +229,12 @@ export default function Landing() {
 
         <section className='my-12 px-4'>
           <h2 className='text-2xl font-bold text-center mb-8'>Author Spotlights</h2>
-          <div className='grid grid-cols-1 md:grid-cols-3 gap-8'>
-            {[
-              { name: 'Colson Whitehead', img: Author3},
-              { name: 'Carol Roh Spaulding', img: Author2 },
-              { name: 'Barnes & Noble Press Author', img: Author1 }
-            ].map((author, index) => (
-              <div key={index} className='bg-white rounded-lg shadow-md overflow-hidden'>
-                <img className='h-48 w-full object-contain' src={author.img} alt={author.name} />
-                <div className='p-4'>
-                  <h3 className='text-xl font-semibold mb-2'>{author.name}</h3>
-                  <p className='text-gray-700 text-justify'>A brief bio of {author.name}.</p>
-                </div>
-              </div>
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-4'>
+            {authors.map((author, index) => (
+              <AuthorCard key={index} img={author.img} name={author.name} />
             ))}
           </div>
         </section>
-
-        
 
         <section className='my-12 px-4'>
           <h2 className='text-2xl font-bold text-center mb-8'>Newsletter Subscription</h2>
@@ -274,13 +244,14 @@ export default function Landing() {
           </div>
         </section>
 
-
-
-
       </div>
       <Footer />
     </div>
   );
 }
+
+
+
+
 
 

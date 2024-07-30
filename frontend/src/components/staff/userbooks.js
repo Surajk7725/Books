@@ -115,7 +115,7 @@ const UserBooks = () => {
         <div className="min-h-screen bg-gray-100 flex flex-col">
             <NavBar />
             <main className="flex-grow mt-8 mb-8">
-                <div className="max-w-6xl mx-auto bg-white p-8 rounded-lg shadow-md mb-14">
+                <div className="max-w-6xl mx-auto bg-white p-8 rounded-lg shadow-md mb-14 mt-8">
                     <h2 className="text-2xl font-bold mb-6 text-gray-800">Book List</h2>
                     <Table
                         dataSource={data}
@@ -125,8 +125,8 @@ const UserBooks = () => {
                         rowKey="id"
                     />
                 </div>
-                <Footer />
             </main>
+            <Footer />
             <ToastContainer />
         </div>
     );
