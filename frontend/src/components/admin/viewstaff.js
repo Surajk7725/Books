@@ -86,55 +86,7 @@ const sentimentData = {
 
 function ViewStaff() {
   return (
-    // <div className="justify-center items-center min-h-screen mb-2 ml-10">
-
-    //   <div className="text-start -mt-2 mb-2">
-    //     <div className="bg-white p-4 rounded-lg shadow-md mb-6 flex justify-between items-center">
-    //       <h1 className="text-2xl font-bold text-gray-800 ml-4">Staff Analysis</h1>
-    //       <Breadcrumb>
-    //         <Breadcrumb.Item><Link to="/admin/home">Dashboard</Link></Breadcrumb.Item>
-    //         <Breadcrumb.Item><Link to="/admin/staff-display">Staff Display</Link></Breadcrumb.Item>
-    //         <Breadcrumb.Item>Staff Analysis</Breadcrumb.Item>
-    //       </Breadcrumb>
-    //     </div>
-    //   </div>
-
-    //   <div className="justify-center items-center min-h-screen p-2">
-    //   <div className="grid grid-cols-1 md:grid-cols-2 gap-4  mt-[0.5cm]">
-    //     <Card className="bg-white shadow-lg rounded-lg">
-    //       <h2 className="text-lg font-semibold mb-2 text-center">User Activity Trends</h2>
-    //       <div style={{ height: '400px' }}>
-    //          <Line data={data} options={barOptions} />
-    //       </div>
-    //     </Card>
-    //     <Card className="bg-white shadow-lg rounded-lg">
-    //       <h2 className="text-lg font-semibold mb-2 text-center">Books Statistics</h2>
-    //       <div style={{ height: '400px' }}>
-    //          <Bar data={barData} options={barOptions} />
-    //       </div>
-    //     </Card>
-    //   </div>
-    // </div>
-
-    // <div className="justify-center items-center min-h-screen p-2 -mt-[2cm]">
-    //   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-    //     <Card className="bg-white shadow-lg rounded-lg">
-    //       <h2 className="text-lg font-semibold mb-2 text-center">Review Analysis</h2>
-    //       <div style={{ height: '400px' }}>
-    //         <Bar data={reviewData} options={barOptions} />
-    //       </div>
-    //     </Card>
-    //     <Card className="bg-white shadow-lg rounded-lg">
-    //       <h2 className="text-lg font-semibold mb-2 text-center">Sentiment Analysis</h2>
-    //       <div style={{ height: '400px' }}>
-    //         <Pie data={sentimentData} />
-    //       </div>
-    //     </Card>
-    //   </div>
-    // </div>
-
-    // </div>
-
+    
     <div className="flex flex-col items-center min-h-screen mb-2 ml-10">
 
     <div className="text-start -mt-2 mb-2 w-full px-4 md:px-0">
