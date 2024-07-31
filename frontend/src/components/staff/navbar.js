@@ -151,9 +151,6 @@ export default function NavBar() {
                                 <Link to="/staff-settings" className="px-4 py-2 flex items-center hover:bg-gray-100">
                                     <CogIcon className="h-5 w-5 mr-2" /> Settings
                                 </Link>
-                                <Link to="/help-center" className="px-4 py-2 flex items-center hover:bg-gray-100">
-                                    <QuestionMarkCircleIcon className="h-5 w-5 mr-2" /> Help
-                                </Link>
                                 <Link to="/" className="px-4 py-2 flex items-center hover:bg-gray-100">
                                     <LogoutIcon className="h-5 w-5 mr-2" /> Logout
                                 </Link>

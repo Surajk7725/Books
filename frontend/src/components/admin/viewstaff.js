@@ -86,12 +86,10 @@ const sentimentData = {
 
 function ViewStaff() {
   return (
-    
-    <div className="flex flex-col items-center min-h-screen mb-2 ml-10">
-
-    <div className="text-start -mt-2 mb-2 w-full px-4 md:px-0">
-        <div className="bg-white p-4 rounded-lg shadow-md mb-6 flex flex-col md:flex-row justify-between items-start md:items-center">
-            <h1 className="text-2xl font-bold text-gray-800 mb-2 md:mb-0">Staff Analysis</h1>
+    <div className="justify-center items-center min-h-screen mb-2 ml-2 mt-4 md:ml-10">
+    <div className="text-start -mt-4 mb-8">
+      <div className="bg-white p-4 rounded-lg shadow-md mb-6 flex flex-col md:flex-row justify-between items-center">
+        <h1 className="text-2xl font-bold text-gray-800 ml-4 mb-4 md:mb-0">Staff Analysis</h1>
             <Breadcrumb>
                 <Breadcrumb.Item><Link to="/admin/home">Dashboard</Link></Breadcrumb.Item>
                 <Breadcrumb.Item><Link to="/admin/staff-display">Staff Display</Link></Breadcrumb.Item>

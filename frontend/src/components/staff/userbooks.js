@@ -113,22 +113,24 @@ const UserBooks = () => {
 
     return (
         <div className="min-h-screen bg-gray-100 flex flex-col">
-            <NavBar />
-            <main className="flex-grow mt-8 mb-8">
-                <div className="max-w-6xl mx-auto bg-white p-8 rounded-lg shadow-md mb-14 mt-8">
-                    <h2 className="text-2xl font-bold mb-6 text-gray-800">Book List</h2>
-                    <Table
-                        dataSource={data}
-                        columns={columns}
-                        pagination={{ current: currentPage, pageSize: itemsPerPage, total: data.length }}
-                        onChange={handleTableChange}
-                        rowKey="id"
-                    />
-                </div>
-            </main>
-            <Footer />
-            <ToastContainer />
-        </div>
+        <NavBar />
+        <main className="flex-grow mt-4 mb-4 md:mt-8 md:mb-8 px-4 md:px-0">
+            <div className="max-w-full md:max-w-6xl mx-auto bg-white p-4 md:p-8 rounded-lg shadow-md mb-6 md:mb-14 mt-4 md:mt-8 overflow-x-auto">
+                <h2 className="text-xl md:text-2xl font-bold mb-4 md:mb-6 text-gray-800">Book List</h2>
+                <Table
+                    dataSource={data}
+                    columns={columns}
+                    pagination={{ current: currentPage, pageSize: itemsPerPage, total: data.length }}
+                    onChange={handleTableChange}
+                    rowKey="id"
+                />
+            </div>
+        </main>
+        <Footer />
+        <ToastContainer />
+    </div>
+    
+
     );
 };
 

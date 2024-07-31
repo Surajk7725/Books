@@ -48,11 +48,10 @@ const Books = () => {
   const paginate = pageNumber => setCurrentPage(pageNumber);
 
   return (
-    <div className="container -mt-8 mb-8  mx-auto px-4 py-6 relative">
-      {/* Heading */}
+    <div className="justify-center items-center min-h-screen mb-2 ml-2 mt-4 md:ml-10">
       <div className="text-start -mt-4 mb-8">
-        <div className="bg-white p-4 rounded-lg shadow-md mb-6 flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-gray-800 ml-4">Books</h1>
+        <div className="bg-white p-4 rounded-lg shadow-md mb-6 flex flex-col md:flex-row justify-between items-center">
+          <h1 className="text-2xl font-bold text-gray-800 ml-4 mb-4 md:mb-0">Books</h1>
           <Breadcrumb>
             <Breadcrumb.Item><Link to="/admin/home">Dashboard</Link></Breadcrumb.Item>
             <Breadcrumb.Item>Books</Breadcrumb.Item>
@@ -61,7 +60,7 @@ const Books = () => {
       </div>
 
       {/* Search bar */}
-      <div className="absolute mt-24 top-4 right-4 flex items-center space-x-2">
+      <div className="fixed top-10 left-36 mr-14 flex items-center space-x-2 mt-48 md:mr-14 md:top-4 md:right-4 md:left-auto">
         <input
           type="text"
           placeholder="Search books..."

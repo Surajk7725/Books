@@ -186,11 +186,10 @@ const UserDisplay = () => {
   ];
 
   return (
-        <div className="flex justify-center items-center min-h-screen overflow-hidden bg-gray-100">
-    <div className="w-full max-w-6xl px-4">
+    <div className="justify-center items-center min-h-screen mb-2 ml-2 mt-4 md:ml-10">
       <div className="text-start -mt-4 mb-8">
-        <div className="bg-white p-4 rounded-lg shadow-md mb-6 flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-gray-800 ml-4">Display User</h1>
+        <div className="bg-white p-4 rounded-lg shadow-md mb-6 flex flex-col md:flex-row justify-between items-center">
+          <h1 className="text-2xl font-bold text-gray-800 ml-4 mb-4 md:mb-0">Display User</h1>
           <Breadcrumb>
             <Breadcrumb.Item>
               <Link to="/admin/home">Dashboard</Link>
@@ -205,7 +204,6 @@ const UserDisplay = () => {
       </div>
       <ToastContainer />
     </div>
-  </div>
   );
 };
 

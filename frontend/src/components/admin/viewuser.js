@@ -83,12 +83,12 @@ function ViewUser() {
   return (
     
 
-    <div className="justify-center items-center min-h-screen mb-2 ml-10">
+    <div className="justify-center items-center min-h-screen mb-2 ml-2 mt-4 md:ml-10">
 
     <div className="text-start -mt-4 mb-8">
-        <div className="bg-white p-4 rounded-lg shadow-md mb-6 flex flex-col md:flex-row justify-between items-start md:items-center">
-            <h1 className="text-2xl font-bold text-gray-800 mb-2 md:mb-0 ml-4">User Analysis</h1>
-            <Breadcrumb className="ml-4 md:ml-0">
+        <div className="bg-white p-4 rounded-lg shadow-md mb-6 flex flex-col md:flex-row justify-between items-center">
+            <h1 className="text-2xl font-bold text-gray-800 ml-4 mb-4 md:mb-0">User Analysis</h1>
+            <Breadcrumb>
                 <Breadcrumb.Item><Link to="/admin/home">Dashboard</Link></Breadcrumb.Item>
                 <Breadcrumb.Item><Link to="/admin/user-display">User Display</Link></Breadcrumb.Item>
                 <Breadcrumb.Item>User Analysis</Breadcrumb.Item>

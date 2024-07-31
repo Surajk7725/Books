@@ -36,7 +36,7 @@ const Sidebar = () => {
   );
 
   return (
-    <Layout className="min-h-screen">
+     <Layout className="min-h-screen overflow-x-hidden">
       <Sider
         breakpoint="lg"
         collapsedWidth="0"
@@ -65,7 +65,7 @@ const Sidebar = () => {
               <Link to="/admin/user-display">Display</Link>
             </Menu.Item>
           </SubMenu>
-          <SubMenu key="sub2" icon={<FcLibrary />} title="Librarian">
+          <SubMenu key="sub2" icon={<UserOutlined />} title="Librarian">
             <Menu.Item key="4" icon={<PlusOutlined />}>
               <Link to="/admin/staff-create">Create</Link>
             </Menu.Item>
@@ -73,7 +73,7 @@ const Sidebar = () => {
               <Link to="/admin/staff-display">Display</Link>
             </Menu.Item>
           </SubMenu>
-          <SubMenu key="sub3" icon={<GrUserAdmin />} title="Admin">
+          <SubMenu key="sub3" icon={<UserOutlined />} title="Admin">
             <Menu.Item key="6" icon={<PlusOutlined />}>
               <Link to="/admin/admin-create">Create</Link>
             </Menu.Item>
@@ -81,16 +81,15 @@ const Sidebar = () => {
               <Link to="/admin/admin-display">Display</Link>
             </Menu.Item>
           </SubMenu>
-          <Menu.Item key="8" icon={<CustomerServiceOutlined />} title="Resolve">
+          <Menu.Item key="8" icon={<CustomerServiceOutlined />}>
             <Link to="/admin/contact-resolve">Resolve</Link>
           </Menu.Item>
-          <Menu.Item key="9" icon={<ReadOutlined />} title="Books">
+          <Menu.Item key="9" icon={<ReadOutlined />}>
             <Link to="/admin/books">Books</Link>
           </Menu.Item>
-          <Menu.Item key="10" icon={<UserOutlined />} title="Profile">
+          <Menu.Item key="10" icon={<UserOutlined />}>
             <Link to="/admin/profile">Profile</Link>
           </Menu.Item>
-
           <SubMenu key="sub4" icon={<SettingOutlined />} title="Settings">
             <Menu.Item key="11" icon={<UserOutlined />}>
               <Link to="/admin/settings">Personal Information</Link>
@@ -99,8 +98,7 @@ const Sidebar = () => {
               <Link to="/admin/security">Security</Link>
             </Menu.Item>
           </SubMenu>
-
-          <SubMenu key="sub5" icon={<AiOutlineTool />} title="Authentication">
+          <SubMenu key="sub5" icon={<SettingOutlined />} title="Authentication">
             <Menu.Item key="13" icon={<LoginOutlined />}>
               <Link to="/login">Login</Link>
             </Menu.Item>
@@ -110,7 +108,7 @@ const Sidebar = () => {
           </SubMenu>
         </Menu>
       </Sider>
-      <Layout>
+      <Layout className="flex flex-col h-screen">
         <Header className="flex justify-between items-center bg-white p-0 h-20">
           <div className="flex items-center">
             <Input
@@ -118,28 +116,31 @@ const Sidebar = () => {
               prefix={<SearchOutlined />}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="ml-24 w-64"
+              className="ml-4 w-64 md:ml-24"
             />
           </div>
-
           <div className="flex items-center mr-4">
             <Dropdown overlay={menu} trigger={['click']}>
               <BellOutlined className="text-2xl cursor-pointer" />
             </Dropdown>
-            <div className="w-[1.0cm]"></div>
+            <div className="w-4 md:w-[1.0cm]"></div>
             <Dropdown overlay={dropdown} trigger={['click']}>
-              <Avatar src="https://wallpapers.com/images/hd/yuuichi-katagiri-anime-portrait-5xl430n009kmsg7l.jpg" className="cursor-pointer" size="large" />
+              <Avatar
+                src="https://wallpapers.com/images/hd/yuuichi-katagiri-anime-portrait-5xl430n009kmsg7l.jpg"
+                className="cursor-pointer"
+                size="large"
+              />
             </Dropdown>
           </div>
         </Header>
-        <Content className="m-4 mt-12">
-          <div className="p-2 min-h-screen bg-gray-100 rounded-lg">
+        <Content className="flex-grow m-4 mt-12 overflow-y-scroll">
+          <div className="p-2 bg-gray-100 rounded-lg">
             <Outlet />
           </div>
+          <Footer className="text-center mt-4 md:mt-8">
+            Book Hub ©{new Date().getFullYear()}
+          </Footer>
         </Content>
-        <Footer className="text-center">
-          Book Hub ©{new Date().getFullYear()}
-        </Footer>
       </Layout>
     </Layout>
   );

@@ -70,10 +70,10 @@ const SettingsPage = () => {
 
     return (
 
-        <div className="justify-center items-center bg-gray-100 min-h-screen ml-4 lg:ml-12 mb-2">
-            <div className="text-start -mt-4 mb-8 px-4">
-                <div className="bg-white p-4 rounded-lg shadow-md mb-6 flex flex-col lg:flex-row justify-between items-start lg:items-center">
-                    <h1 className="text-2xl font-bold text-gray-800 mb-4 lg:mb-0 ml-4">Settings</h1>
+    <div className="justify-center items-center min-h-screen mb-2 ml-2 mt-4 md:ml-10">
+      <div className="text-start -mt-4 mb-8">
+        <div className="bg-white p-4 rounded-lg shadow-md mb-6 flex flex-col md:flex-row justify-between items-center">
+          <h1 className="text-2xl font-bold text-gray-800 ml-4 mb-4 md:mb-0">Settings</h1>
                     <Breadcrumb>
                         <Breadcrumb.Item><Link to="/admin/home">Dashboard</Link></Breadcrumb.Item>
                         <Breadcrumb.Item>Settings</Breadcrumb.Item>

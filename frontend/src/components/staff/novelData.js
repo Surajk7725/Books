@@ -62,21 +62,23 @@ const NovelData = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
-      <NavBar />
-      <main className="flex-grow mt-8 mb-8">
-        <div className="max-w-6xl mx-auto bg-white p-8 rounded-lg shadow-md mb-14">
-          <h3 className="text-2xl font-bold mb-6 text-gray-800">Reading History</h3>
-          <Table
-            dataSource={sampleData}
-            columns={columns}
-            pagination={{ current: currentPage, pageSize: itemsPerPage, total: sampleData.length }}
-            onChange={handleTableChange}
-            rowKey="id"
-          />
-        </div>
-        <Footer />
-      </main>
-    </div>
+    <NavBar />
+    <main className="flex-grow mt-8 mb-8 px-4 md:px-0"> {/* Add horizontal padding for mobile */}
+      <div className="max-w-6xl mx-auto bg-white p-8 rounded-lg shadow-md mb-14 overflow-x-auto">
+        <h3 className="text-2xl font-bold mb-6 text-gray-800">Reading History</h3>
+        <Table
+          dataSource={sampleData}
+          columns={columns}
+          pagination={{ current: currentPage, pageSize: itemsPerPage, total: sampleData.length }}
+          onChange={handleTableChange}
+          rowKey="id"
+        />
+      </div>
+    </main>
+    <Footer />
+  </div>
+  
+
   );
 };
 
