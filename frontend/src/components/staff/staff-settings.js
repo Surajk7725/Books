@@ -132,7 +132,7 @@ const Staff_Settings = () => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => resolve(reader.result);
-       reader.onerror = (error) => reject(error);
+      reader.onerror = (error) => reject(error);
     });
 
   const [previewOpen, setPreviewOpen] = useState(false);
@@ -166,7 +166,7 @@ const Staff_Settings = () => {
     setStartDate(date);
     console.log(date, dateString);
   };
-  
+
 
 
   const fileInputRef = useRef(null);
@@ -186,9 +186,9 @@ const Staff_Settings = () => {
       }
       return file;
     });
-  
+
     setFileList(updatedFileList);
-  
+
     if (updatedFileList.length > 0) {
       setProfileImage(updatedFileList[0].url || updatedFileList[0].thumbUrl);
     } else {
@@ -235,7 +235,7 @@ const Staff_Settings = () => {
     { label: 'Santali', value: 'Santali' },
     { label: 'Kashmiri', value: 'Kashmiri' }
   ];
-  
+
 
   const computerSkillOptions = [
     { label: 'Library Management Systems', value: 'Library Management Systems' },
@@ -253,17 +253,18 @@ const Staff_Settings = () => {
   const handleSkillChange = (value) => {
     setComputerSkills(value);
   };
-  
+
 
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
       <div className="flex flex-col lg:flex-row">
-        <div className="lg:w-64 bg-white text-black p-8">
-          <h2 className="text-2xl font-bold mb-6">Settings</h2>
 
-          <div className="flex">
-            <div className="w-64">
+        <div className="w-full lg:w-64 bg-white text-black p-4 sm:p-6 lg:p-8">
+          <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Settings</h2>
+
+          <div className="flex justify-center lg:justify-start">
+            <div className="w-full lg:w-64">
               <ul className="space-y-2">
                 <li
                   className={`p-2 cursor-pointer rounded-lg ${selectedSection === 'home' ? 'bg-transparent-700 border border-gray-300' : ''}`}
@@ -299,191 +300,192 @@ const Staff_Settings = () => {
             </div>
           </div>
         </div>
-        <div className="flex-grow p-6 mb-8">
 
+
+        <div className="flex-grow p-6 mb-8">
 
           {selectedSection === 'account' && (
             <div className="max-w-full mx-4 p-8 bg-white rounded-md shadow-md">
-            <h2 className="text-3xl font-bold mb-6">Edit Profile</h2>
-            <div className="flex">
-            <div className="flex-shrink-0 mr-6">
-                <div className="relative w-24 h-24">
-                  <Upload
-                    action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
-                    listType="picture-circle"
-                    fileList={fileList}
-                    onPreview={handlePreview}
-                    onChange={handleChange}
-                  >
-                    {fileList.length >= 1 ? null : uploadButton}
-                  </Upload>
-                  {previewImage && (
-                    <Image
-                      wrapperStyle={{ display: 'none' }}
-                      preview={{
-                        visible: previewOpen,
-                        onVisibleChange: (visible) => setPreviewOpen(visible),
-                        afterOpenChange: (visible) => !visible && setPreviewImage(''),
-                      }}
-                      src={previewImage}
-                    />
-                  )}
-                </div>
-              </div>
-     
-              <form className="flex-1">
-                <div className="grid grid-cols-2 gap-4 ml-10">
-                  <div className="col-span-2 sm:col-span-1">
-                    <label className="block text-gray-700">Full Name</label>
-                    <input
-                      type="text"
-                      className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
-                      value={fullName}
-                      onChange={(e) => setFullName(e.target.value)}
-                    />
-                  </div>
-                  <div className="col-span-2 sm:col-span-1">
-                    <label className="block text-gray-700">User Name</label>
-                    <input
-                      type="text"
-                      className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
-                      value={userName}
-                      onChange={(e) => setUserName(e.target.value)}
-                    />
-                  </div>
-                  <div className="col-span-2 sm:col-span-1">
-                    <label className="block text-gray-700">Date of Birth</label>
-                    <DatePicker onChange={onChange} value={dob} className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md" />
-                  </div>
-                  <div className="col-span-2 sm:col-span-1">
-                    <label className="block text-gray-700">Email Address</label>
-                    <input
-                      type="email"
-                      className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                    />
-                  </div>
-                  <div className="col-span-2 sm:col-span-1">
-                    <label className="block text-gray-700">Phone Number</label>
-                    <input
-                      type="text"
-                      className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
-                      value={phoneNumber}
-                      onChange={(e) => setPhoneNumber(e.target.value)}
-                    />
-                  </div>
-                  <div className="col-span-2 sm:col-span-1">
-                    <label className="block text-gray-700">House Address</label>
-                    <input
-                      type="text"
-                      className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
-                      value={houseAddress}
-                      onChange={(e) => setHouseAddress(e.target.value)}
-                    />
-                  </div>
-                </div>
-      
-                <h3 className="text-xl font-bold mt-6 mb-2 ml-10">Professional Details</h3>
-                <div className="grid grid-cols-2 gap-4 ml-10">
-                  <div className="col-span-2 sm:col-span-1">
-                    <label className="block text-gray-700">Job Title</label>
-                    <input
-                      type="text"
-                      className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
-                      value={jobTitle}
-                      onChange={(e) => setJobTitle(e.target.value)}
-                    />
-                  </div>
-                  <div className="col-span-2 sm:col-span-1">
-                    <label className="block text-gray-700">Start Date</label>
-                    <DatePicker onChange={startChange} value={startDate} className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md" />
-                  </div>
-                  <div className="col-span-2 sm:col-span-1">
-                    <label className="block text-gray-700">Employee ID or Code</label>
-                    <input
-                      type="text"
-                      className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
-                      value={employeeID}
-                      onChange={(e) => setEmployeeID(e.target.value)}
-                    />
-                  </div>
-                </div>
-      
-                <h3 className="text-xl font-bold mt-6 mb-2 ml-10">Qualifications and Education</h3>
-                <div className="grid grid-cols-2 gap-4 ml-10">
-                  <div className="col-span-2 sm:col-span-1">
-                    <label className="block text-gray-700">Highest Education Level Attained</label>
-                    <select
-                      className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
-                      value={highestEducation}
-                      onChange={(e) => setHighestEducation(e.target.value)}
+              <h2 className="text-3xl font-bold mb-6">Edit Profile</h2>
+              <div className="flex flex-col sm:flex-row">
+                <div className="flex-shrink-0 mb-6 sm:mb-0 sm:mr-6">
+                  <div className="relative w-24 h-24 mx-auto sm:mx-0">
+                    <Upload
+                      action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
+                      listType="picture-circle"
+                      fileList={fileList}
+                      onPreview={handlePreview}
+                      onChange={handleChange}
                     >
-                      <option value=""></option>
-                      <option value="High School Diploma">High School Diploma</option>
-                      <option value="Associate's Degree">Associate's Degree</option>
-                      <option value="Bachelor's Degree">Bachelor's Degree</option>
-                      <option value="Master's Degree">Master's Degree</option>
-                      <option value="Doctorate">Doctorate</option>
-                      <option value="Other">Other</option>
-                    </select>
-                  </div>
-                  <div className="col-span-2 sm:col-span-1">
-                    <label className="block text-gray-700">Degrees or Certifications</label>
-                    <select
-                      className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
-                      value={degrees}
-                      onChange={(e) => setDegrees(e.target.value)}
-                    >
-                      <option value=""></option>
-                      <option value="Certified Librarian">Certified Librarian</option>
-                      <option value="School Media Specialist Certification">School Media Specialist Certification</option>
-                      <option value="Archival Certifications">Archival Certifications</option>
-                      <option value="Other">Other</option>
-                    </select>
-                  </div>
-                  <div className="col-span-2">
-                    <label className="block text-gray-700">Professional Affiliations</label>
-                    <select
-                      className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
-                      value={affiliations}
-                      onChange={(e) => setAffiliations(e.target.value)}
-                    >
-                      <option value=""></option>
-                      <option value="ALA (American Library Association)">ALA (American Library Association)</option>
-                      <option value="SLA (Special Libraries Association)">SLA (Special Libraries Association)</option>
-                      <option value="PLA (Public Library Association)">PLA (Public Library Association)</option>
-                      <option value="ACRL (Association of College and Research Libraries)">ACRL (Association of College and Research Libraries)</option>
-                      <option value="Other">Other</option>
-                    </select>
+                      {fileList.length >= 1 ? null : uploadButton}
+                    </Upload>
+                    {previewImage && (
+                      <Image
+                        wrapperStyle={{ display: 'none' }}
+                        preview={{
+                          visible: previewOpen,
+                          onVisibleChange: (visible) => setPreviewOpen(visible),
+                          afterOpenChange: (visible) => !visible && setPreviewImage(''),
+                        }}
+                        src={previewImage}
+                      />
+                    )}
                   </div>
                 </div>
 
-                <h3 className="text-xl font-bold mt-6 mb-2 ml-10">Work Experience</h3>
-                <div className="grid grid-cols-2 gap-4 ml-10">
-                  <div className="col-span-2 sm:col-span-1">
-                    <label className="block text-gray-700">Previous Position</label>
-                    <input
-                      type="text"
-                      className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
-                      value={workExperience}
-                      onChange={(e) => setWorkExperience(e.target.value)}
-                    />
+                <form className="flex-1">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="col-span-1">
+                      <label className="block text-gray-700">Full Name</label>
+                      <input
+                        type="text"
+                        className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
+                        value={fullName}
+                        onChange={(e) => setFullName(e.target.value)}
+                      />
+                    </div>
+                    <div className="col-span-1">
+                      <label className="block text-gray-700">User Name</label>
+                      <input
+                        type="text"
+                        className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
+                        value={userName}
+                        onChange={(e) => setUserName(e.target.value)}
+                      />
+                    </div>
+                    <div className="col-span-1">
+                      <label className="block text-gray-700">Date of Birth</label>
+                      <DatePicker onChange={onChange} value={dob} className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md" />
+                    </div>
+                    <div className="col-span-1">
+                      <label className="block text-gray-700">Email Address</label>
+                      <input
+                        type="email"
+                        className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                      />
+                    </div>
+                    <div className="col-span-1">
+                      <label className="block text-gray-700">Phone Number</label>
+                      <input
+                        type="text"
+                        className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
+                        value={phoneNumber}
+                        onChange={(e) => setPhoneNumber(e.target.value)}
+                      />
+                    </div>
+                    <div className="col-span-1">
+                      <label className="block text-gray-700">House Address</label>
+                      <input
+                        type="text"
+                        className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
+                        value={houseAddress}
+                        onChange={(e) => setHouseAddress(e.target.value)}
+                      />
+                    </div>
                   </div>
-                  <div className="col-span-2 sm:col-span-1">
-                    <label className="block text-gray-700">Years of Experience in Libraries</label>
-                    <input
-                      type="text"
-                      className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
-                      value={yearsExperience}
-                      onChange={(e) => setYearsExperience(e.target.value)}
-                    />
+
+                  <h3 className="text-xl font-bold mt-6 mb-2">Professional Details</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="col-span-1">
+                      <label className="block text-gray-700">Job Title</label>
+                      <input
+                        type="text"
+                        className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
+                        value={jobTitle}
+                        onChange={(e) => setJobTitle(e.target.value)}
+                      />
+                    </div>
+                    <div className="col-span-1">
+                      <label className="block text-gray-700">Start Date</label>
+                      <DatePicker onChange={startChange} value={startDate} className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md" />
+                    </div>
+                    <div className="col-span-1">
+                      <label className="block text-gray-700">Employee ID or Code</label>
+                      <input
+                        type="text"
+                        className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
+                        value={employeeID}
+                        onChange={(e) => setEmployeeID(e.target.value)}
+                      />
+                    </div>
                   </div>
-                </div>
-      
-                <h3 className="text-xl font-bold mt-6 mb-2 ml-10">Skills and Competencies</h3>
-                  <div className="grid grid-cols-2 gap-4 ml-10">
-                    <div className="col-span-2 sm:col-span-1">
+
+                  <h3 className="text-xl font-bold mt-6 mb-2">Qualifications and Education</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="col-span-1">
+                      <label className="block text-gray-700">Highest Education Level Attained</label>
+                      <select
+                        className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
+                        value={highestEducation}
+                        onChange={(e) => setHighestEducation(e.target.value)}
+                      >
+                        <option value=""></option>
+                        <option value="High School Diploma">High School Diploma</option>
+                        <option value="Associate's Degree">Associate's Degree</option>
+                        <option value="Bachelor's Degree">Bachelor's Degree</option>
+                        <option value="Master's Degree">Master's Degree</option>
+                        <option value="Doctorate">Doctorate</option>
+                        <option value="Other">Other</option>
+                      </select>
+                    </div>
+                    <div className="col-span-1">
+                      <label className="block text-gray-700">Degrees or Certifications</label>
+                      <select
+                        className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
+                        value={degrees}
+                        onChange={(e) => setDegrees(e.target.value)}
+                      >
+                        <option value=""></option>
+                        <option value="Certified Librarian">Certified Librarian</option>
+                        <option value="School Media Specialist Certification">School Media Specialist Certification</option>
+                        <option value="Archival Certifications">Archival Certifications</option>
+                        <option value="Other">Other</option>
+                      </select>
+                    </div>
+                    <div className="col-span-1 sm:col-span-2">
+                      <label className="block text-gray-700">Professional Affiliations</label>
+                      <select
+                        className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
+                        value={affiliations}
+                        onChange={(e) => setAffiliations(e.target.value)}
+                      >
+                        <option value=""></option>
+                        <option value="ALA (American Library Association)">ALA (American Library Association)</option>
+                        <option value="SLA (Special Libraries Association)">SLA (Special Libraries Association)</option>
+                        <option value="PLA (Public Library Association)">PLA (Public Library Association)</option>
+                        <option value="ACRL (Association of College and Research Libraries)">ACRL (Association of College and Research Libraries)</option>
+                        <option value="Other">Other</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <h3 className="text-xl font-bold mt-6 mb-2">Work Experience</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="col-span-1">
+                      <label className="block text-gray-700">Previous Position</label>
+                      <input
+                        type="text"
+                        className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
+                        value={workExperience}
+                        onChange={(e) => setWorkExperience(e.target.value)}
+                      />
+                    </div>
+                    <div className="col-span-1">
+                      <label className="block text-gray-700">Years of Experience in Libraries</label>
+                      <input
+                        type="text"
+                        className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
+                        value={yearsExperience}
+                        onChange={(e) => setYearsExperience(e.target.value)}
+                      />
+                    </div>
+                  </div>
+
+                  <h3 className="text-xl font-bold mt-6 mb-2">Skills and Competencies</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="col-span-1">
                       <label className="block text-gray-700">Languages Spoken</label>
                       <Select
                         mode="multiple"
@@ -494,12 +496,11 @@ const Staff_Settings = () => {
                         className="mt-1 block w-full"
                       >
                         {languageOptions.map((option) => (
-                          <Option key={option.value}>{option.label}
-                          </Option>
+                          <Option key={option.value}>{option.label}</Option>
                         ))}
                       </Select>
                     </div>
-                    <div className="col-span-2 sm:col-span-1">
+                    <div className="col-span-1">
                       <label className="block text-gray-700">Computer Skills</label>
                       <Select
                         mode="multiple"
@@ -518,64 +519,65 @@ const Staff_Settings = () => {
                     </div>
                   </div>
 
-                <h3 className="text-xl font-bold mt-6 mb-2 ml-10">Add Your Social Handles below</h3>
-                <div className="grid grid-cols-2 gap-4 ml-10">
-                  <div className="flex items-center space-x-2">
-                  <FaYoutube className="text-red-600 h-6 w-6" />
-                    <input
-                      type="url"
-                      name="youtube"
-                      placeholder="YouTube"
-                      className="flex-1 px-4 py-2 bg-gray-100 border rounded-md"
-                      value={socialLinks.youtube}
-                      onChange={handleInputChange}
-                    />
+                  <h3 className="text-xl font-bold mt-6 mb-2">Add Your Social Handles below</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="flex items-center space-x-2">
+                      <FaYoutube className="text-red-600 h-6 w-6" />
+                      <input
+                        type="url"
+                        name="youtube"
+                        placeholder="YouTube"
+                        className="flex-1 px-4 py-2 bg-gray-100 border rounded-md"
+                        value={socialLinks.youtube}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <FaInstagram className="text-pink-600 h-6 w-6" />
+                      <input
+                        type="url"
+                        name="instagram"
+                        placeholder="Instagram"
+                        className="flex-1 px-4 py-2 bg-gray-100 border rounded-md"
+                        value={socialLinks.instagram}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <FaTwitter className="text-blue-400 h-6 w-6" />
+                      <input
+                        type="url"
+                        name="twitter"
+                        placeholder="Twitter"
+                        className="flex-1 px-4 py-2 bg-gray-100 border rounded-md"
+                        value={socialLinks.twitter}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <FaLinkedin className="text-blue-700 h-6 w-6" />
+                      <input
+                        type="url"
+                        name="linkedin"
+                        placeholder="LinkedIn"
+                        className="flex-1 px-4 py-2 bg-gray-100 border rounded-md"
+                        value={socialLinks.linkedin}
+                        onChange={handleInputChange}
+                      />
+                    </div>
                   </div>
-                  <div className="flex items-center space-x-2">
-                  <FaInstagram className="text-pink-600 h-6 w-6" />
-                    <input
-                      type="url"
-                      name="instagram"
-                      placeholder="Instagram"
-                      className="flex-1 px-4 py-2 bg-gray-100 border rounded-md"
-                      value={socialLinks.instagram}
-                      onChange={handleInputChange}
-                    />
-                  </div>
-                  <div className="flex items-center space-x-2">
-                  <FaTwitter className="text-blue-400 h-6 w-6" />
-                    <input
-                      type="url"
-                      name="twitter"
-                      placeholder="Twitter"
-                      className="flex-1 px-4 py-2 bg-gray-100 border rounded-md"
-                      value={socialLinks.twitter}
-                      onChange={handleInputChange}
-                    />
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <FaLinkedin className="text-blue-700 h-6 w-6" />
-                    <input
-                      type="url"
-                      name="linkedin"
-                      placeholder="LinkedIn"
-                      className="flex-1 px-4 py-2 bg-gray-100 border rounded-md"
-                      value={socialLinks.linkedin}
-                      onChange={handleInputChange}
-                    />
-                  </div>
-                </div>
-                
-                <button
-                  type="submit"
-                  className="mt-6 w-full bg-blue-500 text-white py-2 rounded-md"
-                >
-                  Update
-                </button>
-              </form>
+
+                  <button
+                    type="submit"
+                    className="mt-6 w-full bg-blue-500 text-white py-2 rounded-md"
+                  >
+                    Update
+                  </button>
+                </form>
+              </div>
             </div>
-          </div>
           )}
+
 
           {selectedSection === 'security' && (
             <form onSubmit={handlePasswordSubmit} className="bg-white rounded-lg shadow-md p-6 mb-8">
@@ -594,7 +596,7 @@ const Staff_Settings = () => {
               </div>
               <div className="mb-4">
                 <label className="block text-gray-700">New Password
-                <span className="text-red-500">*</span>
+                  <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="password"
@@ -606,7 +608,7 @@ const Staff_Settings = () => {
               </div>
               <div className="mb-4">
                 <label className="block text-gray-700">Confirm Password
-                <span className="text-red-500">*</span>
+                  <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="password"
@@ -645,7 +647,7 @@ const Staff_Settings = () => {
                 ))}
               </div>
             </div>
-          )}          
+          )}
 
         </div>
       </div>

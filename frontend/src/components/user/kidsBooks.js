@@ -58,7 +58,7 @@ function KidsBooks({ bookmarkedBooks, toggleBookmark }) {
           <SearchIcon className="h-6 w-6 text-gray-500" />
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-20">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-20">
           {/* Render books */}
           {currentBooks.map(book => (
             <div key={book.id} className="max-w-sm rounded-lg overflow-hidden shadow-lg">

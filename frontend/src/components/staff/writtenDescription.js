@@ -135,40 +135,46 @@ const UserContent = () => {
         </main>
       </div>
 
-      <Modal
-        title="Provide Feedback"
-        visible={isModalOpen}
-        onCancel={() => setIsModalOpen(false)}
-        footer={null}
-        closeIcon={<CloseOutlined />}
-      >
-        <div className="mb-6">
-          <p className="mb-2 text-gray-700 font-medium">Stars:</p>
-          <Rate
-            count={5}
-            value={stars}
-            onChange={(value) => setStars(value)}
-            character={<StarFilled />}
-            className="text-yellow-400"
-          />
-        </div>
-        <div className="mb-6">
-          <label htmlFor="comment" className="block text-gray-700 font-medium mb-2">
-            Comment:
-          </label>
-          <TextArea
-            id="comment"
-            value={comment}
-            onChange={(e) => setComment(e.target.value)}
-            rows={4}
-            placeholder="Enter your comment"
-          />
-        </div>
-        <div className="flex justify-end space-x-4">
-          <Button onClick={() => setIsModalOpen(false)}>Cancel</Button>
-          <Button type="primary" onClick={handleSubmit}>Submit</Button>
-        </div>
-      </Modal>
+    <Modal
+      title="Provide Feedback"
+      visible={isModalOpen}
+      onCancel={() => setIsModalOpen(false)}
+      footer={null}
+      closeIcon={<CloseOutlined />}
+      className="w-full max-w-md mx-auto p-4 sm:p-6 md:p-8"
+    >
+      <div className="mb-6">
+        <p className="mb-2 text-gray-700 font-medium">Stars:</p>
+        <Rate
+          count={5}
+          value={stars}
+          onChange={(value) => setStars(value)}
+          character={<StarFilled />}
+          className="text-yellow-400"
+        />
+      </div>
+      <div className="mb-6">
+        <label htmlFor="comment" className="block text-gray-700 font-medium mb-2">
+          Comment:
+        </label>
+        <TextArea
+          id="comment"
+          value={comment}
+          onChange={(e) => setComment(e.target.value)}
+          rows={4}
+          placeholder="Enter your comment"
+          className="w-full"
+        />
+      </div>
+      <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-4">
+        <Button onClick={() => setIsModalOpen(false)} className="w-full sm:w-auto">
+          Cancel
+        </Button>
+        <Button type="primary" onClick={handleSubmit} className="w-full sm:w-auto">
+          Submit
+        </Button>
+      </div>
+    </Modal>
     </div>
   );
 };

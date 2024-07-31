@@ -34,22 +34,24 @@ const MyWishlist = ({ bookmarkedBooks, toggleBookmark }) => {
     <div>
       <NavBar />
       <div className="container mx-auto px-4 py-6 relative">
+
         {/* Search bar */}
-        <div className="absolute top-4 right-4 flex items-center space-x-2">
+        <div className="absolute top-4 right-4 flex items-center space-x-2 sm:space-x-4">
           <input
             type="text"
             placeholder="Search books..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-32 sm:w-48 md:w-64 lg:w-80 border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
           <SearchIcon className="h-6 w-6 text-gray-500" />
         </div>
+        
         <h1 className="text-2xl font-bold mb-4">My Wishlist</h1>
         {filteredBookmarkedData.length === 0 ? (
           <p className="text-center">No books bookmarked.</p>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {currentBooks.map(book => (
               <div key={book.id} className="max-w-sm rounded-lg overflow-hidden shadow-lg">
                 <div className="relative">

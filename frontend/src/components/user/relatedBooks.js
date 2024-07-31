@@ -28,7 +28,7 @@ const RelatedBooks = ({ category }) => {
   return (
     <div className="mt-8">
       <h2 className="text-xl font-bold mb-4">Related Books</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-20">
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-20">
           {/* Render books */}
           {relatedBooks.map(book => (
             <div key={book.id} className="max-w-sm rounded-lg overflow-hidden shadow-lg">

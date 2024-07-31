@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import Notifications from './user/notification';
 import {  Dropdown } from 'antd';
 import { BellOutlined } from '@ant-design/icons';
-import { ChevronDownIcon, BookOpenIcon, ClipboardCheckIcon, PencilIcon, MailIcon, UserCircleIcon, CogIcon, QuestionMarkCircleIcon, LogoutIcon, StarIcon } from '@heroicons/react/outline'; 
+import { ChevronDownIcon, BookOpenIcon, PencilIcon, MailIcon, UserCircleIcon, CogIcon, QuestionMarkCircleIcon, LogoutIcon, StarIcon } from '@heroicons/react/outline'; 
 
 export default function NavBar() {
     const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -136,9 +136,6 @@ export default function NavBar() {
                             </div>
                         )}
                     </div>
-                    <Link to="#" className="block py-2 bg-white text-black hover:text-gray-300"><span className="flex items-center">
-                        <ClipboardCheckIcon className="h-5 w-5" /> Queries</span>
-                    </Link>
                     <Link to="/write-book" className="block py-2 bg-white text-black hover:text-gray-300"><span className="flex items-center">
                         <PencilIcon className="h-5 w-5" /> Write A Note</span>
                     </Link>
