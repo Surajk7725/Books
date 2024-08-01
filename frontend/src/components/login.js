@@ -5,7 +5,8 @@ export default function Login() {
   const navigate = useNavigate();
   
     const handleLogin = () => {
-        navigate('/home');
+      localStorage.setItem('isAuthenticated', 'true');
+      navigate('/home');
     };
 
   return (
