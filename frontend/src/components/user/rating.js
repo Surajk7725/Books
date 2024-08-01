@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StarIcon } from '@heroicons/react/solid'; // Assuming a star icon is available
-import Footer from '../footer';
+import Footer from './footer';
 import NavBar from '../navbar';
 
 // Define a sample book for demonstration
@@ -31,7 +31,7 @@ const Rating = () => {
   return (
     <div>
       <NavBar />
-      <div className="flex justify-center items-start mt-10">
+      <div className="flex justify-center items-start mt-10 mx-4">
         {/* Transparent Card Container */}
         <div className="bg-white shadow-lg rounded-lg overflow-hidden flex w-full md:w-4/5 mb-10">
           {/* Book Image (left side, centered) */}

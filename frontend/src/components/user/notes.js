@@ -6,18 +6,18 @@ import 'react-toastify/dist/ReactToastify.css';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import NavBar from '../navbar';
-import Footer from '../footer';
+import Footer from './footer';
 import NoteDetail from './noteDetails';
 
 const formatDate = (dateString) => {
-  const options = { 
-    year: 'numeric', 
-    month: 'long', 
-    day: 'numeric', 
-    hour: '2-digit', 
-    minute: '2-digit', 
-    second: '2-digit', 
-    hour12: false 
+  const options = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false
   };
   return new Date(dateString).toLocaleString('en-US', options);
 };
@@ -41,7 +41,7 @@ const Notes = () => {
         'application/vnd.ms-excel',
         'text/csv',
         'text/plain',
-        'application/vnd.ms-powerpoint' 
+        'application/vnd.ms-powerpoint'
       ];
       if (files[0] && allowedTypes.includes(files[0].type)) {
         setCurrentNote({
@@ -175,11 +175,11 @@ const Notes = () => {
         {selectedNote ? (
           <NoteDetail note={selectedNote} onClose={closeNoteDetail} />
         ) : (
-          <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-24">
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-24">
             {filteredNotes.map((note, index) => (
-              <div 
-                key={index} 
-                className="rounded w-full h-auto flex flex-col justify-between bg-white dark:bg-gray-800 rounded-lg border dark:border-gray-700 mb-6 py-5 px-4 shadow-md relative min-h-[300px]"
+              <div
+                key={index}
+                className="w-full h-auto flex flex-col justify-between bg-white dark:bg-gray-800 rounded-lg border dark:border-gray-700 mb-6 py-5 px-4 shadow-md relative min-h-[300px]"
               >
                 <button
                   onClick={(e) => {
@@ -190,11 +190,11 @@ const Notes = () => {
                 >
                   <AiOutlinePushpin />
                 </button>
-                
+
                 <div className="flex-1">
                   <h4 className="text-gray-800 dark:text-gray-100 font-bold mb-3">{note.title}</h4>
                   {renderContent(note.content)}
-                  <button 
+                  <button
                     onClick={() => viewNote(note)}
                     className="text-blue-500 underline mt-2"
                   >
@@ -231,7 +231,7 @@ const Notes = () => {
                   )}
                 </div>
 
-                <button 
+                <button
                   onClick={() => viewNote(note)}
                   className="p-2 bg-blue-500 text-white rounded w-full hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 mt-4"
                 >
@@ -265,11 +265,11 @@ const Notes = () => {
             ))}
           </div>
         )}
-       
+
 
         {isFormVisible && (
           <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
-            <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl"> {/* Adjusted max-w-lg to max-w-2xl */}
+            <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md sm:max-w-lg lg:max-w-2xl mx-4"> {/* Added mx-4 */}
               <div className="flex justify-end">
                 <button className="text-gray-400 hover:text-gray-600" onClick={closeForm}>
                   <AiOutlineClose />

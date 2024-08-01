@@ -1,9 +1,10 @@
 import React, { useState, useRef } from 'react';
-import { MenuAlt1Icon, UserCircleIcon, LockClosedIcon, BookOpenIcon, DocumentTextIcon, GlobeAltIcon, DesktopComputerIcon, LogoutIcon, PhotographIcon } from '@heroicons/react/outline';
-import Footer from '../footer';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLinkedin, faInstagram, faTwitter, faYoutube } from '@fortawesome/free-brands-svg-icons';
-import { Link } from 'react-router-dom';
+import { MenuAlt1Icon, UserCircleIcon, LockClosedIcon, BookOpenIcon, DocumentTextIcon, GlobeAltIcon, DesktopComputerIcon, LogoutIcon } from '@heroicons/react/outline';
+import Footer from './footer';
+import { FaLinkedin, FaInstagram, FaTwitter, FaYoutube } from 'react-icons/fa';
+import { PlusOutlined } from '@ant-design/icons';
+import { Image, Upload, DatePicker, Table, Button } from 'antd';
+
 
 const Settings = () => {
   const [selectedSection, setSelectedSection] = useState('account');
@@ -135,28 +136,61 @@ const Settings = () => {
     { id: 12, bookName: 'Alice\'s Adventures in Wonderland', authorName: 'Lewis Carroll', timestamp: '2024-06-26 14:15:00' },
   ];
 
-  // Pagination Logic
-  const itemsPerPage = 10;
-
   const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(5);
 
-  const totalPages = Math.ceil(tableData.length / itemsPerPage);
-  const paginatedData = tableData.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+  const columns = [
+    {
+      title: 'Sr.No',
+      dataIndex: 'id',
+      sorter: (a, b) => a.id - b.id,
+      key: 'id',
+    },
+    {
+      title: 'Book Name',
+      dataIndex: 'bookName',
+      sorter: (a, b) => a.bookName.localeCompare(b.bookName),
+      key: 'bookName',
+    },
+    {
+      title: 'Author Name',
+      dataIndex: 'authorName',
+      sorter: (a, b) => a.authorName.localeCompare(b.authorName),
+      key: 'authorName',
+    },
+    {
+      title: 'Timestamp',
+      dataIndex: 'timestamp',
+      sorter: (a, b) => new Date(a.timestamp) - new Date(b.timestamp),
+      key: 'timestamp',
+    },
+  ];
 
-  const handlePrevPage = () => {
-    setCurrentPage((prev) => Math.max(prev - 1, 1));
+  const handleTableChange = (pagination, filters, sorter) => {
+    setCurrentPage(pagination.current);
+    setPageSize(pagination.pageSize);
   };
-
-  const handleNextPage = () => {
-    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
-  };
-
 
   //Account Details
 
+  const getBase64 = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+
+  const [dob, setDob] = useState(null);
+
+  const onChange = (date, dateString) => {
+    setDob(date);
+    console.log(date, dateString);
+  };
+
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState('');
+  const [fileList, setFileList] = useState([]);
   const [profileImage, setProfileImage] = useState(null);
   const [fullName, setFullName] = useState('');
   const [userName, setUserName] = useState('');
@@ -170,25 +204,53 @@ const Settings = () => {
     linkedin: ''
   });
 
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setProfileImage(reader.result);
-    };
-    reader.readAsDataURL(file);
+  const fileInputRef = useRef(null);
+
+  const handlePreview = async (file) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj);
+    }
+    setPreviewImage(file.url || file.preview);
+    setPreviewOpen(true);
   };
+
+  const handleChange = ({ fileList: newFileList }) => {
+    const updatedFileList = newFileList.map(file => {
+      if (file.status === 'error') {
+        return { ...file, status: 'done' };
+      }
+      return file;
+    });
+
+    setFileList(updatedFileList);
+
+    if (updatedFileList.length > 0) {
+      setProfileImage(updatedFileList[0].url || updatedFileList[0].thumbUrl);
+    } else {
+      setProfileImage(null);
+    }
+  };
+
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setSocialLinks({ ...socialLinks, [name]: value });
+    setSocialLinks((prev) => ({ ...prev, [name]: value }));
   };
 
-  const fileInputRef = useRef(null);
-
-  const handleButtonClick = () => {
-    fileInputRef.current.click();
-  };
+  const uploadButton = (
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '100%'
+      }}
+    >
+      <PlusOutlined />
+      <div style={{ marginTop: 8 }}>Upload</div>
+    </div>
+  );
 
 
   return (
@@ -256,42 +318,37 @@ const Settings = () => {
 
 
           {selectedSection === 'account' && (
-            <div className="max-w-4xl mx-auto p-8 bg-white rounded-md shadow-md">
+            <div className="max-w-4xl mx-auto p-4 sm:p-8 bg-white rounded-md shadow-md">
               <h2 className="text-3xl font-bold mb-6">Edit Profile</h2>
-              <div className="flex">
-                <div className="flex-shrink-0 mr-6">
-                <div className="relative w-24 h-24">
-                {profileImage ? (
-                  <Link to={`/profile-image-view?image=${encodeURIComponent(profileImage)}`}>
-                    <img
-                      src={profileImage}
-                      alt="Profile"
-                      className="w-24 h-24 rounded-full object-cover shadow-lg transition-transform transform hover:scale-105"
-                    />
-                  </Link>
-                ) : (
-                  <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center shadow-lg">
-                    <PhotographIcon className="w-12 h-12 text-gray-500" />
+              <div className="flex flex-col sm:flex-row">
+                <div className="flex-shrink-0 mb-6 sm:mb-0 sm:mr-6">
+                  <div className="relative w-24 h-24 mx-auto sm:mx-0">
+                    <Upload
+                      action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
+                      listType="picture-circle"
+                      fileList={fileList}
+                      onPreview={handlePreview}
+                      onChange={handleChange}
+                    >
+                      {fileList.length >= 1 ? null : uploadButton}
+                    </Upload>
+                    {previewImage && (
+                      <Image
+                        wrapperStyle={{ display: 'none' }}
+                        preview={{
+                          visible: previewOpen,
+                          onVisibleChange: (visible) => setPreviewOpen(visible),
+                          afterOpenChange: (visible) => !visible && setPreviewImage(''),
+                        }}
+                        src={previewImage}
+                      />
+                    )}
                   </div>
-                )}
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="absolute inset-0 opacity-0 cursor-pointer"
-                  onChange={handleImageUpload}
-                  ref={fileInputRef}
-                />
-              </div>
-              <div className="flex justify-center mt-6">
-                <button onClick={handleButtonClick} className="px-4 py-1 bg-gradient-to-r from-blue-400 to-blue-600 text-white rounded-md shadow-lg transition-colors hover:from-blue-500 hover:to-blue-700">
-                  Upload
-                </button>
-              </div>
-            </div>
+                </div>
 
                 <form className="flex-1">
-                  <div className="grid grid-cols-2 gap-4 ml-10">
-                    <div className="col-span-2 sm:col-span-1">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="col-span-1">
                       <label className="block text-gray-700">Full Name</label>
                       <input
                         type="text"
@@ -300,7 +357,7 @@ const Settings = () => {
                         onChange={(e) => setFullName(e.target.value)}
                       />
                     </div>
-                    <div className="col-span-2 sm:col-span-1">
+                    <div className="col-span-1">
                       <label className="block text-gray-700">Username</label>
                       <input
                         type="text"
@@ -309,7 +366,7 @@ const Settings = () => {
                         onChange={(e) => setUserName(e.target.value)}
                       />
                     </div>
-                    <div className="col-span-2">
+                    <div className="col-span-1">
                       <label className="block text-gray-700">Email Address</label>
                       <input
                         type="email"
@@ -318,7 +375,11 @@ const Settings = () => {
                         onChange={(e) => setEmail(e.target.value)}
                       />
                     </div>
-                    <div className="col-span-2 sm:col-span-1">
+                    <div className="col-span-1">
+                      <label className="block text-gray-700">Date of Birth</label>
+                      <DatePicker onChange={onChange} value={dob} className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md" />
+                    </div>
+                    <div className="col-span-1">
                       <label className="block text-gray-700">Phone Number</label>
                       <input
                         type="text"
@@ -327,7 +388,7 @@ const Settings = () => {
                         onChange={(e) => setPhoneNumber(e.target.value)}
                       />
                     </div>
-                    <div className="col-span-2 sm:col-span-1">
+                    <div className="col-span-1">
                       <label className="block text-gray-700">House Address</label>
                       <input
                         type="text"
@@ -337,10 +398,11 @@ const Settings = () => {
                       />
                     </div>
                   </div>
-                  <h3 className="text-xl font-bold mt-6 mb-2 ml-10">Add Your Social Handles below</h3>
-                  <div className="grid grid-cols-2 gap-4 ml-10">
+
+                  <h3 className="text-xl font-bold mt-6 mb-2">Add Your Social Handles below</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="flex items-center space-x-2">
-                      <FontAwesomeIcon icon={faYoutube} className="text-red-600 w-6 h-6" />
+                      <FaYoutube className="text-red-600 h-6 w-6" />
                       <input
                         type="url"
                         name="youtube"
@@ -351,7 +413,7 @@ const Settings = () => {
                       />
                     </div>
                     <div className="flex items-center space-x-2">
-                      <FontAwesomeIcon icon={faInstagram} className="text-pink-500 w-6 h-6" />
+                      <FaInstagram className="text-pink-600 h-6 w-6" />
                       <input
                         type="url"
                         name="instagram"
@@ -362,7 +424,7 @@ const Settings = () => {
                       />
                     </div>
                     <div className="flex items-center space-x-2">
-                      <FontAwesomeIcon icon={faTwitter} className="text-blue-400 w-6 h-6" />
+                      <FaTwitter className="text-blue-400 h-6 w-6" />
                       <input
                         type="url"
                         name="twitter"
@@ -373,7 +435,7 @@ const Settings = () => {
                       />
                     </div>
                     <div className="flex items-center space-x-2">
-                      <FontAwesomeIcon icon={faLinkedin} className="text-blue-700 w-6 h-6" />
+                      <FaLinkedin className="text-blue-700 h-6 w-6" />
                       <input
                         type="url"
                         name="linkedin"
@@ -384,6 +446,7 @@ const Settings = () => {
                       />
                     </div>
                   </div>
+
                   <button
                     type="submit"
                     className="mt-6 w-full bg-blue-500 text-white py-2 rounded-md"
@@ -394,6 +457,7 @@ const Settings = () => {
               </div>
             </div>
           )}
+
 
           {selectedSection === 'security' && (
             <form onSubmit={handlePasswordSubmit} className="bg-white rounded-lg shadow-md p-6 mb-8">
@@ -412,7 +476,7 @@ const Settings = () => {
               </div>
               <div className="mb-4">
                 <label className="block text-gray-700">New Password
-                <span className="text-red-500">*</span>
+                  <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="password"
@@ -424,7 +488,7 @@ const Settings = () => {
               </div>
               <div className="mb-4">
                 <label className="block text-gray-700">Confirm Password
-                <span className="text-red-500">*</span>
+                  <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="password"
@@ -517,50 +581,25 @@ const Settings = () => {
 
 
           {selectedSection === 'readingHistory' && (
-            <div className="max-w-4xl mx-auto mt-8">
-              <h3 className="text-xl font-semibold mb-4">Reading History</h3>
-              <div className="bg-white shadow-md rounded my-6 overflow-x-auto">
-                <table className="min-w-full bg-white">
-                  <thead>
-                    <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
-                      <th className="py-3 px-6 text-left">Sr.No</th>
-                      <th className="py-3 px-6 text-left">Book Name</th>
-                      <th className="py-3 px-6 text-left">Author Name</th>
-                      <th className="py-3 px-6 text-left">Timestamp</th>
-                    </tr>
-                  </thead>
-                  <tbody className="text-gray-600 text-sm font-light">
-                    {paginatedData.map((row) => (
-                      <tr key={row.id} className="border-b border-gray-200 hover:bg-gray-100">
-                        <td className="py-3 px-6 text-left whitespace-nowrap">{row.id}</td>
-                        <td className="py-3 px-6 text-left">{row.bookName}</td>
-                        <td className="py-3 px-6 text-left">{row.authorName}</td>
-                        <td className="py-3 px-6 text-left">{row.timestamp}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+            <main className="flex-grow mt-8 mb-8">
+              <div className="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md">
+                <h3 className="text-2xl font-bold mb-6 text-gray-800">Reading History</h3>
+                <Table
+                  columns={columns}
+                  dataSource={tableData}
+                  pagination={{
+                    current: currentPage,
+                    pageSize: pageSize,
+                    total: tableData.length,
+                    showSizeChanger: true,
+                  }}
+                  onChange={handleTableChange}
+                  rowKey="id"
+                  className="bg-white shadow-md rounded my-6 overflow-x-auto"
+                />
               </div>
-              <div className="flex justify-between items-center py-2">
-                <button
-                  onClick={handlePrevPage}
-                  className="bg-blue-500 text-white px-4 py-2 rounded disabled:bg-gray-400"
-                  disabled={currentPage === 1}
-                >
-                  Previous
-                </button>
-                <span>
-                  Page {currentPage} of {totalPages}
-                </span>
-                <button
-                  onClick={handleNextPage}
-                  className="bg-blue-500 text-white px-4 py-2 rounded disabled:bg-gray-400"
-                  disabled={currentPage === totalPages}
-                >
-                  Next
-                </button>
-              </div>
-            </div>
+            </main>
+
           )}
 
           {selectedSection === 'offlineAccess' && (

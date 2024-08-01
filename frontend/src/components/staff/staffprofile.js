@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import NavBar from '../staff/navbar';
-import Footer from '../footer';
+import Footer from './footer';
 
 
 const Staff_Profile = () => {

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import NavBar from '../staff/navbar';
-import Footer from '../footer';
+import Footer from './footer';
 import { UserIcon, GlobeAltIcon, DocumentTextIcon } from '@heroicons/react/outline';
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';

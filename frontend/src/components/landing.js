@@ -1,36 +1,100 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, memo, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Slide4 from './images/slide4.jpg';
 import Slide5 from './images/slide5.jpg';
 import Slide6 from './images/slide6.jpg';
 import Slide7 from './images/slide7.jpg';
-import Footer from './footer';
+import Footer from './user/footer';
+import Novel1 from './images/A Little History Economics.jpg';
+import Novel2 from './images/Bad days in History.jpg';
+import Novel3 from './images/Black code.jpg';
+import Novel13 from './images/More More Time.jpg';
+import Novel14 from './images/Quantative Aptitufe.jpg';
+import Novel15 from './images/Stone oF Time.jpg';
+import Author1 from './images/Barnes.png';
+import Author2 from './images/Carol.png';
+import Author3 from './images/Colson-Whitehead.png'; 
 
-function ImageSlider() {
+
+const ImageSlider = memo(() =>  {
   const images = [Slide4, Slide5, Slide6, Slide7];
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [loaded, setLoaded] = useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const intervalId = setInterval(() => {
-      setCurrentIndex((currentIndex + 1) % images.length);
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
     }, 8000);
 
     return () => clearInterval(intervalId);
-  }, [currentIndex, images.length]);
+  }, [images.length]);
+
 
   return (
-    <div className='h-[500px] bg-center bg-cover transition-all duration-500 relative' style={{ backgroundImage: `url(${images[currentIndex]})` }}>
+    <div className='h-[500px] bg-center bg-cover transition-all duration-500 relative'>
+    {!loaded && (
+      <div className="absolute inset-0 flex items-center justify-center bg-gray-200">
+        <span>Loading...</span>
+      </div>
+    )}
+    <img
+      src={images[currentIndex]}
+      srcSet={`${images[currentIndex]} 320w, ${images[currentIndex]} 480w, ${images[currentIndex]} 800w`}
+      sizes="(max-width: 320px) 280px, (max-width: 480px) 440px, 800px"
+      alt="Slider"
+      className="h-full w-full object-cover"
+      onLoad={() => setLoaded(true)}
+      style={{ display: loaded ? 'block' : 'none' }}
+    />
+    {loaded && (
       <div className="absolute inset-0 flex items-center justify-center">
-        <h1 className="text-4xl font-bold text-white bg-black bg-opacity-50 p-4 rounded-lg shadow-lg">
+        <h1 className="text-2xl md:text-4xl font-bold text-white bg-black bg-opacity-50 p-2 md:p-4 rounded-lg shadow-lg text-center">
           Explore a World of Books
         </h1>
       </div>
+    )}
+  </div>
+);
+});
+
+const BookCard = memo(({ image, title, description }) => (
+  <div className='bg-white rounded-lg shadow-md overflow-hidden'>
+    <img className='h-96 w-full object-contain' src={image} alt={title} loading="lazy" />
+    <div className='p-4'>
+      <h3 className='text-xl font-semibold mb-2'>{title}</h3>
+      <p className='text-gray-700 text-justify'>{description}</p>
     </div>
-  );
-}
+  </div>
+));
+
+const AuthorCard = memo(({ img, name }) => (
+  <div className='bg-white rounded-lg shadow-md overflow-hidden'>
+    <img className='h-48 w-full object-contain' src={img} alt={name} loading="lazy" />
+    <div className='p-4'>
+      <h3 className='text-xl font-semibold mb-2'>{name}</h3>
+      <p className='text-gray-700 text-justify'>A brief bio of {name}.</p>
+    </div>
+  </div>
+));
+
 
 export default function Landing() {
   const navigate = useNavigate();
+
+  const categories = useMemo(() => ['Fiction', 'Non-Fiction', 'Fantasy', 'Science Fiction', 'Mystery', 'Educational'], []);
+
+  const featuredBooks = useMemo(() => [
+    { image: Novel1, title: 'A Little History Economics', description: 'A brief description of A Little History Economics.' },
+    { image: Novel2, title: 'Bad days in History', description: 'A brief description of Bad days in History.' },
+    { image: Novel3, title: 'Black code', description: 'A brief description of Black code.' }
+  ], []);
+
+  const authors = useMemo(() => [
+    { name: 'Colson Whitehead', img: Author3 },
+    { name: 'Carol Roh Spaulding', img: Author2 },
+    { name: 'Barnes & Noble Press Author', img: Author1 }
+  ], []);
+
 
   return (
     <div className="flex flex-col min-h-screen relative">
@@ -83,7 +147,14 @@ export default function Landing() {
         <ImageSlider />
 
         <section className='flex flex-col md:flex-row items-center my-12 px-4'>
-          <img src='https://images.pexels.com/photos/159866/books-book-pages-read-literature-159866.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1' className='w-full md:w-1/3 rounded' alt='Library' />
+        <img 
+            src='https://images.pexels.com/photos/159866/books-book-pages-read-literature-159866.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1' 
+            srcSet='https://images.pexels.com/photos/159866/books-book-pages-read-literature-159866.jpeg?auto=compress&cs=tinysrgb&w=320&h=240&dpr=1 320w, https://images.pexels.com/photos/159866/books-book-pages-read-literature-159866.jpeg?auto=compress&cs=tinysrgb&w=480&h=360&dpr=1 480w, https://images.pexels.com/photos/159866/books-book-pages-read-literature-159866.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&dpr=1 800w'
+            sizes='(max-width: 320px) 280px, (max-width: 480px) 440px, 800px'
+            className='w-full md:w-1/3 rounded' 
+            alt='Library' 
+            loading="lazy" 
+          />
           <div className='mt-4 md:mt-0 md:ml-8 text-justify'>
             <h2 className='text-2xl font-bold'>About Us</h2>
             <p className='mt-4 text-gray-700'>
@@ -99,91 +170,23 @@ export default function Landing() {
         </section>
 
 
-        <section className='my-12 px-4'>
-          <h2 className='text-2xl font-bold text-center mb-8'>Book Categories</h2>
-          <div className='flex flex-wrap justify-center gap-4'>
-            {['Fiction', 'Non-Fiction', 'Fantasy', 'Science Fiction', 'Mystery', 'Educational'].map(category => (
-              <button key={category} className='px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors duration-300'>{category}</button>
+        <section className='my-12'>
+          <h2 className='text-2xl md:text-3xl font-semibold text-center mb-6'>Book Categories</h2>
+          <div className='flex flex-wrap justify-center'>
+            {categories.map((category) => (
+              <button key={category} className='m-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300'>
+                {category}
+              </button>
             ))}
           </div>
         </section>
 
-        <section className='my-12 px-4'>
+
+        <section className='my-12'>
           <h2 className='text-2xl font-bold text-center mb-8'>Featured Books</h2>
-          <div className='grid grid-cols-1 md:grid-cols-3 gap-8'>
-            {[
-              {
-                image: 'https://images.unsplash.com/photo-1557804506-669a67965ba0',
-                title: 'The Secret Garden'
-              },
-              {
-                image: 'https://images.unsplash.com/photo-1544717305-2782549b5136',
-                title: 'The Hobbit'
-              },
-              {
-                image: 'https://images.unsplash.com/photo-1544716278-e513176f20b5',
-                title: 'War and Peace'
-              },
-              {
-                image: 'https://www.prestwickhouse.com/Image%20Library/Blog/thumbnail/Brave-New-World_HTT_Blogs.jpg',
-                title: 'Brave New World'
-              },
-              {
-                image: 'https://images.squarespace-cdn.com/content/v1/56688a6e841abadb3a87fb8c/1549982235927-ETAK5MSQC2LGELEGTUB8/little-women-book-cover-louisa-may-alcott.png',
-                title: 'Little Women'
-              },
-              {
-                image: 'https://images.unsplash.com/photo-1532012197267-da84d127e765',
-                title: 'The Odyssey'
-              }
-            ].map((book, index) => (
-              <div key={index} className='bg-white rounded-lg shadow-md overflow-hidden'>
-                <img className='h-96 w-full object-cover' src={book.image} alt={book.title} />
-                <div className='p-4'>
-                  <h3 className='text-xl font-semibold mb-2'>{book.title}</h3>
-                  <p className='text-gray-700 text-justify'>A brief description of {book.title}.</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section className='my-12 px-4'>
-          <h2 className='text-2xl font-bold text-center mb-8'>Recommended Books</h2>
-          <div className='grid grid-cols-1 md:grid-cols-3 gap-8'>
-            {[
-              {
-                image: 'https://images.unsplash.com/photo-1512820790803-83ca734da794',
-                title: 'The Mysterious Island'
-              },
-              {
-                image: 'https://ntvb.tmsimg.com/assets/p24408887_b_h8_ad.jpg?w=1280&h=720',
-                title: 'Journey to the Center of the Earth'
-              },
-              {
-                image: 'https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/hostedimages/1493112918i/22583221._SX540_.jpg',
-                title: 'Twenty Thousand Leagues Under the Sea'
-              },
-              {
-                image: 'https://www.hollywoodreporter.com/wp-content/uploads/2021/12/ATWIED-Tennant-Still-PBS-Publicity-H-2021.jpg?w=1296',
-                title: 'Around the World in Eighty Days'
-              },
-              {
-                image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcZJ1Cd6GDfp3V5-w5mawA4JzWh4KuIDx_KA&s',
-                title: 'The Invisible Man'
-              },
-              {
-                image: 'https://images.unsplash.com/photo-1507842217343-583bb7270b66',
-                title: 'The Time Machine'
-              }
-            ].map((book, index) => (
-              <div key={index} className='bg-white rounded-lg shadow-md overflow-hidden'>
-                <img className='h-96 w-full object-cover' src={book.image} alt={book.title} />
-                <div className='p-4'>
-                  <h3 className='text-xl font-semibold mb-2'>{book.title}</h3>
-                  <p className='text-gray-700 text-justify'>A brief description of {book.title}.</p>
-                </div>
-              </div>
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-4'>
+            {featuredBooks.map((book, index) => (
+              <BookCard key={index} image={book.image} title={book.title} description={book.description} />
             ))}
           </div>
         </section>
@@ -193,12 +196,12 @@ export default function Landing() {
           <h2 className='text-2xl font-bold text-center mb-8'>Downloadable Books</h2>
           <div className='grid grid-cols-1 md:grid-cols-3 gap-8'>
             {[
-              { title: 'Downloadable Book 1', image: 'https://images-na.ssl-images-amazon.com/images/I/81ZS4+QhiCL._AC_UL600_SR600,600_.jpg' },
-              { title: 'Downloadable Book 2', image: 'https://m.media-amazon.com/images/I/717uhZ0DdrL._AC_UF1000,1000_QL80_.jpg' },
-              { title: 'Downloadable Book 3', image: 'https://gyaanstore.com/cdn/shop/files/241_e1cb3088-cecb-4bf4-9d5c-8c7439d9730f.png?v=1701690945&width=1445' }
+              { title: 'More More Time', image: Novel13 },
+              { title: 'Quantative Cat', image: Novel14 },
+              { title: 'The stone Of Time', image: Novel15 }
             ].map((book, index) => (
               <div key={index} className='bg-white rounded-lg shadow-md overflow-hidden'>
-                <img className='h-96 w-full object-cover' src={book.image} alt={book.title} />
+                <img className='h-96 w-full object-contain' src={book.image} alt={book.title} />
                 <div className='p-4'>
                   <h3 className='text-xl font-semibold mb-2'>{book.title}</h3>
                   <p className='text-gray-700 text-justify'>A brief description of {book.title}.</p>
@@ -208,7 +211,7 @@ export default function Landing() {
             ))}
           </div>
         </section>
- 
+
         <section className='my-12 px-4'>
           <h2 className='text-2xl font-bold text-center mb-8'>User Reviews</h2>
           <div className='grid grid-cols-1 md:grid-cols-3 gap-8'>
@@ -226,59 +229,9 @@ export default function Landing() {
 
         <section className='my-12 px-4'>
           <h2 className='text-2xl font-bold text-center mb-8'>Author Spotlights</h2>
-          <div className='grid grid-cols-1 md:grid-cols-3 gap-8'>
-            {[
-              { name: 'Colson Whitehead', img: 'https://www.plainfieldlibrary.net/wp-content/uploads/2023/07/AS-Colson-Whitehead.png' },
-              { name: 'Carol Roh Spaulding', img: 'https://images.squarespace-cdn.com/content/v1/5a81dadde9bfdff9a97b0da7/5912d271-0775-4318-ba4c-9173280bb707/Carol+Roh+Spaulding+author+spotlight.png' },
-              { name: 'Barnes & Noble Press Author', img: 'https://press.barnesandnoble.com/bnpress-blog/wp-content/nas-uploads/2024/01/Blog-Header-1-9-632x362.png' }
-            ].map((author, index) => (
-              <div key={index} className='bg-white rounded-lg shadow-md overflow-hidden'>
-                <img className='h-48 w-full object-cover' src={author.img} alt={author.name} />
-                <div className='p-4'>
-                  <h3 className='text-xl font-semibold mb-2'>{author.name}</h3>
-                  <p className='text-gray-700 text-justify'>A brief bio of {author.name}.</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section className='my-12 px-4'>
-          <h2 className='text-2xl font-bold text-center mb-8'>Blog</h2>
-          <div className='grid grid-cols-1 md:grid-cols-3 gap-8'>
-            {[
-              {
-                img: 'https://thewildernesshaven.com/cdn/shop/articles/7.png?v=1688129872',
-                title: 'Exploring the Great Outdoors'
-              },
-              {
-                img: 'https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0',
-                title: 'The Art of Minimalism'
-              },
-              {
-                img: 'https://images.unsplash.com/photo-1517841905240-472988babdf9',
-                title: 'Culinary Adventures'
-              },
-              {
-                img: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d',
-                title: 'The World of Technology'
-              },
-              {
-                img: 'https://images.unsplash.com/photo-1516483638261-f4dbaf036963',
-                title: 'Urban Jungle'
-              },
-              {
-                img: 'https://images.unsplash.com/photo-1515378791036-0648a3ef77b2',
-                title: 'Travel Diaries'
-              }
-            ].map((post, index) => (
-              <div key={index} className='bg-white rounded-lg shadow-md overflow-hidden'>
-                <img className='h-48 w-full object-cover' src={post.img} alt={post.title} />
-                <div className='p-4'>
-                  <h3 className='text-xl font-semibold mb-2'>{post.title}</h3>
-                  <p className='text-gray-700 text-justify'>A brief description of {post.title}.</p>
-                </div>
-              </div>
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-4'>
+            {authors.map((author, index) => (
+              <AuthorCard key={index} img={author.img} name={author.name} />
             ))}
           </div>
         </section>
@@ -291,13 +244,14 @@ export default function Landing() {
           </div>
         </section>
 
-
-
-
       </div>
       <Footer />
     </div>
   );
 }
+
+
+
+
 
 

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { SearchIcon, HeartIcon } from '@heroicons/react/outline';
 import { HeartIcon as HeartIconSolid } from '@heroicons/react/solid';
 import NavBar from '../navbar';
-import Footer from '../footer';
+import Footer from './footer';
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -61,7 +61,7 @@ function AcademicBooks({bookmarkedBooks, toggleBookmark}) {
           <SearchIcon className="h-6 w-6 text-gray-500" />
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-20">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-20">
           {/* Render books */}
           {currentBooks.map(book => (
             <div key={book.id} className="max-w-sm rounded-lg overflow-hidden shadow-lg">
@@ -91,8 +91,8 @@ function AcademicBooks({bookmarkedBooks, toggleBookmark}) {
               </div>
               <div className="px-6 py-4">
                 <div className="font-bold text-xl mb-2 text-center">{book.title}</div>
-                <div className="flex">
-                  <button className="bg-gray-300  ml-20 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded transition-colors duration-300">
+                <div className="flex justify-center">
+                  <button className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded transition-colors duration-300">
                     View Book
                   </button>
                 </div>

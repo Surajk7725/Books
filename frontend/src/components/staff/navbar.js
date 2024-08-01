@@ -1,13 +1,23 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronDownIcon, BookOpenIcon, PencilIcon, MailIcon, UserCircleIcon, CogIcon, QuestionMarkCircleIcon, LogoutIcon, UserIcon} from '@heroicons/react/outline'; // Import required icons
+import Notification from './notification';
+import {  Dropdown } from 'antd';
+import { BellOutlined } from '@ant-design/icons';
+import { ChevronDownIcon, BookOpenIcon, PencilIcon, MailIcon, UserCircleIcon, CogIcon, QuestionMarkCircleIcon, LogoutIcon, UserIcon } from '@heroicons/react/outline'; 
 
 export default function NavBar() {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [booksDropdownOpen, setBooksDropdownOpen] = useState(false);
+    const [usersDropdownOpen, setUsersDropdownOpen] = useState(false);
+    const [novelsDropdownOpen, setNovelsDropdownOpen] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false); // State for mobile menu toggle
     const [displayDropdownOpen, setDisplayDropdownOpen] = useState(false);
-
+    
+    const menu = (
+        <div className="max-h-48">
+          <Notification />
+        </div>
+    );
 
     return (
         <div className="bg-transparent-800 text-black rounded-lg shadow-md">
@@ -64,29 +74,60 @@ export default function NavBar() {
                                         </div>
                                     )}
                                 </div>
+                                <Link to="/staff-bookreview" className="block px-4 py-2 hover:bg-gray-100">Book Review</Link>
                             </div>
 
+
+                        )}
+                        
+                    </div>
+
+                    <span className="flex items-center">
+                        <UserIcon className="h-5 w-5" /> Users </span>
+
+                    <div className="relative mt-1.5">
+                        <button
+                            onClick={() => setUsersDropdownOpen(!usersDropdownOpen)}
+                            className="flex items-center text-white-700 hover:text-gray-300 transition duration-300 ease-in-out"
+                        >
+                            <ChevronDownIcon className="h-4 w-4 ml-[-1rem]" />
+                        </button>
+                        {usersDropdownOpen && (
+                            <div className="absolute z-10 mt-2 w-48 bg-white text-black rounded-md shadow-lg">
+                                <Link to="/manageuser-data" className="block px-4 py-2 hover:bg-gray-100">Manage User</Link>
+                                <Link to="/userbooks-data" className="block px-4 py-2 hover:bg-gray-100">User Books</Link>
+                            </div>
                         )}
                     </div>
 
+                    <span className="flex items-center">
+                        <PencilIcon className="h-5 w-5" /> Novels </span>
 
+                    <div className="relative mt-1.5">
+                        <button
+                            onClick={() => setNovelsDropdownOpen(!novelsDropdownOpen)}
+                            className="flex items-center text-white-700 hover:text-gray-300 transition duration-300 ease-in-out"
+                        >
+                            <ChevronDownIcon className="h-4 w-4 ml-[-1rem]" />
+                        </button>
+                        {novelsDropdownOpen && (
+                            <div className="absolute z-10 mt-2 w-48 bg-white text-black rounded-md shadow-lg">
+                                <Link to="/staff-writeinfo" className="block px-4 py-2 hover:bg-gray-100"> Written Novels</Link>
+                                <Link to="/novel-data" className="block px-4 py-2 hover:bg-gray-100">Novel Data</Link>
+                            </div>
+                        )}
+                    </div>
 
-                    <Link to="/write-book" className="text-gray-700 hover:text-gray-300 transition duration-300 ease-in-out">
-                        <span className="flex items-center">
-                            <UserIcon className="h-5 w-5" /> Manage Users
-                        </span>
-                    </Link>
-                    <Link to="/write-book" className="text-gray-700 hover:text-gray-300 transition duration-300 ease-in-out"><span className="flex items-center">
-                        <PencilIcon className="h-5 w-5" /> Written Notes</span>
-                    </Link>
-                    <Link to="/contactus" className="text-gray-700 hover:text-gray-300 transition duration-300 ease-in-out"><span className="flex items-center">
+                    <Link to="/staff-contact" className="text-gray-700 hover:text-gray-300 transition duration-300 ease-in-out"><span className="flex items-center">
                         <MailIcon className="h-5 w-5" /> Contact Us</span>
                     </Link>
                 </div>
 
                 {/* Profile dropdown */}
                 <div className="relative flex items-center">
-                    
+                    <Dropdown overlay={menu} trigger={['click']}>
+                        <BellOutlined className="text-2xl cursor-pointer" />
+                    </Dropdown>
                     <div className="relative ml-6">
                         <button
                             onClick={() => setDropdownOpen(!dropdownOpen)}
@@ -110,9 +151,6 @@ export default function NavBar() {
                                 <Link to="/staff-settings" className="px-4 py-2 flex items-center hover:bg-gray-100">
                                     <CogIcon className="h-5 w-5 mr-2" /> Settings
                                 </Link>
-                                <Link to="/help-center" className="px-4 py-2 flex items-center hover:bg-gray-100">
-                                    <QuestionMarkCircleIcon className="h-5 w-5 mr-2" /> Help
-                                </Link>
                                 <Link to="/" className="px-4 py-2 flex items-center hover:bg-gray-100">
                                     <LogoutIcon className="h-5 w-5 mr-2" /> Logout
                                 </Link>
@@ -126,7 +164,7 @@ export default function NavBar() {
             {menuOpen && (
                 <div className="md:hidden bg-transparent-800 text-black py-2 px-4">
 
-                <span className="flex items-center">
+                    <span className="flex items-center">
                         <BookOpenIcon className="h-5 w-5" /> Books</span>
 
 
@@ -159,17 +197,61 @@ export default function NavBar() {
                                         </div>
                                     )}
                                 </div>
+                                <Link to="/staff-bookreview" className="block px-4 py-2 hover:bg-gray-100">Book Review</Link>
                             </div>
 
                         )}
+                        
                     </div>
+
+                    <span className="flex items-center">
+                        <UserIcon className="h-5 w-5" /> Users </span>
+
+                    <div className="relative mt-1.5">
+                        <button
+                            onClick={() => setUsersDropdownOpen(!usersDropdownOpen)}
+                            className="flex items-center text-white-700 hover:text-gray-300 transition duration-300 ease-in-out"
+                        >
+                            <ChevronDownIcon className="h-4 w-4 ml-16 mt-[-2rem]" />
+                        </button>
+
+                        {usersDropdownOpen && (
+                            <div className="absolute z-10 mt-2 w-48 bg-white text-black rounded-md shadow-lg">
+                                <Link to="/manageuser-data" className="block px-4 py-2 hover:bg-gray-100">Manage User</Link>
+                                <Link to="/userbooks-data" className="block px-4 py-2 hover:bg-gray-100">User Books</Link>
+                            </div>
+                        )}
+                    </div>
+
+                    <span className="flex items-center">
+                        <PencilIcon className="h-5 w-5" /> Novels </span>
+
+                    <div className="relative mt-1.5">
+                        <button
+                            onClick={() => setNovelsDropdownOpen(!novelsDropdownOpen)}
+                            className="flex items-center text-white-700 hover:text-gray-300 transition duration-300 ease-in-out"
+                        >
+                            <ChevronDownIcon className="h-4 w-4 ml-16 mt-[-2rem]" />
+                        </button>
+                        {novelsDropdownOpen && (
+                            <div className="absolute z-10 mt-2 w-48 bg-white text-black rounded-md shadow-lg">
+                                <Link to="/staff-writeinfo" className="block px-4 py-2 hover:bg-gray-100"> Written Novels</Link>
+                                <Link to="/novel-data" className="block px-4 py-2 hover:bg-gray-100">Novel Data</Link>
+                            </div>
+                        )}
+                    </div>
+
+
                     <Link to="#" className="block py-2 bg-white text-black hover:text-gray-300"><span className="flex items-center">
                         <UserIcon className="h-5 w-5" /> Manage Users</span>
                     </Link>
-                    <Link to="/write-book" className="block py-2 bg-white text-black hover:text-gray-300"><span className="flex items-center">
+                    <Link to="/staff-writeinfo" className="block py-2 bg-white text-black hover:text-gray-300"><span className="flex items-center">
                         <PencilIcon className="h-5 w-5" /> Written Notes</span>
                     </Link>
-                    <Link to="/contactus" className="block py-2 bg-white text-black hover:text-gray-300"><span className="flex items-center">
+
+
+
+                    <Link to="/staff-contact" className="block py-2 bg-white text-black hover:text-gray-300"><span className="flex items-center">
                         <MailIcon className="h-5 w-5" /> Contact Us</span>
                     </Link>
                 </div>

@@ -28,7 +28,7 @@ const RelatedBooks = ({ category }) => {
   return (
     <div className="mt-8">
       <h2 className="text-xl font-bold mb-4">Related Books</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-20">
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-20">
           {/* Render books */}
           {relatedBooks.map(book => (
             <div key={book.id} className="max-w-sm rounded-lg overflow-hidden shadow-lg">
@@ -51,8 +51,8 @@ const RelatedBooks = ({ category }) => {
               </div>
               <div className="px-6 py-4">
                 <div className="font-bold text-xl mb-2 text-center">{book.title}</div>
-                <div className="flex">
-                  <button className="bg-gray-300 ml-20 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded transition-colors duration-300">
+                <div className="flex justify-center">
+                  <button className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded transition-colors duration-300">
                     View Book
                   </button>
                 </div>

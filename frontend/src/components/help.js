@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import NavBar from './navbar';
-import Footer from './footer';
+import Footer from './user/footer';
 
 const FAQPage = () => {
   const [searchQuery, setSearchQuery] = useState('');

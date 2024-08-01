@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { PlusCircleIcon } from '@heroicons/react/outline';
 import NavBar from '../navbar';
-import Footer from '../footer';
+import Footer from './footer';
 
 function BookForm() {
     const [authors, setAuthors] = useState(['']);
@@ -36,8 +36,8 @@ function BookForm() {
     return (
         <div className="min-h-screen bg-gray-100 flex flex-col">
             <NavBar />
-            <main className="flex-grow mt-8 mb-8">
-                <div className="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md">
+            <main className="flex-grow mt-8 mb-8 px-4 sm:px-6 lg:px-8">
+                <div className="max-w-4xl mx-auto bg-white p-4 sm:p-6 md:p-8 rounded-lg shadow-md">
                     <h2 className="text-2xl font-bold mb-6 text-gray-800">Add Book</h2>
                     <form onSubmit={handleFormSubmit}>
                         <div className="mb-4">
@@ -118,9 +118,9 @@ function BookForm() {
                             <label className="block text-gray-700 font-bold mb-2" htmlFor="cover-image">
                                 Cover Image
                             </label>
-                            <div className="flex items-center">
+                            <div className="flex flex-col sm:flex-row sm:items-center">
                                 <input
-                                    className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-2"
+                                    className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-2 sm:mb-0 sm:mr-2"
                                     id="cover-image"
                                     type="file"
                                     accept="image/*"
@@ -128,7 +128,7 @@ function BookForm() {
                                 />
                                 <span className="text-gray-500">or</span>
                                 <input
-                                    className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ml-2"
+                                    className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mt-2 sm:mt-0 sm:ml-2"
                                     id="cover-image-url"
                                     type="text"
                                     value={coverImageUrl}
@@ -150,9 +150,9 @@ function BookForm() {
                                 required
                             />
                         </div>
-                        <div className="flex items-center justify-between">
+                        <div className="flex flex-col sm:flex-row items-center justify-between space-y-2 sm:space-y-0">
                             <button
-                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full sm:w-auto"
                                 type="submit"
                             >
                                 Submit
