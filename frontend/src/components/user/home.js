@@ -81,10 +81,7 @@ function Discounts() {
        
         imageUrl: Novel8
       },
-
-      // Add more books by Jane Doe as needed
     ]
-
   };
 
   return (

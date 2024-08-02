@@ -56,6 +56,8 @@ import Books from './components/admin/books.js';
 import ViewBook from './components/admin/viewbook.js';
 import ViewUser from './components/admin/viewuser.js';
 import ViewStaff from './components/admin/viewstaff.js';
+import ProtectedRoute from './components/protectedRoute.js';
+import { AuthProvider } from './components/authcontext.js';
 
 
 function App() {
@@ -81,6 +83,7 @@ function App() {
   return (
     <Router>
       <PageTitle title="Book Hub" /> {/* Set the title for all pages */}
+      <AuthProvider>
       <Routes>
 
         <Route path="/" element={<Landing />} />
@@ -88,6 +91,8 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/forgot" element={<Forgot />} />
         <Route path="/update-password" element={<Update />} />
+
+        <Route element={<ProtectedRoute />}>
         <Route path="/home" element={<Home />} />
         <Route path="/display-books" element={<AllBooks bookmarkedBooks={bookmarkedBooks} toggleBookmark={toggleBookmark} />} />
         <Route path="/display-books/description" element={<BookDescription />} />
@@ -146,9 +151,10 @@ function App() {
           <Route path='staff-display/view' element={<ViewStaff />} />
  
         </Route>
-
+        </Route>
 
       </Routes>
+      </AuthProvider>
     </Router>
   );
 }
