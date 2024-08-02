@@ -3,12 +3,22 @@ import { Link } from 'react-router-dom';
 import Notifications from './user/notification';
 import {  Dropdown } from 'antd';
 import { BellOutlined } from '@ant-design/icons';
+import { useNavigate } from "react-router-dom";
+import { useAuth } from './authcontext';
 import { ChevronDownIcon, BookOpenIcon, PencilIcon, MailIcon, UserCircleIcon, CogIcon, QuestionMarkCircleIcon, LogoutIcon, StarIcon } from '@heroicons/react/outline'; 
 
 export default function NavBar() {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [booksDropdownOpen, setBooksDropdownOpen] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false); // State for mobile menu toggle
+
+    const navigate = useNavigate();
+    const { logout } = useAuth();
+    const handleSignOut = () => {
+        console.log("User signed out");
+        logout();
+        navigate("/login");
+    };
 
     const menu = (
         <div className="max-h-48">
@@ -105,7 +115,7 @@ export default function NavBar() {
                                 <Link to="/help-center" className="px-4 py-2 flex items-center hover:bg-gray-100">
                                     <QuestionMarkCircleIcon className="h-5 w-5 mr-2" /> Help
                                 </Link>
-                                <Link to="/" className="px-4 py-2 flex items-center hover:bg-gray-100">
+                                <Link className="px-4 py-2 flex items-center hover:bg-gray-100" onClick={handleSignOut}>
                                     <LogoutIcon className="h-5 w-5 mr-2" /> Logout
                                 </Link>
                             </div>
