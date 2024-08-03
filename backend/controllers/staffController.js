@@ -1,4 +1,4 @@
-import Staff from '../models/staff';
+import Staff from '../models/staff.js';
 import bcrypt from 'bcryptjs';
 import asyncHandler from 'express-async-handler';
 import sendEmail from '../utils/sendEmail.js';
