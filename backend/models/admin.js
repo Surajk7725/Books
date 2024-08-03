@@ -6,8 +6,8 @@ const adminSchema = new mongoose.Schema({
     email: {type:String, required:true, unique:true},
     password: {type:String, required:true},
     Phonenumber: {type:String},
-    dob: {type:string},
-    profilepic: {type:string},
+    dob: {type:Date},
+    profilepic: {type:String},
     socialMediaLinks: {
         insta:String,
         twitter:String,

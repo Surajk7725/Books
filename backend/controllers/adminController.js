@@ -1,9 +1,7 @@
-import Admin from '../models/admin';
+import Admin from '../models/admin.js';
 import bcrypt from 'bcryptjs';
 import asyncHandler from 'express-async-handler';
 import sendEmail from '../utils/sendEmail.js';
-import { deleteAdmin } from './adminController';
-
 
 // Adding a admin member
 export const addAdmin = asyncHandler(async (request,response) => {
