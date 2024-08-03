@@ -2,7 +2,6 @@ import Staff from '../models/staff.js';
 import bcrypt from 'bcryptjs';
 import asyncHandler from 'express-async-handler';
 import sendEmail from '../utils/sendEmail.js';
-import { request, response } from 'express';
 
 //Adding a Staff Member
 
