@@ -52,8 +52,8 @@ export const editAdmin = asyncHandler (async (request,response) => {
 
 export const getAllAdmin =asyncHandler(async (request,response) => {
     try {
-        const Admin = await Admin.find({});
-        response.status(200).json(Admin);
+        const admin = await Admin.find({});
+        response.status(200).json(admin);
     } catch (error) {
         response.status(500).json({message:"Server Error", error:error.message});
         
@@ -65,11 +65,11 @@ export const getAllAdmin =asyncHandler(async (request,response) => {
 export const getAdminById = asyncHandler(async(request,response) => {
     const {id} = request.params;
     try {
-        const Admin = await Admin.findById(id);
-        if(!Admin) {
+        const admin = await Admin.findById(id);
+        if(!admin) {
             return response.status(400).json({message:"Admin Not Found"});
         }
-        response.status(200).json(Admin);
+        response.status(200).json(admin);
     } catch (error) {
         response.status(500).json({message:"Server Error", error:error.message});
     }
