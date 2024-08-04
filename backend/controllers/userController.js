@@ -1,103 +1,119 @@
 import User from '../models/user.js';
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
 import sendEmail from '../utils/sendEmail.js';
-import generateToken from '../utils/generateToken.js';
+import asyncHandler from 'express-async-handler';
+import { uploadProfilePic } from '../utils/pics.js';
 
-// Register user logic 
-export const registerUser = async (req, res) => {
-    const { fullname, username, email, password } = req.body;
+// Add a new user
+
+export const addUser = asyncHandler(async (request, response) => {
+    upload.single('profilePic')(request, response, async (err) => {
+        if (err) {
+            return response.status(400).json({ message: 'Error uploading image', error: err.message });
+        }
+
+        const { fullname, username, email, phonenumber, dob, address, password, socialMediaLinks } = request.body;
+        const profilePic = request.file ? request.file.path : null;
+
+        try {
+            const hashedPassword = await bcrypt.hash(password, 12);
+
+            const newUser = await User.create({
+                fullname,
+                username,
+                email,
+                phonenumber,
+                dob,
+                address,
+                password: hashedPassword,
+                profilePic,
+                socialMediaLinks
+            });
+
+            // Send email with username and password
+            const emailSubject = 'Welcome to Our Service';
+            const emailText = `Hello ${fullname},\n\nYour account has been created.\nUsername: ${username}\nPassword: ${password}\n\nPlease keep this information safe.`;
+
+            await sendEmail(email, emailSubject, emailText);
+
+            response.status(201).json({ message: 'User added successfully', user: newUser });
+        } catch (error) {
+            response.status(500).json({ message: 'Server error', error: error.message });
+        }
+    });
+});
+
+
+// Edit an existing user
+export const editUser = asyncHandler(async (request, response) => {
+    upload.single('profilePic')(request, response, async (err) => {
+        if (err) {
+            return response.status(400).json({ message: 'Error uploading image', error: err.message });
+        }
+
+        const { username } = req.params;
+        const { fullname, email, phonenumber, dob, address, socialMediaLinks } = req.body;
+        const profilePic = req.file ? req.file.path : null;
+
+        try {
+            const updateData = { fullname, email, phonenumber, dob, address, socialMediaLinks };
+            if (profilePic) updateData.profilePic = profilePic;
+
+            const updatedUser = await User.findOneAndUpdate({ username }, updateData, { new: true });
+
+            if (!updatedUser) {
+                return response.status(404).json({ message: 'User not found' });
+            }
+
+            response.status(200).json({ message: 'User updated successfully', user: updatedUser });
+        } catch (error) {
+            response.status(500).json({ message: 'Server error', error: error.message });
+        }
+    });
+});
+
+// Display all Users
+
+export const getAllUsers = asyncHandler(async (request,response) => {
+    try {
+        const user = await User.find({});
+        response.status(200).json(user);
+    } catch (error) {
+        response.status(500).json({message:"Server Error",error:error.message});
+    }
+});
+
+// Display a single staff
+
+export const getUserById = asyncHandler(async(request,response) => {
+    const { username } = request.params;
 
     try {
-        const userExists = await User.findOne({ email });
-
-        if (userExists) {
-            return res.status(400).json({ message: 'User already exists' });
+        const user = await User.findOne({ username });
+        if(!user) {
+            return response.status(404).json({message:"User Not Found"});
         }
-
-        const hashedPassword = await bcrypt.hash(password, 12);
-
-        const user = await User.create({ fullname, username, email, password: hashedPassword });
-
-        res.status(201).json({ message: 'User registered successfully' });
+        response.status(200).json(user);
     } catch (error) {
-        res.status(500).json({ message: 'Server error', error: error.message });
+        response.status(500).json({message:"Server Error",error:error.message});
     }
-};
+});
 
-// Login logic
-export const loginUser = async (req, res) => {
-    const { username, password } = req.body;
 
+// Delete a Staff
+
+export const deleteUser = asyncHandler (async(request,response) => {
+    const { username } = request.params;
     try {
-        let user = await User.findOne({ username }) || await Staff.findOne({ username }) || await Admin.findOne({ username });
+        const deleteUser = await Staff.findOneAndDelete({ username });
 
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
+        if(!deleteUser) {
+            return response.status(404).json({message:"User Not Found"});
         }
-
-        const isPasswordCorrect = await bcrypt.compare(password, user.password);
-
-        if (!isPasswordCorrect) {
-            return res.status(400).json({ message: 'Invalid credentials' });
-        }
-
-        const role = user instanceof User ? 'user' : user instanceof Staff ? 'staff' : 'admin';
-        const token = jwt.sign({ id: user._id, role }, process.env.JWT_SECRET, { expiresIn: '1h' });
-
-        res.cookie('token', token, { httpOnly: true }).status(200).json({ message: 'Logged in successfully' });
-    } catch (error) {
-        res.status(500).json({ message: 'Server error', error: error.message });
+        response.status(200).json({message:"User Deleted Successfully"});
+    } catch(error) {
+        response.status(500).json({message:"Server Error",error:error.message});
     }
-};
+});
 
-// Forget password logic
-export const forgetPassword = async (req, res) => {
-    const { email } = req.body;
 
-    try {
-        let user = await User.findOne({ email }) || await Staff.findOne({ email }) || await Admin.findOne({ email });
-
-        if (!user) {
-            return res.status(404).json({ message: 'Email not found' });
-        }
-
-        const token = generateToken(user._id, 'passwordReset');
-        const resetLink = `${req.protocol}://${req.get('host')}/api/users/reset-password/${token}`;
-
-        await sendEmail(email, 'Password Reset', `Please use the following link to reset your password: ${resetLink}`);
-
-        res.status(200).json({ message: 'Password reset link sent to email' });
-    } catch (error) {
-        res.status(500).json({ message: 'Server error', error: error.message });
-    }
-};
-
-// Reset password logic
-export const resetPassword = async (req, res) => {
-    const { newPassword, confirmPassword } = req.body;
-    const { token } = req.params;
-
-    if (newPassword !== confirmPassword) {
-        return res.status(400).json({ message: 'Passwords do not match' });
-    }
-
-    try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        const userId = decoded.id;
-
-        let user = await User.findById(userId) || await Staff.findById(userId) || await Admin.findById(userId);
-
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-
-        const hashedPassword = await bcrypt.hash(newPassword, 12);
-        user.password = hashedPassword;
-        await user.save();
-
-        res.status(200).json({ message: 'Password reset successfully' });
-    } catch (error) {
-        res.status(500).json({ message: 'Server error', error: error.message });
-    }
-};

@@ -1,13 +1,13 @@
 import jwt from 'jsonwebtoken';
-import User from '../models/userModel.js';
-import Staff from '../models/staffModel.js';
-import Admin from '../models/adminModel.js';
+import User from '../models/user.js';
+import Staff from '../models/staff.js';
+import Admin from '../models/admin.js';
 
-const authMiddleware = async (req, res, next) => {
+const authMiddleware = async (request, response, next) => {
     const token = req.cookies.token;
 
     if (!token) {
-        return res.status(401).json({ message: 'Not authenticated' });
+        return response.status(401).json({ message: 'Not authenticated' });
     }
 
     try {
@@ -17,15 +17,15 @@ const authMiddleware = async (req, res, next) => {
                    || await Admin.findById(decoded.id).select('-password');
 
         if (!user) {
-            return res.status(401).json({ message: 'User not found' });
+            return response.status(401).json({ message: 'User not found' });
         }
 
-        req.user = user;
-        req.role = decoded.role;
+        request.user = user;
+        request.role = decoded.role;
 
         next();
     } catch (error) {
-        res.status(401).json({ message: 'Invalid token' });
+        response.status(401).json({ message: 'Invalid token' });
     }
 };
 

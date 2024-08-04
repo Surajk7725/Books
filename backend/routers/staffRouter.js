@@ -4,10 +4,10 @@ import { addStaff, deleteStaff, editStaff, getAllStaff, getStaffById } from '../
 const router = express.Router();
 
 router.post('/add',addStaff);
-router.put('/update/:id',editStaff);
+router.put('/update/:username',editStaff);
 router.get('/display',getAllStaff);
-router.get('/display/:id',getStaffById);
-router.delete('/:id',deleteStaff);
+router.get('/display/:username',getStaffById);
+router.delete('/delete/:username',deleteStaff);
 
 
 export default router;

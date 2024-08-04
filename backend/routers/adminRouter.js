@@ -4,10 +4,10 @@ import { addAdmin, deleteAdmin, editAdmin, getAdminById, getAllAdmin } from '../
 const router = express.Router();
 
 router.post('/add',addAdmin);
-router.put('/updated/:id',editAdmin);
+router.put('/updated/:username',editAdmin);
 router.get('/display',getAllAdmin);
-router.get('/display/:id',getAdminById);
-router.delete('/:id',deleteAdmin);
+router.get('/display/:username',getAdminById);
+router.delete('/delete/:username',deleteAdmin);
 
 
 export default router;
