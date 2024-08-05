@@ -31,7 +31,7 @@ export const addAdmin = asyncHandler(async (request,response) => {
 
             // Send email with username and password
             const emailSubject = 'Welcome to Our Service';
-            const emailText = `Hello ${fullname},\n\nYour account has been created.\nUsername: ${username}\nPassword: ${password}\n\nPlease keep this information safe.`;
+            const emailText = `Hello ${fullName},\n\nYour account has been created.\nUsername: ${username}\nPassword: ${password}\n\nPlease keep this information safe.`;
 
             await sendEmail(email, emailSubject, emailText);
 

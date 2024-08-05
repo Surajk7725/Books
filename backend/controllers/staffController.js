@@ -34,9 +34,14 @@ export const addStaff = asyncHandler(async (request, response) => {
             const emailSubject = 'Welcome to Our BookHub';
             const emailText = `Hello ${fullName},\n\nYour account has been created.\nUsername: ${username}\nPassword: ${password}\n\nPlease keep this information safe.`;
 
-            await sendEmail(email,emailSubject, emailText);
+            try {
+                await sendEmail(email, emailSubject, emailText);
+            } catch (emailError) {
+                console.error('Error sending welcome email:', emailError);
+                return response.status(500).json({ message: 'Staff added but email not sent', error: emailError.message });
+            }
 
-            response.status(201).json({ message: 'Staff Added Successfully',staff:newStaff });
+            response.status(201).json({ message: 'Staff Added Successfully', staff: newStaff });
         } catch (error) {
             response.status(500).json({ message: "Server error", error: error.message });
         }

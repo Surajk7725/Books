@@ -7,9 +7,9 @@ import { uploadProfilePic } from '../utils/pics.js';
 // Add a new user
 
 export const addUser = asyncHandler(async (request, response) => {
-    upload.single('profilePic')(request, response, async (err) => {
+    uploadProfilePic(request, response, async (err) => {
         if (err) {
-            return response.status(400).json({ message: 'Error uploading image', error: err.message });
+            return response.status(400).json({ message: 'Error uploading image', error: err });
         }
 
         const { fullname, username, email, phonenumber, dob, address, password, socialMediaLinks } = request.body;
@@ -32,7 +32,7 @@ export const addUser = asyncHandler(async (request, response) => {
 
             // Send email with username and password
             const emailSubject = 'Welcome to Our Service';
-            const emailText = `Hello ${fullname},\n\nYour account has been created.\nUsername: ${username}\nPassword: ${password}\n\nPlease keep this information safe.`;
+            const emailText = `Hello ${fullName},\n\nYour account has been created.\nUsername: ${username}\nPassword: ${password}\n\nPlease keep this information safe.`;
 
             await sendEmail(email, emailSubject, emailText);
 
