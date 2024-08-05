@@ -1,4 +1,5 @@
 import Contact from '../models/contact.js';
+import asyncHandler from 'express-async-handler';
 
 // Create a new contact
 export const createContact = asyncHandler (async (request, response) => {

@@ -4,7 +4,7 @@ import cookieParser from 'cookie-parser';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import connectDB from './dbConnect.js';
-import authRoutes from './routers/authRouter.js';
+import authRoutes from './routers/authRouters.js';
 import userRoutes from './routers/userRouter.js';
 import staffRoutes from './routers/staffRouter.js';
 import adminRoutes from './routers/adminRouter.js';

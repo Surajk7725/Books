@@ -6,4 +6,4 @@ const router = express.Router();
 router.post('/create-issue',createContact);
 router.get('/display-issues',getAllContacts);
 
-export default routers;
+export default router;
