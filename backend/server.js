@@ -9,6 +9,7 @@ import userRoutes from './routers/userRouter.js';
 import staffRoutes from './routers/staffRouter.js';
 import adminRoutes from './routers/adminRouter.js';
 import contactRoutes from './routers/contactRouter.js';
+import noteRoutes from './routers/noteRouter.js';
 
 dotenv.config();
 connectDB();
@@ -24,6 +25,7 @@ app.use(cookieParser());
 
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
+app.use('/api/user-notes', noteRoutes);
 app.use('/api/staff', staffRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/contact-issues', contactRoutes);
