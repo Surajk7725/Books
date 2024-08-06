@@ -1,9 +1,13 @@
 import express from 'express';
-import {createContact, getAllContacts} from '../controllers/contactController.js';
+import { createContact, getAllContacts, updateContactStatus } from '../controllers/contactController.js';
 
 const router = express.Router();
 
-router.post('/create-issue',createContact);
-router.get('/display-issues',getAllContacts);
+router.route('/issues')
+    .post(createContact)
+    .get(getAllContacts);
+
+router.route('/issues/:id')
+    .patch(updateContactStatus);
 
 export default router;
