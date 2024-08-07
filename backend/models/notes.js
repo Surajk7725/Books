@@ -7,6 +7,7 @@ const noteSchema = new mongoose.Schema({
   media: { type: String },
   song: { type: String },
   date: { type: Date, default: Date.now },
+  isPinned: {type: Boolean,default: false},
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }
 });
 

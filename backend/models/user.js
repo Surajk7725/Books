@@ -9,6 +9,7 @@ const userSchema = new mongoose.Schema({
     address: { type: String },
     password: { type: String},
     profilePic: { type: String },
+    bookmarks: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Book' }],  
     socialMediaLinks: {
         insta: String,
         twitter: String,
