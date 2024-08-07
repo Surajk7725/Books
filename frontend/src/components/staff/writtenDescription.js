@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import Sidebar from '../staff/sidebar';
-import { Modal, Button, Rate, Input } from 'antd';
+import { Modal, Button, Rate, Input, Radio } from 'antd';
 import { StarFilled, CloseOutlined } from '@ant-design/icons';
 import html2pdf from 'html2pdf.js';
 
@@ -19,9 +19,9 @@ const UserContent = () => {
   const [currentDocumentIndex, setCurrentDocumentIndex] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formType, setFormType] = useState(""); // "success" or "reject"
-  const [marks, setMarks] = useState(0);
   const [stars, setStars] = useState(0);
   const [comment, setComment] = useState("");
+  const [decision, setDecision] = useState("");
   const pdfContentRef = useRef(null);
   const documents = [
     {
@@ -35,9 +35,9 @@ const UserContent = () => {
 
   const handleSubmit = () => {
     const feedback = {
-      marks,
       stars,
       comment,
+      decision,
     };
     console.log("Feedback Submitted:", feedback);
     
@@ -64,9 +64,9 @@ const UserContent = () => {
     }
 
     setIsModalOpen(false);
-    setMarks(0);
     setStars(0);
     setComment("");
+    setDecision("");
   };
 
   return (
@@ -113,21 +113,12 @@ const UserContent = () => {
               <div id="actionButtons" className="flex space-x-4 mt-4">
                 <button
                   onClick={() => {
-                    setFormType("success");
+                    setFormType("review");
                     setIsModalOpen(true);
                   }}
-                  className="bg-green-500 text-white px-4 py-2 rounded"
+                  className="bg-blue-500 text-white px-4 py-2 rounded"
                 >
-                  Success
-                </button>
-                <button
-                  onClick={() => {
-                    setFormType("reject");
-                    setIsModalOpen(true);
-                  }}
-                  className="bg-red-500 text-white px-4 py-2 rounded"
-                >
-                  Reject
+                  Review
                 </button>
               </div>
             </div>
@@ -166,6 +157,13 @@ const UserContent = () => {
           className="w-full"
         />
       </div>
+      <div className="mb-6">
+          <p className="mb-2 text-gray-700 font-medium">Decision:</p>
+          <Radio.Group onChange={(e) => setDecision(e.target.value)} value={decision}>
+            <Radio value="Accepted">Accepted</Radio>
+            <Radio value="Rejected">Rejected</Radio>
+          </Radio.Group>
+        </div>
       <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-4">
         <Button onClick={() => setIsModalOpen(false)} className="w-full sm:w-auto">
           Cancel
