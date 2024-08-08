@@ -158,5 +158,10 @@ export const getUserDownloadedBooks = asyncHandler(async (request, response) => 
     response.json(downloadedBooks);
 });
 
-
+// Update the Password
+export const updateUserPassword = asyncHandler(async (request, response) => {
+    const { username, oldPassword, newPassword } = request.body;
+    const user = await updatePassword(User, username, oldPassword, newPassword);
+    response.status(200).json({ message: 'Password updated successfully' });
+});
 

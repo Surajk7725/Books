@@ -29,6 +29,9 @@ const bookSchema = new mongoose.Schema({
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     addedByStaff: { type: Boolean, default: false },
     addedDate: { type: Date, default: Date.now },
+    createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'Staff' }, // Added by a staff member
+    updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'Staff' }, // Last edited by a staff member
+    deletedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'Staff' }, // Deleted by a staff member
     ratings: [{
         user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
         username: { type: String, required: true },

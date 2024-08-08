@@ -28,6 +28,21 @@ const userSchema = new mongoose.Schema({
     },
     downloadedBooks: [bookDownloadSchema],
     bookHistory: [bookHistorySchema],
+
+    loginCount: { type: Number, default: 0 },
+    logoutCount: { type: Number, default: 0 },
+    readBooks: [
+        {
+            bookId: { type: mongoose.Schema.Types.ObjectId, ref: 'Book' },
+            count: { type: Number, default: 0 }
+        }
+    ],
+    wishlistedBooks: [
+        { bookId: { type: mongoose.Schema.Types.ObjectId, ref: 'Book' } }
+    ],
+    
+
+
 }, { timestamps: true });
 
 const User = mongoose.model('User', userSchema);

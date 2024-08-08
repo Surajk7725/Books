@@ -1,5 +1,6 @@
 import express from 'express';
-import { addAdmin, deleteAdmin, editAdmin, getAdminById, getAllAdmin } from '../controllers/adminController.js';
+import { addAdmin, deleteAdmin, editAdmin, getAdminById, getAdminDashboardStats, getAllAdmin, getBookDetails, getStaffHistory, getUserHistory, updateAdminPassword } from '../controllers/adminController.js';
+
 
 const router = express.Router();
 
@@ -8,6 +9,11 @@ router.put('/updated/:username',editAdmin);
 router.get('/display',getAllAdmin);
 router.get('/display/:username',getAdminById);
 router.delete('/delete/:username',deleteAdmin);
+router.put('/update-password', updateAdminPassword);
+router.get('/counts', getAdminDashboardStats);
+router.get('/user-history', getUserHistory);
+router.get('/staff-history', getStaffHistory);
+router.get('/book-history', getBookDetails);
 
 
 export default router;

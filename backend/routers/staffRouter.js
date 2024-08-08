@@ -1,5 +1,5 @@
 import express from 'express';
-import { addStaff, deleteStaff, editStaff, getAllStaff, getStaffById } from '../controllers/staffController.js';
+import { addStaff, deleteStaff, editStaff, getAllStaff, getStaffById, getUserBookHistory, updateStaffPassword } from '../controllers/staffController.js';
 
 const router = express.Router();
 
@@ -8,6 +8,8 @@ router.put('/update/:username',editStaff);
 router.get('/display',getAllStaff);
 router.get('/display/:username',getStaffById);
 router.delete('/delete/:username',deleteStaff);
+router.put('/update-password',updateStaffPassword);
+router.get('/user-history', getUserBookHistory);
 
 
 export default router;
