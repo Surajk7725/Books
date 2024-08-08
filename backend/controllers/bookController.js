@@ -75,12 +75,15 @@ export const editBook = asyncHandler(async (request, response) => {
         if (err) {
             return response.status(400).json({ message: 'Error uploading image', error: err });
         }
-        const { id } = request.params;
+        const { bookTitle } = request.params; // Use bookTitle instead of id
         const { authors, title, genre, category, isbn, publisher, language, bookDescription } = request.body;
         const coverImage = request.file ? request.file.path : '';
 
-        const book = await Book.findById(id);
+        // Find the book by title
+        const book = await Book.findOne({ title: bookTitle });
+
         if (book) {
+            // Update the book details
             book.authors = authors || book.authors;
             book.title = title || book.title;
             book.genre = genre || book.genre;
@@ -99,6 +102,7 @@ export const editBook = asyncHandler(async (request, response) => {
     });
 });
 
+
 // Display All Books
 export const displayAllBooks = asyncHandler(async (request, response) => {
     const books = await Book.find();
@@ -108,8 +112,8 @@ export const displayAllBooks = asyncHandler(async (request, response) => {
 
 // Display Particular Book
 export const displayParticularBook = asyncHandler(async (request, response) => {
-    const { id } = request.params;
-    const book = await Book.findById(id);
+    const { title } = request.params;
+    const book = await Book.findOne({ title });
     if (book) {
         response.json(book);
     } else {
@@ -148,3 +152,103 @@ export const displayUserAddedBooks = asyncHandler(async (request, response) => {
     response.json(books);
 });
 
+
+// Create Book Rating
+export const createBookRating = asyncHandler(async (request, response) => {
+    const { title, author, rating, comment } = request.body;
+
+    const book = await Book.findOne({ title, authors: author });
+    if (!book) {
+        return response.status(404).json({ message: 'Book not found' });
+    }
+
+    const userId = request.user._id; // Assuming the user ID is in the request object
+    const user = await User.findById(userId).select('username');
+    if (!user) {
+        return response.status(404).json({ message: 'User not found' });
+    }
+
+    const newRating = { user: userId, username: user.username, rating, comment };
+
+    book.ratings.push(newRating);
+    await book.save();
+
+    response.status(201).json({ message: 'Rating added successfully' });
+});
+
+// Display Book Ratings
+export const displayBookRatings = asyncHandler(async (request, response) => {
+    const { title, author } = request.params;
+
+    const book = await Book.findOne({ title, authors: author }).populate('ratings.user', 'username');
+    if (!book) {
+        return response.status(404).json({ message: 'Book not found' });
+    }
+
+    response.status(200).json(book.ratings);
+});
+
+// Add Comment to Book
+export const addBookComment = asyncHandler(async (request, response) => {
+    const { title, author, comment } = request.body;
+
+    const book = await Book.findOne({ title, authors: author });
+    if (!book) {
+        return response.status(404).json({ message: 'Book not found' });
+    }
+
+    const userId = request.user._id; // Assuming the user ID is in the request object
+    const user = await User.findById(userId).select('username');
+    if (!user) {
+        return response.status(404).json({ message: 'User not found' });
+    }
+
+    const newComment = { user: userId, username: user.username, comment };
+
+    book.bookComments.push(newComment);
+    await book.save();
+
+    response.status(201).json({ message: 'Comment added successfully' });
+});
+
+// Add Reply to Comment
+export const addCommentReply = asyncHandler(async (request, response) => {
+    const { title, author, commentId, reply } = request.body;
+
+    const book = await Book.findOne({ title, authors: author });
+    if (!book) {
+        return response.status(404).json({ message: 'Book not found' });
+    }
+
+    const comment = book.bookComments.id(commentId);
+    if (!comment) {
+        return response.status(404).json({ message: 'Comment not found' });
+    }
+
+    const userId = request.user._id; // Assuming the user ID is in the request object
+    const user = await User.findById(userId).select('username');
+    if (!user) {
+        return response.status(404).json({ message: 'User not found' });
+    }
+
+    const newReply = { user: userId, username: user.username, comment: reply };
+
+    comment.replies.push(newReply);
+    await book.save();
+
+    response.status(201).json({ message: 'Reply added successfully' });
+});
+
+// Display Book Comments
+export const displayBookComments = asyncHandler(async (request, response) => {
+    const { title, author } = request.params;
+
+    const book = await Book.findOne({ title, authors: author })
+        .populate('bookComments.user', 'username')
+        .populate('bookComments.replies.user', 'username');
+    if (!book) {
+        return response.status(404).json({ message: 'Book not found' });
+    }
+
+    response.status(200).json(book.bookComments);
+});

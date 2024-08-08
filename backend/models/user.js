@@ -1,7 +1,17 @@
 import mongoose from 'mongoose';
 
+const bookDownloadSchema = new mongoose.Schema({
+    book: { type: mongoose.Schema.Types.ObjectId, ref: 'Book', required: true },
+    downloadedAt: { type: Date, default: Date.now }
+});
+
+const bookHistorySchema = new mongoose.Schema({
+    book: { type: mongoose.Schema.Types.ObjectId, ref: 'Book', required: true },
+    viewedAt: { type: Date, default: Date.now }
+});
+
 const userSchema = new mongoose.Schema({
-    fullname: { type: String, required: true },
+    fullName: { type: String, required: true },
     username: { type: String, required: true, unique: true },
     email: { type: String, required: true, unique: true },
     phonenumber: { type: String, required: true },
@@ -15,7 +25,9 @@ const userSchema = new mongoose.Schema({
         twitter: String,
         youtube: String,
         linkedin: String
-    }
+    },
+    downloadedBooks: [bookDownloadSchema],
+    bookHistory: [bookHistorySchema],
 }, { timestamps: true });
 
 const User = mongoose.model('User', userSchema);

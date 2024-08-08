@@ -11,14 +11,14 @@ export const addAdmin = asyncHandler(async (request,response) => {
             return response.status(400).json({ message: 'Error uploading image', error: err });
         }
     
-        const {fullname, username, email, password, phoneNumber, dob, address, socialMediaLinks} = request.body;
+        const {fullName, username, email, password, phoneNumber, dob, address, socialMediaLinks} = request.body;
         const profilePic = request.file ? request.file.path : null;
 
         try {
             const hashedPassword = await bcrypt.hash(password,12);
 
             const newAdmin = await Admin.create({
-                fullname,
+                fullName,
                 username,
                 email,
                 password : hashedPassword,
@@ -52,7 +52,7 @@ export const editAdmin = asyncHandler (async (request,response) => {
         
         const { username } = request.params;
 
-        const {fullname, email, password, phoneNumber, dob, address, socialMediaLinks} = request.body;
+        const {fullName, email, password, phoneNumber, dob, address, socialMediaLinks} = request.body;
         const profilePic = request.file ? request.file.path : null;
 
         try {
