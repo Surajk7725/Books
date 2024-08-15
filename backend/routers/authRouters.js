@@ -6,8 +6,7 @@ const router = express.Router();
 router.post('/register', registerUser);
 router.post('/login', loginUser);
 router.post('/forget-password', forgetPassword);
-router.post('/reset-password/:token', resetPassword);
+router.post('/update-password/:token', resetPassword);
 
-// Add other user routes (addUser, etc.)
 
 export default router;

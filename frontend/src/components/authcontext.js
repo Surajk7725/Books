@@ -1,25 +1,40 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState } from 'react';
+import axios from 'axios';
 
 const AuthContext = createContext();
-export const AuthProvider = ({ children }) => {
-  const [token, setToken] = useState(null);
-  const login = (userToken) => {
-    setToken(userToken);
-  };
-  const logout = () => {
-    setToken(null);
-  };
-  const isAuthenticated = !!token;
-  return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
-      {children}
-    </AuthContext.Provider>
-  );
-};
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
+
+export function useAuth() {
+  return useContext(AuthContext);
+}
+
+export function AuthProvider({ children }) {
+  const [user, setUser] = useState(null);
+const [role, setRole] = useState(null);
+
+const login = async (formData) => {
+  try {
+    const response = await axios.post('http://localhost:5000/api/auth/login', formData);
+    const { token, role, user } = response.data;
+
+    if (!token) {
+      throw new Error('Token not provided in response');
+    }
+    
+    localStorage.setItem('token', token);
+    setUser(user); // Save user to state
+    setRole(role); // Save role to state
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Login failed');
   }
-  return context;
 };
+
+const value = {
+  user,
+  role,
+  login,
+};
+
+return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+}
+

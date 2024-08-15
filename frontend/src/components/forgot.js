@@ -1,12 +1,21 @@
 import React, { useState } from "react";
+import axiosInstance from './axiosInstance'; 
 
 export default function Forgot() {
+  const [email, setEmail] = useState('');
   const [emailSent, setEmailSent] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setEmailSent(true);
-    // Logic to send email can be added here
+
+    try {
+      await axiosInstance.post('/auth/forget-password', { email });
+      setEmailSent(true);
+    } catch (error) {
+      console.error('Error sending email:', error.response?.data?.message || error.message);
+      setError(error.response?.data?.message || 'Failed to send reset email. Please try again.');
+    }
   };
 
   return (
@@ -17,11 +26,20 @@ export default function Forgot() {
           <p className="text-green-500 text-center">Email Sent Successfully</p>
         ) : (
           <form onSubmit={handleSubmit}>
+            {error && <p className="text-red-500 text-center">{error}</p>}
             <div className="mb-4">
               <label className="block text-gray-700 font-bold mb-2" htmlFor="email">Email
               <span className="text-red-500">*</span>
               </label>
-              <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="email" placeholder="Enter your email address" type="email" />
+              <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="email"
+                placeholder="Enter your email address"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
             </div>
             <div className="flex items-center justify-center">
               <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition-colors duration-300" type="submit">Submit</button>

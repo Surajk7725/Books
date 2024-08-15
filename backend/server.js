@@ -1,6 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import connectDB from './dbConnect.js';
@@ -24,6 +25,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static('uploads'));
 app.use(cookieParser());
+
+app.use(cors({
+    origin: process.env.FRONTEND_URL || 'http://localhost:3000', 
+    credentials: true, // allow credentials (cookies) to be sent
+}));
 
 app.use('/api/auth',authRoutes);
 app.use('/api/user',userRoutes);

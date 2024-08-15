@@ -1,38 +1,29 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { useNavigate, useParams } from 'react-router-dom';
+import axiosInstance from './axiosInstance'; 
 
 export default function UpdatePassword() {
-  const [email, setEmail] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
+  const { token } = useParams(); // Get token from URL
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (newPassword !== confirmPassword) {
       setError('Passwords do not match');
       return;
     }
 
     try {
-      // Check email type (user or admin)
-      const response = await axios.post('/api/check-email-type', { email });
-      const userType = response.data.userType;
-
-      // Simulate password update (replace with actual update logic)
-      setTimeout(() => {
-        alert('Password updated successfully');
-        if (userType === 'user') {
-          navigate('/login');
-        } else if (userType === 'admin') {
-          navigate('/admin-login');
-        }
-      }, 1000);
+      await axiosInstance.post(`/auth/update-password/${token}`, { newPassword, confirmPassword });
+      alert('Password updated successfully');
+      navigate('/login');
     } catch (error) {
-      console.error('Error checking email type:', error);
-      setError('Failed to update password. Please try again.');
+      console.error('Error updating password:', error.response?.data?.message || error.message);
+      setError(error.response?.data?.message || 'Failed to update password. Please try again.');
     }
   };
 
@@ -42,20 +33,6 @@ export default function UpdatePassword() {
         <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">Update Password</h1>
         {error && <p className="text-red-500 text-center mb-4">{error}</p>}
         <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label className="block text-gray-700 font-bold mb-2" htmlFor="email">Email
-            <span className="text-red-500">*</span>
-            </label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="email"
-              placeholder="Enter your email address"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
           <div className="mb-4">
             <label className="block text-gray-700 font-bold mb-2" htmlFor="newPassword">New Password
             <span className="text-red-500">*</span>

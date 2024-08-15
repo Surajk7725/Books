@@ -8,7 +8,7 @@ const staffSchema = new mongoose.Schema({
     phoneNumber: {type: String},
     address: {type: String},
     dob: {type: Date},
-    profilePic: {type: String},
+    profilePic: { type: String },
     socialMediaLinks: {
         insta: String,
         twitter: String,

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Navigate } from "react-router-dom";
 import Landing from './components/landing';
 import Login from './components/login';
 import SignUp from './components/signup';
@@ -90,9 +91,9 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/forgot" element={<Forgot />} />
-        <Route path="/update-password" element={<Update />} />
+        <Route path="/update-password/:token" element={<Update />} />
 
-        <Route element={<ProtectedRoute />}>
+        <Route element={<ProtectedRoute allowedRoles={['user']} />}>
         <Route path="/home" element={<Home />} />
         <Route path="/display-books" element={<AllBooks bookmarkedBooks={bookmarkedBooks} toggleBookmark={toggleBookmark} />} />
         <Route path="/display-books/description" element={<BookDescription />} />
@@ -108,9 +109,10 @@ function App() {
         <Route path="/settings" element={<Settings />} />
         <Route path="/help-center" element={<Help />} />
         <Route path="/contactus" element={<Contactus />} />
+        </Route>
 
         {/* Teacher Routes */}
-
+        <Route element={<ProtectedRoute allowedRoles={['staff']} />}>
         <Route path='/staff-home' element={<Staff_home />} />
         <Route path='/staff-allbooks' element={<All_Books />} />
         <Route path='/staff-allbooks/kids' element={<Kids_Books />} />
@@ -127,9 +129,10 @@ function App() {
         <Route path='/manageuser-data' element={<ManageUser />} />
         <Route path='/staff-bookreview' element={<BookReview />} />
         <Route path='/staff-contact' element={<ContactUsR />} />
+        </Route>
 
         {/* Admin Routes */}
-
+        <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
         <Route path="/admin/*" element={<AdminSidebar />}>
           <Route path='home' element={<AdminHome />} />
           <Route path='user-create' element={<UserCreate />} />
@@ -151,8 +154,10 @@ function App() {
           <Route path='staff-display/view' element={<ViewStaff />} />
  
         </Route>
-        </Route>
+       </Route>
 
+       <Route path="*" element={<Navigate to="/login" />} />
+        
       </Routes>
       </AuthProvider>
     </Router>

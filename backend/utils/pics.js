@@ -28,4 +28,5 @@ const upload = multer({
     fileFilter: fileFilter
 });
 
+export { upload }; // Named export
 export const uploadProfilePic = upload.single('profilePic');
