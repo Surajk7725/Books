@@ -4,6 +4,7 @@ import Notifications from './user/notification';
 import { Dropdown } from 'antd';
 import { BellOutlined } from '@ant-design/icons';
 import { useAuth } from './authcontext';
+import { useNavigate } from 'react-router-dom';
 import { ChevronDownIcon, BookOpenIcon, PencilIcon, MailIcon, UserCircleIcon, CogIcon, QuestionMarkCircleIcon, LogoutIcon, StarIcon } from '@heroicons/react/outline';
 
 export default function NavBar() {
@@ -12,6 +13,7 @@ export default function NavBar() {
     const [menuOpen, setMenuOpen] = useState(false); // State for mobile menu toggle
     const [username, setUsername] = useState('');
     const { user, logout } = useAuth();
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (user) {
@@ -21,7 +23,7 @@ export default function NavBar() {
 
     const handleSignOut = () => {
         console.log("User signed out");
-        logout();
+        navigate("/")
     };
 
     const menu = (
