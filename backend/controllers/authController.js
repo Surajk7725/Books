@@ -64,6 +64,7 @@ export const loginUser = async (req, res) => {
 // Forget password logic
 export const forgetPassword = async (req, res) => {
     const { email } = req.body;
+    console.log("Received email:", email);
 
     try {
         let user = await User.findOne({ email }) || await Staff.findOne({ email }) || await Admin.findOne({ email });
