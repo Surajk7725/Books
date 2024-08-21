@@ -2,9 +2,7 @@ import User from '../models/user.js';
 import Admin from '../models/admin.js';
 import Staff from '../models/staff.js';
 import bcrypt from 'bcryptjs';
-import { encryptToken, decryptToken } from '../utils/crypto.js';
 import dotenv from 'dotenv';
-import crypto from 'crypto';
 import sendEmail from '../utils/sendEmail.js';
 import generateToken from '../utils/generateToken.js';
 
@@ -36,7 +34,7 @@ export const registerUser = async (req, res) => {
 // Login logic
 export const loginUser = async (req, res) => {
     const { username, password } = req.body;
-
+    
     try {
         let user = await User.findOne({ username });
         if (!user) user = await Staff.findOne({ username });
@@ -47,12 +45,9 @@ export const loginUser = async (req, res) => {
         const isPasswordCorrect = await bcrypt.compare(password, user.password);
         if (!isPasswordCorrect) return res.status(400).json({ message: 'Invalid credentials' });
 
-        // Determine the role of the user
         const role = user instanceof Admin ? 'admin' : user instanceof Staff ? 'staff' : 'user';
-        
-        // Generate a token
+
         const token = generateToken(user._id, role);
-        console.log('Generated Token:', token); // Debugging line
 
         if (!token) {
             return res.status(500).json({ message: 'Token generation failed' });
@@ -60,7 +55,7 @@ export const loginUser = async (req, res) => {
 
         res.status(200).json({ message: 'Logged in successfully', token, role, user });
     } catch (error) {
-        console.error('Login Error:', error.message); 
+        console.error('Login Error:', error.message);
         res.status(500).json({ message: 'Server error', error: error.message });
     }
 };
@@ -77,68 +72,39 @@ export const forgetPassword = async (req, res) => {
             return res.status(404).json({ message: 'Email not found' });
         }
 
-        const resetToken = crypto.randomBytes(20).toString('hex');
-        const encryptedToken = encryptToken(resetToken);
-        console.log(`Generated reset token: ${resetToken}`);
-        console.log(`Encrypted reset token: ${encryptedToken}`);
-        
-        user.resetPasswordToken = encryptedToken; // Store the encrypted token
-        user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
-        await user.save();
+        const resetLink = `http://localhost:3000/update-password`;
+        await sendEmail(email, 'Password Reset', `Your password reset request has been received. Please use the following link to reset your password: ${resetLink}`);
 
-        const resetLink = `${process.env.FRONTEND_URL}/update-password/${encryptedToken}`; // FRONTEND_URL should be in your .env file
-
-        await sendEmail(email, 'Password Reset', `Please use the following link to reset your password: ${resetLink}`);
-
-        res.status(200).json({ message: 'Password reset link sent to email' });
+        res.status(200).json({ message: 'Password reset instructions sent to email' });
     } catch (error) {
         console.error("Error:", error.message);
         res.status(500).json({ message: 'Server error', error: error.message });
     }
 };
 
+
 // Update the password
 export const resetPassword = async (req, res) => {
-    const { newPassword, confirmPassword } = req.body;
-    const { token } = req.params;
+    const { email, newPassword, confirmPassword } = req.body;
 
     if (newPassword !== confirmPassword) {
         return res.status(400).json({ message: 'Passwords do not match' });
     }
 
     try {
-        // Decrypt the token first
-        const decryptedToken = decryptToken(token);
-        console.log(`Received token: ${token}`);
-        console.log(`Decrypted token: ${decryptedToken}`);
-
-        // Find the user by the decrypted token
-        let user = await User.findOne({ resetPasswordToken: decryptedToken }) ||
-                   await Staff.findOne({ resetPasswordToken: decryptedToken }) ||
-                   await Admin.findOne({ resetPasswordToken: decryptedToken });
+        let user = await User.findOne({ email }) || await Staff.findOne({ email }) || await Admin.findOne({ email });
 
         if (!user) {
-            console.log('No user found with the provided reset token');
-            return res.status(400).json({ message: 'Token is invalid or has expired' });
-        }
-
-        console.log(`Found user: ${user.email}`);
-        console.log(`Token expiry: ${user.resetPasswordExpires}`);
-        
-        if (user.resetPasswordExpires < Date.now()) {
-            console.log('Token has expired');
-            return res.status(400).json({ message: 'Token is invalid or has expired' });
+            return res.status(404).json({ message: 'Email not found' });
         }
 
         const hashedPassword = await bcrypt.hash(newPassword, 12);
         user.password = hashedPassword;
-        user.resetPasswordToken = undefined; // Clear the token
-        user.resetPasswordExpires = undefined;
         await user.save();
 
         res.status(200).json({ message: 'Password reset successfully' });
     } catch (error) {
-        console.error("Error :", error.message);
+        console.error("Error:", error.message);
         res.status(500).json({ message: 'Server error', error: error.message });
     }
 };

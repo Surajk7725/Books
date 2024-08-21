@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import axiosInstance from './axiosInstance'; 
+import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import axiosInstance from './axiosInstance';
 
 export default function UpdatePassword() {
+  const [email, setEmail] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
-  const { token } = useParams(); // Get token from URL
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -18,12 +20,13 @@ export default function UpdatePassword() {
     }
 
     try {
-      await axiosInstance.post(`/auth/update-password/${token}`, { newPassword, confirmPassword });
-      alert('Password updated successfully');
+      await axiosInstance.post('/auth/update-password', { email, newPassword, confirmPassword });
+      toast.success('Password updated successfully');
       navigate('/login');
     } catch (error) {
       console.error('Error updating password:', error.response?.data?.message || error.message);
       setError(error.response?.data?.message || 'Failed to update password. Please try again.');
+      toast.error(error.response?.data?.message || 'Failed to update password. Please try again.');
     }
   };
 
@@ -34,8 +37,22 @@ export default function UpdatePassword() {
         {error && <p className="text-red-500 text-center mb-4">{error}</p>}
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
+            <label className="block text-gray-700 font-bold mb-2" htmlFor="email">Email
+              <span className="text-red-500">*</span>
+            </label>
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="email"
+              type="email"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className="mb-4">
             <label className="block text-gray-700 font-bold mb-2" htmlFor="newPassword">New Password
-            <span className="text-red-500">*</span>
+              <span className="text-red-500">*</span>
             </label>
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -49,7 +66,7 @@ export default function UpdatePassword() {
           </div>
           <div className="mb-4">
             <label className="block text-gray-700 font-bold mb-2" htmlFor="confirmPassword">Confirm Password
-            <span className="text-red-500">*</span>
+              <span className="text-red-500">*</span>
             </label>
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -70,6 +87,7 @@ export default function UpdatePassword() {
             </button>
           </div>
         </form>
+        <ToastContainer />
       </div>
     </div>
   );

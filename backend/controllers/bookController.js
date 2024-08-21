@@ -11,8 +11,11 @@ export const addBookByStaff = asyncHandler(async (request, response) => {
         if (err) {
             return response.status(400).json({ message: 'Error uploading image', error: err });
         }
-        const { authors, title, genre, category, isbn, publisher, language, bookDescription } = request.body;
-        const coverImage = request.file ? request.file.path : null;
+        const { authors, title, genre, category, isbn, publisher, language, description } = request.body;
+
+        const coverImage = request.files.coverImage ? request.files.coverImage[0].path : null;
+        const bookFile = request.files.bookFile ? request.files.bookFile[0].path : null;
+
         const newBook = new Book({
             authors,
             title,
@@ -22,7 +25,8 @@ export const addBookByStaff = asyncHandler(async (request, response) => {
             isbn,
             publisher,
             language,
-            bookDescription,
+            bookFile,
+            description,
             addedByStaff: true
         });
 
@@ -38,32 +42,33 @@ export const addBookByStaff = asyncHandler(async (request, response) => {
 
 // Add Book by User
 export const addBookByUser = asyncHandler(async (request, response) => {
-    const { authors, title, genre, category, isbn, publisher, language, bookDescription, username } = request.body;
-    const coverImage = request.file ? request.file.path : null;
-    const user = await User.findOne({ username });
+    const { authors, title, genre, description } = request.body;
+
+    const coverImage = request.files?.coverImage ? request.files.coverImage[0].path : null;
+    const bookFile = request.files?.bookFile ? request.files.bookFile[0].path : null;
+
+    const user = await User.findById(request.user._id);
+
     if (!user) {
-        return response.status(404).json({ message: 'User not found' });
+        response.status(404);
+        throw new Error('User not found');
     }
 
     const newBook = new Book({
         authors,
         title,
         genre,
-        category,
+        description,
         coverImage,
-        isbn,
-        publisher,
-        language,
-        bookDescription,
-        createdBy: user._id,
+        bookFile,
+        user: request.user._id,
         addedByStaff: false
     });
 
     const createdBook = await newBook.save();
 
-    // Send notification
     const notificationText = `Book Title: ${title}, Date: ${new Date().toLocaleDateString()}, Time: ${new Date().toLocaleTimeString()}`;
-    sendNotification(user._id, notificationText, `link_to_book/${createdBook._id}`);
+    sendNotification(request.user._id, notificationText, `link_to_book/${createdBook._id}`);
 
     response.status(201).json({ message: 'Book added successfully by user', book: createdBook });
 });
@@ -76,7 +81,7 @@ export const editBook = asyncHandler(async (request, response) => {
             return response.status(400).json({ message: 'Error uploading image', error: err });
         }
         const { bookTitle } = request.params; // Use bookTitle instead of id
-        const { authors, title, genre, category, isbn, publisher, language, bookDescription } = request.body;
+        const { authors, title, genre, category, isbn, publisher, language, description } = request.body;
         const coverImage = request.file ? request.file.path : '';
 
         // Find the book by title
@@ -92,7 +97,7 @@ export const editBook = asyncHandler(async (request, response) => {
             book.isbn = isbn || book.isbn;
             book.publisher = publisher || book.publisher;
             book.language = language || book.language;
-            book.bookDescription = bookDescription || book.bookDescription;
+            book.description = description || book.description;
 
             const updatedBook = await book.save();
             response.json({ message: 'Book updated successfully', book: updatedBook });

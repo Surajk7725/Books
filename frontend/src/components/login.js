@@ -28,13 +28,14 @@ export default function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     if (!validate()) return;
-  
+    
     try {
       const response = await login(formData);
       toast.success('Login successful!');
   
-      const { role } = response;
-  
+      const {username, role } = response; 
+      
+      
       if (role === 'admin') 
         navigate('/admin/home');
       else if (role === 'staff') 
@@ -42,19 +43,15 @@ export default function Login() {
       else 
         navigate('/home');
     } catch (error) {
-      setErrors({ general: error.message });
       toast.error(error.message);
     }
   };
   
 
-
-
   return (
     <div className="flex items-center justify-center min-h-screen bg-cover bg-center" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1527176930608-09cb256ab504?q=80&w=1474&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')" }}>
       <div className="bg-white bg-opacity-80 p-8 rounded-lg shadow-lg">
         <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">Login</h1>
-        {errors.general && <p className="text-red-500 text-center">{errors.general}</p>}
         <form>
           <div className="mb-4">
             <label className="block text-gray-700 font-bold mb-2" htmlFor="username">User Name

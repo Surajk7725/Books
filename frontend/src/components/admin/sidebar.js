@@ -127,7 +127,7 @@ const Sidebar = () => {
             <Dropdown overlay={dropdown} trigger={['click']}>
               <Avatar
                 src="https://wallpapers.com/images/hd/yuuichi-katagiri-anime-portrait-5xl430n009kmsg7l.jpg"
-                className="cursor-pointer"
+                className="cursor-pointer h-10 w-10 rounded-full border-2 border-gray-300 object-cover"
                 size="large"
               />
             </Dropdown>

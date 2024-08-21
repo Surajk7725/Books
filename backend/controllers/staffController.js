@@ -145,9 +145,29 @@ export const deleteStaff = asyncHandler (async(request,response) => {
 
 // Update the Password
 export const updateStaffPassword = asyncHandler(async (request, response) => {
-    const { oldPassword, newPassword } = request.body;
-    const staff = await updatePassword(Staff, username,  oldPassword, newPassword);
-    response.status(200).json({ message: 'Password updated successfully' });
+    try {
+        const { username } = request.params;
+        const { oldPassword, newPassword } = request.body;
+
+        const staff = await Staff.findOne({ username });
+
+        if (!staff) {
+            return response.status(404).json({ message: 'Staff not found' });
+        }
+
+        const isMatch = bcrypt.compare(oldPassword, staff.password);
+        if (!isMatch) {
+            return response.status(400).json({ message: 'Incorrect old password' });
+        }
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        staff.password = hashedPassword;
+        await staff.save();
+
+        response.status(200).json({ message: 'Password updated successfully' });
+    } catch (error) {
+        response.status(500).json({ message: 'Server error', error });
+    }
 });
 
 // Display User's Full Book History

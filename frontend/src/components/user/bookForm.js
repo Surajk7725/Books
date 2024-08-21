@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axiosInstance from '../axiosInstance';
 import { PlusCircleIcon } from '@heroicons/react/outline';
 import NavBar from '../navbar';
 import Footer from './footer';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function BookForm() {
     const [authors, setAuthors] = useState(['']);
@@ -9,7 +12,6 @@ function BookForm() {
     const [genre, setGenre] = useState('');
     const [description, setDescription] = useState('');
     const [coverImage, setCoverImage] = useState(null);
-    const [coverImageUrl, setCoverImageUrl] = useState('');
     const [bookFile, setBookFile] = useState(null);
 
     const addAuthorField = () => {
@@ -27,11 +29,38 @@ function BookForm() {
         setCoverImage(file);
     };
 
-    const handleFormSubmit = (e) => {
-        e.preventDefault();
-        // Handle form submission logic
-        console.log({ title, authors, genre, description, coverImage, coverImageUrl, bookFile });
+    const handleBookFileUpload = (e) => {
+        const file = e.target.files[0];
+        setBookFile(file);
     };
+
+    const handleFormSubmit = async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData();
+        formData.append('title', title);
+        formData.append('genre', genre);
+        formData.append('description', description);
+        if (coverImage) formData.append('coverImage', coverImage);
+        if (bookFile) formData.append('bookFile', bookFile);
+        authors.forEach((author, index) => {
+            formData.append(`authors[${index}]`, author);
+        });
+
+        try {
+            const response = await axiosInstance.post('/books/user/add', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                }
+            });
+            toast.success('Book added successfully!');
+            console.log(response.data);
+        } catch (error) {
+            toast.error('Error adding book. Please try again.');
+            console.error('Error adding book:', error.response ? error.response.data : error.message);
+        }        
+    };
+    
 
     return (
         <div className="min-h-screen bg-gray-100 flex flex-col">
@@ -100,7 +129,6 @@ function BookForm() {
                                 <option value="Dystopian">Dystopian</option>
                             </select>
                         </div>
-
                         <div className="mb-4">
                             <label className="block text-gray-700 font-bold mb-2" htmlFor="description">
                                 Description
@@ -115,53 +143,38 @@ function BookForm() {
                             ></textarea>
                         </div>
                         <div className="mb-4">
-                            <label className="block text-gray-700 font-bold mb-2" htmlFor="cover-image">
+                            <label className="block text-gray-700 font-bold mb-2" htmlFor="coverImage">
                                 Cover Image
                             </label>
-                            <div className="flex flex-col sm:flex-row sm:items-center">
-                                <input
-                                    className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-2 sm:mb-0 sm:mr-2"
-                                    id="cover-image"
-                                    type="file"
-                                    accept="image/*"
-                                    onChange={handleImageUpload}
-                                />
-                                <span className="text-gray-500">or</span>
-                                <input
-                                    className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mt-2 sm:mt-0 sm:ml-2"
-                                    id="cover-image-url"
-                                    type="text"
-                                    value={coverImageUrl}
-                                    onChange={(e) => setCoverImageUrl(e.target.value)}
-                                    placeholder="Enter image URL"
-                                />
-                            </div>
-                        </div>
-                        <div className="mb-6">
-                            <label className="block text-gray-700 font-bold mb-2" htmlFor="book-file">
-                                Book File <span className="text-red-500">*</span>
-                            </label>
                             <input
-                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                id="book-file"
                                 type="file"
-                                onChange={(e) => setBookFile(e.target.files[0])}
-                                accept=".pdf,.doc,.docx"
-                                required
+                                id="coverImage"
+                                accept="image/*"
+                                onChange={handleImageUpload}
                             />
                         </div>
-                        <div className="flex flex-col sm:flex-row items-center justify-between space-y-2 sm:space-y-0">
-                            <button
-                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full sm:w-auto"
-                                type="submit"
-                            >
-                                Submit
-                            </button>
+                        <div className="mb-4">
+                            <label className="block text-gray-700 font-bold mb-2" htmlFor="bookFile">
+                                Book File
+                            </label>
+                            <input
+                                type="file"
+                                id="bookFile"
+                                accept=".pdf, .epub, .mobi"
+                                onChange={handleBookFileUpload}
+                            />
                         </div>
+                        <button
+                            type="submit"
+                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        >
+                            Add Book
+                        </button>
                     </form>
                 </div>
             </main>
             <Footer />
+            <ToastContainer />
         </div>
     );
 }

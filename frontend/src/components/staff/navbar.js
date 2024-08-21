@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Notification from './notification';
-import {  Dropdown } from 'antd';
+import { Dropdown } from 'antd';
 import { BellOutlined } from '@ant-design/icons';
-import { ChevronDownIcon, BookOpenIcon, PencilIcon, MailIcon, UserCircleIcon, CogIcon, QuestionMarkCircleIcon, LogoutIcon, UserIcon } from '@heroicons/react/outline'; 
+import { useAuth } from '../authcontext';
+import { ChevronDownIcon, BookOpenIcon, PencilIcon, MailIcon, UserCircleIcon, CogIcon, QuestionMarkCircleIcon, LogoutIcon, UserIcon } from '@heroicons/react/outline';
 
 export default function NavBar() {
     const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -12,10 +13,28 @@ export default function NavBar() {
     const [novelsDropdownOpen, setNovelsDropdownOpen] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false); // State for mobile menu toggle
     const [displayDropdownOpen, setDisplayDropdownOpen] = useState(false);
-    
+    const [username, setUsername] = useState('');
+    const { user, logout } = useAuth();
+
+    useEffect(() => {
+        if (user) {
+            setUsername(user.username);
+        }
+    }, [user]);
+
+    const handleSignOut = () => {
+        console.log("User signed out");
+        logout();
+    };
+
+    // Construct the image URL
+    const baseURL = 'http://localhost:5000/api/';
+    const profilePicURL = user.profilePic ? `${baseURL}${user.profilePic.replace('\\', '/')}` : '';
+
+
     const menu = (
         <div className="max-h-48">
-          <Notification />
+            <Notification />
         </div>
     );
 
@@ -79,7 +98,7 @@ export default function NavBar() {
 
 
                         )}
-                        
+
                     </div>
 
                     <span className="flex items-center">
@@ -137,15 +156,15 @@ export default function NavBar() {
                             aria-haspopup="true"
                         >
                             <img
-                                src="https://wallpapers.com/images/hd/yuuichi-katagiri-anime-portrait-5xl430n009kmsg7l.jpg"
+                                src={profilePicURL}
                                 alt="Profile"
-                                className="h-8 w-8 rounded-full"
+                                className="h-10 w-10 rounded-full border-2 border-gray-300 object-cover"
                             />
                             <ChevronDownIcon className="h-4 w-4 ml-1" />
                         </button>
                         {dropdownOpen && (
                             <div className="absolute z-10 mt-2 w-48 bg-white text-black rounded-md shadow-lg right-0">
-                                <Link to="/staff-profile" className="px-4 py-2 flex items-center hover:bg-gray-100">
+                                <Link to={`/staff-profile/${username}`} className="px-4 py-2 flex items-center hover:bg-gray-100">
                                     <UserCircleIcon className="h-5 w-5 mr-2" /> My Profile
                                 </Link>
                                 <Link to="/staff-settings" className="px-4 py-2 flex items-center hover:bg-gray-100">
@@ -201,7 +220,7 @@ export default function NavBar() {
                             </div>
 
                         )}
-                        
+
                     </div>
 
                     <span className="flex items-center">

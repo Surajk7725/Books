@@ -126,9 +126,29 @@ export const deleteAdmin = asyncHandler(async(request,response) => {
 
 // Update the Password
 export const updateAdminPassword = asyncHandler(async (request, response) => {
-    const { username, oldPassword, newPassword } = request.body;
-    const admin = await updatePassword(Admin, username, oldPassword, newPassword);
-    response.status(200).json({ message: 'Password updated successfully' });
+    try {
+        const { username } = request.params;
+        const { oldPassword, newPassword } = request.body;
+
+        const admin = await Admin.findOne({ username });
+
+        if (!admin) {
+            return response.status(404).json({ message: 'Admin not found' });
+        }
+
+        const isMatch = bcrypt.compare(oldPassword, admin.password);
+        if (!isMatch) {
+            return response.status(400).json({ message: 'Incorrect old password' });
+        }
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        admin.password = hashedPassword;
+        await admin.save();
+
+        response.status(200).json({ message: 'Password updated successfully' });
+    } catch (error) {
+        response.status(500).json({ message: 'Server error', error });
+    }
 });
 
 // Controller to get the total counts of users, staffs, books, and admins

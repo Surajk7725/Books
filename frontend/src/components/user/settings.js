@@ -1,14 +1,47 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { MenuAlt1Icon, UserCircleIcon, LockClosedIcon, BookOpenIcon, DocumentTextIcon, GlobeAltIcon, DesktopComputerIcon, LogoutIcon } from '@heroicons/react/outline';
 import Footer from './footer';
+import { useNavigate } from "react-router-dom";
+import axiosInstance from '../axiosInstance';
 import { FaLinkedin, FaInstagram, FaTwitter, FaYoutube } from 'react-icons/fa';
 import { PlusOutlined } from '@ant-design/icons';
-import { Image, Upload, DatePicker, Table, Button } from 'antd';
+import { Image, Upload, DatePicker, Table } from 'antd';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useAuth } from '../authcontext';
 
 
 const Settings = () => {
+  const navigate = useNavigate();
+
+  // Sidebar options
   const [selectedSection, setSelectedSection] = useState('account');
 
+  const handleSectionClick = (section) => {
+    setSelectedSection(section);
+  };
+
+  const handleHome = () => {
+    navigate('/home');
+  };
+
+  const handleLogout = () => {
+    navigate('/');
+  };
+
+  // Fetching username from login page
+  const [username, setUserName] = useState('');
+  const [fullName, setFullName] = useState('');
+  const { user } = useAuth();
+
+  useEffect(() => {
+    if (user && user.username) {
+      setUserName(user.username);
+      setFullName(user.fullName);
+    }
+  }, [user]);
+
+  // Security
   const [passwordDetails, setPasswordDetails] = useState({
     oldPassword: '',
     newPassword: '',
@@ -17,26 +50,37 @@ const Settings = () => {
 
   const handlePasswordChange = (e) => {
     const { name, value } = e.target;
-    setPasswordDetails((prevDetails) => ({ ...prevDetails, [name]: value }));
+    setPasswordDetails((prevDetails) => ({
+        ...prevDetails,
+        [name]: value,
+    }));
   };
 
-  const handleSectionClick = (section) => {
-    setSelectedSection(section);
-  };
 
-  const handleHome = () => {
-    window.location.href = '/home';
-  };
-
-  const handleLogout = () => {
-    console.log('Logging out...');
-    window.location.href = '/';
-  };
-
-  const handlePasswordSubmit = (e) => {
+  const handlePasswordSubmit = async (e) => {
     e.preventDefault();
-    console.log('Password details:', passwordDetails);
-    // Implement your password update logic here
+
+    if (passwordDetails.newPassword !== passwordDetails.confirmPassword) {
+      toast.error('New password and confirm password do not match.');
+      return;
+    }
+
+    try {
+      const response = await axiosInstance.put(`/user/update-password/${username}`, {
+        oldPassword: passwordDetails.oldPassword,
+        newPassword: passwordDetails.newPassword
+    }, {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+      if (response.status === 200) {
+        toast.success('Password updated successfully');
+      }
+    } catch (error) {
+      console.error('Error updating password:', error);
+      toast.error('Failed to update password. Please try again.');
+    }
   };
 
   // For Subscription Cards
@@ -181,20 +225,17 @@ const Settings = () => {
       reader.onerror = (error) => reject(error);
     });
 
-  const [dob, setDob] = useState(null);
-
-  const onChange = (date, dateString) => {
-    setDob(date);
-    console.log(date, dateString);
-  };
-
+    const onChange = (date, dateString) => {
+      setDob(date);
+      console.log(date, dateString);
+    };
+    
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const [fileList, setFileList] = useState([]);
   const [profileImage, setProfileImage] = useState(null);
-  const [fullName, setFullName] = useState('');
-  const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
+  const [dob, setDob] = useState(null);
   const [phoneNumber, setPhoneNumber] = useState('');
   const [houseAddress, setHouseAddress] = useState('');
   const [socialLinks, setSocialLinks] = useState({
@@ -234,7 +275,52 @@ const Settings = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setSocialLinks((prev) => ({ ...prev, [name]: value }));
+    setSocialLinks({ ...socialLinks, [name]: value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append('fullName', fullName);
+    formData.append('username', username);
+    formData.append('email', email);
+    formData.append('phoneNumber', phoneNumber);
+    if (dob) formData.append('dob', dob.toISOString());
+    formData.append('address', houseAddress);
+
+    const filledSocialLinks = Object.fromEntries(
+      Object.entries(socialLinks).filter(([key, value]) => value)
+    );
+    if (Object.keys(filledSocialLinks).length > 0) {
+      formData.append('socialMediaLinks', JSON.stringify(filledSocialLinks));
+    }
+
+    if (fileList.length > 0) {
+      const file = fileList[0].originFileObj || fileList[0];
+      formData.append('profilePic', file);
+  }
+
+    try {
+      const response = await axiosInstance.put(
+        `/user/edit/${username}`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        toast.success('Profile updated successfully!');
+      } else {
+        toast.error('Failed to update profile.');
+      }
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      toast.error('An error occurred while updating the profile.');
+    }
   };
 
   const uploadButton = (
@@ -256,6 +342,7 @@ const Settings = () => {
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
       <div className="flex flex-col lg:flex-row">
+        <ToastContainer />
         <div className="lg:w-64 bg-white text-black p-8">
           <h2 className="text-2xl font-bold mb-6">Settings</h2>
 
@@ -346,7 +433,8 @@ const Settings = () => {
                   </div>
                 </div>
 
-                <form className="flex-1">
+                <form className="flex-1" onSubmit={handleSubmit}>
+                  {/* Input fields */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="col-span-1">
                       <label className="block text-gray-700">Full Name</label>
@@ -354,6 +442,7 @@ const Settings = () => {
                         type="text"
                         className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
                         value={fullName}
+                        readOnly
                         onChange={(e) => setFullName(e.target.value)}
                       />
                     </div>
@@ -362,7 +451,8 @@ const Settings = () => {
                       <input
                         type="text"
                         className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
-                        value={userName}
+                        value={username}
+                        readOnly
                         onChange={(e) => setUserName(e.target.value)}
                       />
                     </div>
@@ -458,7 +548,6 @@ const Settings = () => {
             </div>
           )}
 
-
           {selectedSection === 'security' && (
             <form onSubmit={handlePasswordSubmit} className="bg-white rounded-lg shadow-md p-6 mb-8">
               <h3 className="text-xl font-semibold mb-4">Security</h3>
@@ -505,7 +594,6 @@ const Settings = () => {
               </div>
             </form>
           )}
-
 
           {selectedSection === 'bookCategories' && (
             <div className="bg-white rounded-lg shadow-md p-6 mb-6">

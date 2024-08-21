@@ -22,11 +22,11 @@ const authMiddleware = async (request, response, next) => {
 
         request.user = user;
         request.role = decoded.role;
-        console.log('User authenticated:', user); // Debugging line
+        console.log('User authenticated:', user); 
 
         next();
     } catch (error) {
-        console.error('Authentication Error:', error.message); // Debugging line
+        console.error('Authentication Error:', error.message); 
         response.status(401).json({ message: 'Invalid token' });
     }
 };

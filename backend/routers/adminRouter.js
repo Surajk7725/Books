@@ -9,7 +9,7 @@ router.put('/updated/:username',editAdmin);
 router.get('/display',getAllAdmin);
 router.get('/display/:username',getAdminById);
 router.delete('/delete/:username',deleteAdmin);
-router.put('/update-password', updateAdminPassword);
+router.put('/update-password/:username', updateAdminPassword);
 router.get('/counts', getAdminDashboardStats);
 router.get('/user-history', getUserHistory);
 router.get('/staff-history', getStaffHistory);

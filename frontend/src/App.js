@@ -1,38 +1,38 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Navigate } from "react-router-dom";
-import Landing from './components/landing';
-import Login from './components/login';
-import SignUp from './components/signup';
-import Forgot from './components/forgot';
-import Update from './components/updatePassword';
-import Home from './components/user/home';
-import Settings from './components/user/settings';
-import Help from './components/help';
+import Landing from './components/landing.js';
+import Login from './components/login.js';
+import SignUp from './components/signup.js';
+import Forgot from './components/forgot.js';
+import Update from './components/updatePassword.js';
+import Home from './components/user/home.js';
+import Settings from './components/user/settings.js';
+import Help from './components/help.js';
 import Contactus from './components/user/contact.js';
-import Profile from './components/user/profile';
-import BookForm from './components/user/bookForm';
-import AllBooks from './components/user/allBooks';
-import BookDescription from './components/user/bookDescription';
-import KidsBooks from './components/user/kidsBooks';
-import PopularBooks from './components/user/popularBooks';
-import AcademicBooks from './components/user/academicBooks';
-import Rating from './components/user/rating';
-import MyWishlist from './components/user/myWishlist';
-import Notes from './components/user/notes';
-import Writebook from './components/user/writebook';
-import Staff_home from './components/staff/home';
-import All_Books from './components/staff/displaybooks';
-import Kids_Books from './components/staff/displaykidsbooks';
-import Popular_Books from './components/staff/displaypopularbooks';
-import Academic_Books from './components/staff/displayacademicbooks';
-import AddBook from './components/staff/addbook';
-import EditBook from './components/staff/editbook';
-import Book_Description from './components/staff/bookdescription';
-import Staff_Settings from './components/staff/staff-settings';
-import Staff_Profile from './components/staff/staffprofile';
-import UserContent from './components/staff/writtenDescription';
-import NovelData from './components/staff/novelData';
+import Profile from './components/user/profile.js';
+import BookForm from './components/user/bookForm.js';
+import AllBooks from './components/user/allBooks.js';
+import BookDescription from './components/user/bookDescription.js';
+import KidsBooks from './components/user/kidsBooks.js';
+import PopularBooks from './components/user/popularBooks.js';
+import AcademicBooks from './components/user/academicBooks.js';
+import Rating from './components/user/rating.js';
+import MyWishlist from './components/user/myWishlist.js';
+import Notes from './components/user/notes.js';
+import Writebook from './components/user/writebook.js';
+import Staff_home from './components/staff/home.js';
+import All_Books from './components/staff/displaybooks.js';
+import Kids_Books from './components/staff/displaykidsbooks.js';
+import Popular_Books from './components/staff/displaypopularbooks.js';
+import Academic_Books from './components/staff/displayacademicbooks.js';
+import AddBook from './components/staff/addbook.js';
+import EditBook from './components/staff/editbook.js';
+import Book_Description from './components/staff/bookdescription.js';
+import Staff_Settings from './components/staff/staff-settings.js';
+import Staff_Profile from './components/staff/staffprofile.js';
+import UserContent from './components/staff/writtenDescription.js';
+import NovelData from './components/staff/novelData.js';
 import UserBooks from './components/staff/userbooks.js';
 import ManageUser from './components/staff/manageuser.js';
 import BookReview from './components/staff/bookreview.js';
@@ -91,7 +91,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/forgot" element={<Forgot />} />
-        <Route path="/update-password/:token" element={<Update />} />
+        <Route path="/update-password" element={<Update />} />
 
         <Route element={<ProtectedRoute allowedRoles={['user']} />}>
         <Route path="/home" element={<Home />} />
@@ -103,7 +103,7 @@ function App() {
         <Route path="/display-books/rating" element={<Rating />} />
         <Route path="/my-wishlist" element={<MyWishlist bookmarkedBooks={bookmarkedBooks} toggleBookmark={toggleBookmark} />} />
         <Route path="/user-addbook" element={<BookForm />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/profile/:username" element={<Profile />} />
         <Route path="/private-notes" element={<Notes />} />
         <Route path="/write-book" element={<Writebook />} />
         <Route path="/settings" element={<Settings />} />
