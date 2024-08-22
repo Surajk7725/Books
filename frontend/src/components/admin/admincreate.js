@@ -1,20 +1,55 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
-import { Card, Input, Button, Upload, Form, Select, Breadcrumb} from 'antd';
+import { Link, useNavigate } from 'react-router-dom';
+import { Card, Input, Button, Upload, Form, Select, Breadcrumb } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { FaLinkedin, FaInstagram, FaTwitter, FaYoutube } from 'react-icons/fa';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import axiosInstance from './../axiosInstance';
 
 const { Option } = Select;
 
 const AdminCreate = () => {
   const [form] = Form.useForm();
+  const navigate = useNavigate();
 
-  const handleFinish = (values) => {
-    console.log('Form values:', values);
+  const handleFinish = async (values) => {
+    const formData = new FormData();
+    formData.append('fullName', values.fullName);
+    formData.append('username', values.userName);
+    formData.append('email', values.email);
+    formData.append('password', values.password);
+    formData.append('phoneNumber', values.phoneNumber);
+    formData.append('address', values.address);
+    formData.append('role', values.role);
+    formData.append('permission', values.permission);
+
+    // Adding social media links as individual fields
+    formData.append('socialMediaLinks[linkedin]', values.linkedin);
+    formData.append('socialMediaLinks[instagram]', values.instagram);
+    formData.append('socialMediaLinks[twitter]', values.twitter);
+    formData.append('socialMediaLinks[youtube]', values.youtube);
+
+    if (values.profilePic && values.profilePic.file) {
+      formData.append('profilePic', values.profilePic.file);
+    }
+
+    try {
+      const response = await axiosInstance.post('/admin/add', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      toast.success('Admin created successfully');
+      navigate('/admin/home');
+    } catch (error) {
+      toast.error(`Error: ${error.response?.data?.message || 'Something went wrong'}`);
+    }
   };
 
   return (
     <div className="justify-center items-center min-h-screen mb-2 ml-2 mt-4 md:ml-10">
+      <ToastContainer />
       <div className="text-start -mt-4 mb-8">
         <div className="bg-white p-4 rounded-lg shadow-md mb-6 flex flex-col md:flex-row justify-between items-center">
           <h1 className="text-2xl font-bold text-gray-800 mb-4 md:mb-0">Create Admin</h1>
@@ -43,7 +78,7 @@ const AdminCreate = () => {
               <Input />
             </Form.Item>
           </div>
-          <Form.Item label="House Address" name="houseAddress" rules={[{ required: true, message: 'Please enter your house address' }]}>
+          <Form.Item label="House Address" name="address" rules={[{ required: true, message: 'Please enter your house address' }]}>
             <Input />
           </Form.Item>
           <Form.Item label="Password" name="password" rules={[{ required: true, message: 'Please enter your password' }]}>
@@ -56,7 +91,7 @@ const AdminCreate = () => {
               <Option value="manager">Manager</Option>
             </Select>
           </Form.Item>
-          <Form.Item label="Permissions" name="permissions" rules={[{ required: true, message: 'Please select permissions' }]}>
+          <Form.Item label="Permissions" name="permission" rules={[{ required: true, message: 'Please select permissions' }]}>
             <Select mode="multiple" placeholder="Select permissions">
               <Option value="userManagement">User Management</Option>
               <Option value="bookManagement">Book Management</Option>
@@ -79,8 +114,8 @@ const AdminCreate = () => {
               <Input prefix={<FaYoutube className="text-red-600" />} />
             </Form.Item>
           </div>
-          <Form.Item label="Profile Image" name="profileImage">
-            <Upload name="profileImage" listType="picture" beforeUpload={() => false}>
+          <Form.Item label="Profile Image" name="profilePic">
+            <Upload name="profilePic" listType="picture" beforeUpload={() => false}>
               <Button icon={<UploadOutlined />}>Click to Upload</Button>
             </Upload>
           </Form.Item>

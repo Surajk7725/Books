@@ -14,9 +14,8 @@ export const addAdmin = asyncHandler(async (request,response) => {
             return response.status(400).json({ message: 'Error uploading image', error: err });
         }
     
-        const {fullName, username, email, password, phoneNumber, dob, address, socialMediaLinks} = request.body;
+        const {fullName, username, email, password, phoneNumber, address, socialMediaLinks,role,permission} = request.body;
         const profilePic = request.file ? request.file.path : null;
-
         try {
             const hashedPassword = await bcrypt.hash(password,12);
 
@@ -26,10 +25,11 @@ export const addAdmin = asyncHandler(async (request,response) => {
                 email,
                 password : hashedPassword,
                 phoneNumber,
-                dob,
                 address,
                 profilePic,
-                socialMediaLinks
+                socialMediaLinks,
+                role,
+                permission
             });
 
             // Send email with username and password
@@ -55,11 +55,11 @@ export const editAdmin = asyncHandler (async (request,response) => {
         
         const { username } = request.params;
 
-        const {fullName, email, password, phoneNumber, dob, address, socialMediaLinks} = request.body;
+        const {fullName, email, password, phoneNumber, dob, address, socialMediaLinks,role,permission} = request.body;
         const profilePic = request.file ? request.file.path : null;
 
         try {
-            const updateData = { fullName, email, phoneNumber, dob, address, socialMediaLinks };
+            const updateData = { fullName, email, phoneNumber, dob, address, socialMediaLinks,role,permission };
             if (profilePic) 
                 updateData.profilePic = profilePic;
             if (password) {
