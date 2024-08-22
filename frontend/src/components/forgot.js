@@ -9,14 +9,18 @@ export default function Forgot() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    console.log('Email to be sent:', email);  // Debugging log
+
     try {
-      await axiosInstance.post('/auth/forget-password', { email });
-      setEmailSent(true);
+        const response = await axiosInstance.post('/auth/forget-password', { email });
+        console.log('Server response:', response.data);  // Debugging log
+        setEmailSent(true);
+        setError('');
     } catch (error) {
-      console.error('Error sending email:', error.response?.data?.message || error.message);
-      setError(error.response?.data?.message || 'Failed to send reset email. Please try again.');
+        console.error('Error sending email:', error.response?.data?.message || error.message);
+        setError(error.response?.data?.message || 'Failed to send reset email. Please try again.');
     }
-  };
+};
 
   return (
     <div className="flex justify-center items-center h-screen bg-cover" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1527176930608-09cb256ab504?q=80&w=1474&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')" }}>

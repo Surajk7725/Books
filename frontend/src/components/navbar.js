@@ -12,7 +12,7 @@ export default function NavBar() {
     const [booksDropdownOpen, setBooksDropdownOpen] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false); // State for mobile menu toggle
     const [username, setUsername] = useState('');
-    const { user, logout } = useAuth();
+    const { user } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -22,7 +22,6 @@ export default function NavBar() {
     }, [user]);
 
     const handleSignOut = () => {
-        console.log("User signed out");
         navigate("/")
     };
 
