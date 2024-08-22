@@ -55,26 +55,31 @@ export const editAdmin = asyncHandler (async (request,response) => {
         
         const { username } = request.params;
 
-        const {fullName, email, password, phoneNumber, dob, address, socialMediaLinks,role,permission} = request.body;
+        const {fullName, email, password, phoneNumber, address, socialMediaLinks,role,permission} = request.body;
         const profilePic = request.file ? request.file.path : null;
 
         try {
-            const updateData = { fullName, email, phoneNumber, dob, address, socialMediaLinks,role,permission };
-            if (profilePic) 
-                updateData.profilePic = profilePic;
-            if (password) {
-                const hashedPassword = await bcrypt.hash(password, 12);
-                updateData.password = hashedPassword;
+            const existingUser = await Admin.findOne({ username });
+
+            if (!existingUser) {
+                return response.status(404).json({ message: 'User not found' });
             }
 
-            const updateAdmin = await Admin.findOneAndUpdate({ username }, updateData, {new : true});
+            const updateData = {
+                fullName: fullName || existingUser.fullName,
+                email: email || existingUser.email,
+                phoneNumber: phoneNumber || existingUser.phoneNumber,
+                role: role || existingUser.role,
+                permission: permission || existingUser.permission,
+                address: address || existingUser.address,
+                socialMediaLinks: socialMediaLinks || existingUser.socialMediaLinks,
+                profilePic: profilePic || existingUser.profilePic,
+            };
 
-            if(!updateAdmin){
-                response.status(404).json({message:"Admin not found"});
-            }
+            const updatedAdmin = await Admin.findOneAndUpdate({ username }, updateData, { new: true });
 
-            response.status(200).json({message:"Admin updated successfully",admin:updateAdmin});
-        } catch (error) {
+            response.status(200).json({ message: 'Admin updated successfully', user: updatedAdmin });
+        }catch (error) {
             response.status(500).json({message:"Server Error", error:error.message});
         }
     });

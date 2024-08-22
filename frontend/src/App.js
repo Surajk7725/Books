@@ -136,10 +136,10 @@ function App() {
         <Route path="/admin/*" element={<AdminSidebar />}>
           <Route path='home' element={<AdminHome />} />
           <Route path='user-create' element={<UserCreate />} />
-          <Route path='user-edit' element={<UserEdit />} />
+          <Route path='user-edit/:username' element={<UserEdit />} />
           <Route path='admin-create' element={<AdminCreate />} />
-          <Route path='admin-edit' element={<AdminEdit />} />
-          <Route path='staff-edit' element={<StaffEdit />} />
+          <Route path='admin-edit/:username' element={<AdminEdit />} />
+          <Route path='staff-edit/:username' element={<StaffEdit />} />
           <Route path='staff-create' element={<StaffCreate />} />
           <Route path='user-display' element={<UserDisplay />} />
           <Route path='profile' element={<ProfilePage />} />

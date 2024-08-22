@@ -15,7 +15,7 @@ const adminSchema = new mongoose.Schema({
         linkedin:String
     },
     role:{type:String},
-    permission:{type:String},
+    permission: [{type: String}],
 }, {timestamps: true}); 
 
 const Admin = mongoose.model('Admin',adminSchema);

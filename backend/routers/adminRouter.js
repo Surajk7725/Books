@@ -5,7 +5,7 @@ import { addAdmin, deleteAdmin, editAdmin, getAdminById, getAdminDashboardStats,
 const router = express.Router();
 
 router.post('/add',addAdmin);
-router.put('/updated/:username',editAdmin);
+router.put('/update/:username',editAdmin);
 router.get('/display',getAllAdmin);
 router.get('/display/:username',getAdminById);
 router.delete('/delete/:username',deleteAdmin);
