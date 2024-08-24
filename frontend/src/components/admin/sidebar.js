@@ -103,7 +103,7 @@ const Sidebar = () => {
           </Menu.Item>
           <SubMenu key="sub4" icon={<SettingOutlined />} title="Settings">
             <Menu.Item key="11" icon={<UserOutlined />}>
-              <Link to="/admin/settings">Personal Information</Link>
+              <Link to={`/admin/settings/${username}`}>Personal Information</Link>
             </Menu.Item>
             <Menu.Item key="12" icon={<LockOutlined />}>
               <Link to="/admin/security">Security</Link>
@@ -158,6 +158,8 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
+
+
 
 
 

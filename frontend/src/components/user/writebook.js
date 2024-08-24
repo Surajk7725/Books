@@ -18,11 +18,11 @@ import BulletList from "@tiptap/extension-bullet-list";
 import OrderedList from "@tiptap/extension-ordered-list";
 import Blockquote from "@tiptap/extension-blockquote";
 import CodeBlock from "@tiptap/extension-code-block";
-
 import DropdownStyle from "./bubbleButtons/dropDownStyle";
 import Marks from "./bubbleButtons/marks";
 import DropdownLinkInput from "./bubbleButtons/dropDownLinkInput";
 import Sidebar from "./bubbleButtons/sidebar";
+import axiosInstance from '../axiosInstance';
 
 function Writebook() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -156,23 +156,40 @@ function Writebook() {
     );
   };
 
-  const handleSave = () => {
-    // Add your save logic here
-    toast.success('Saved Book Content');
+  const handleSave = async () => {
+    try {
+      const response = await axiosInstance.post('/api/content/save', currentDocument);
+      toast.success('Book content saved successfully!');
+    } catch (error) {
+      console.error('Error saving document:', error);
+      toast.error('Failed to save book content.');
+    }
   };
 
-  const handlePublish = () => {
-    // Add your publish logic here
-    toast.success('Published Your Book');
+  const handlePublish = async () => {
+    try {
+      const response = await axiosInstance.post('/api/content/publish', { id: currentDocument.id });
+      toast.success('Book published successfully!');
+    } catch (error) {
+      console.error('Error publishing document:', error);
+      toast.error('Failed to publish book.');
+    }
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (documents.length > 1) {
-      const updatedDocuments = documents.filter((_, index) => index !== currentDocumentIndex);
-      setDocuments(updatedDocuments);
-      setCurrentDocumentIndex(0);
+      try {
+        const documentId = currentDocument.id; 
+        await axiosInstance.delete(`/api/content/${documentId}`);
+        const updatedDocuments = documents.filter(doc => doc.id !== documentId);
+        setDocuments(updatedDocuments);
+        setCurrentDocumentIndex(0);
+        toast.success('Document deleted successfully!');
+      } catch (error) {
+        console.error('Error deleting document:', error);
+        toast.error('Failed to delete document.');
+      }
     } else {
-      // Reset to default document
       setDocuments([{
         title: "Untitled",
         coverImage: null,
@@ -182,6 +199,7 @@ function Writebook() {
       setCurrentDocumentIndex(0);
     }
   };
+
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);

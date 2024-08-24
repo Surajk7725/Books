@@ -1,13 +1,20 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Card, Input, Upload, Button, Image, Row, Col, Typography, Breadcrumb } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { Card, Input, Upload, Button, Image, Row, Col, Breadcrumb, Form } from 'antd';
 import {
     UserOutlined,
     PhoneOutlined,
     MailOutlined,
     PlusOutlined,
-    InstagramOutlined, YoutubeOutlined, LinkedinOutlined, TwitterOutlined,
+    InstagramOutlined,
+    YoutubeOutlined,
+    LinkedinOutlined,
+    TwitterOutlined,
 } from '@ant-design/icons';
+import axiosInstance from '../axiosInstance';
+import { useNavigate } from 'react-router-dom';
 
 // Function to convert file to base64
 const getBase64 = (file) =>
@@ -23,6 +30,39 @@ const SettingsPage = () => {
     const [previewImage, setPreviewImage] = useState('');
     const [fileList, setFileList] = useState([]);
     const [profileImage, setProfileImage] = useState(null);
+    const [loading, setLoading] = useState(false); // Initialize as false
+    const [form] = Form.useForm();
+    const navigate = useNavigate();
+
+    const { username } = useParams();
+    const baseURL = 'http://localhost:5000/api/';
+
+    useEffect(() => {
+        if (!username) {
+            toast.error('Username is undefined');
+            return;
+        }
+
+        const fetchAdminData = async () => {
+            try {
+                setLoading(true);
+                const response = await axiosInstance.get(`/admin/display/${username}`);
+                const { socialMediaLinks, profilePic, ...otherData } = response.data;
+                form.setFieldsValue({
+                    ...otherData,
+                    ...socialMediaLinks,
+                });
+                const profilePicURL = profilePic ? `${baseURL}${profilePic.replace('\\', '/')}` : '';
+                setProfileImage(profilePicURL);
+            } catch (error) {
+                toast.error(`Error fetching admin data: ${error.response?.data?.message || 'Something went wrong'}`);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchAdminData();
+    }, [username, form]);
 
     const handlePreview = async (file) => {
         if (!file.url && !file.preview) {
@@ -33,47 +73,59 @@ const SettingsPage = () => {
     };
 
     const handleChange = ({ fileList: newFileList }) => {
-        const updatedFileList = newFileList.map(file => {
-            if (file.status === 'error') {
-                return { ...file, status: 'done' };
-            }
-            return file;
-        });
+        setFileList(newFileList);
 
-        setFileList(updatedFileList);
-
-        if (updatedFileList.length > 0) {
-            setProfileImage(updatedFileList[0].url || updatedFileList[0].thumbUrl);
+        if (newFileList.length > 0) {
+            setProfileImage(newFileList[0].url || newFileList[0].thumbUrl);
         } else {
             setProfileImage(null);
         }
     };
 
+    const handleFinish = async (formValues) => {
+        try {
+            setLoading(true);
+            const formData = new FormData();
+
+            if (fileList.length > 0) {
+                const file = fileList[0].originFileObj || fileList[0];
+                formData.append('profilePic', file);
+            }
+
+            for (const key in formValues) {
+                if (formValues.hasOwnProperty(key)) {
+                    formData.append(key, formValues[key]);
+                }
+            }
+
+            await axiosInstance.put(`/admin/update/${username}`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+
+            toast.success('Admin data updated successfully');
+            navigate("/");
+        } catch (error) {
+            toast.error(`Error updating admin data: ${error.response?.data?.message || 'Something went wrong'}`);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const uploadButton = (
-        <Button className='justify-center'
-            style={{
-                border: 0,
-                background: 'none',
-            }}
-            type="button"
-        >
+        <Button className='justify-center' style={{ border: 0, background: 'none' }} type="button">
             <PlusOutlined />
-            <div
-                style={{
-                    marginTop: 8,
-                }}
-            >
-                Upload
-            </div>
+            <div style={{ marginTop: 8 }}>Upload</div>
         </Button>
     );
 
     return (
-
-    <div className="justify-center items-center min-h-screen mb-2 ml-2 mt-4 md:ml-10">
-      <div className="text-start -mt-4 mb-8">
-        <div className="bg-white p-4 rounded-lg shadow-md mb-6 flex flex-col md:flex-row justify-between items-center">
-          <h1 className="text-2xl font-bold text-gray-800 ml-4 mb-4 md:mb-0">Settings</h1>
+        <div className="justify-center items-center min-h-screen mb-2 ml-2 mt-4 md:ml-10">
+            <ToastContainer />
+            <div className="text-start -mt-4 mb-8">
+                <div className="bg-white p-4 rounded-lg shadow-md mb-6 flex flex-col md:flex-row justify-between items-center">
+                    <h1 className="text-2xl font-bold text-gray-800 ml-4 mb-4 md:mb-0">Settings</h1>
                     <Breadcrumb>
                         <Breadcrumb.Item><Link to="/admin/home">Dashboard</Link></Breadcrumb.Item>
                         <Breadcrumb.Item>Settings</Breadcrumb.Item>
@@ -82,150 +134,100 @@ const SettingsPage = () => {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 px-4">
-
-                {/* Personal Information Section */}
-                <Card title="Personal Information" className="shadow-md col-span-1 lg:col-span-2">
-                    <div className="space-y-6">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label className="block text-lg font-thin mb-1" htmlFor="fullName">
-                                    <UserOutlined className="mr-2" />
-                                    Full Name
-                                </label>
-                                <Input id="fullName" placeholder="Full Name" className="w-full p-4 rounded-md bg-gray-100" />
+            <div className="px-4">
+                <Card title="Profile Settings" className="shadow-md" style={{ width: '100%' }}>
+                    <Form form={form} layout="vertical" onFinish={handleFinish}>
+                        <div className="space-y-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <Form.Item name="fullName" label={<span><UserOutlined className="mr-2" />Full Name</span>}>
+                                    <Input placeholder="Full Name" className="w-full p-4 rounded-md bg-gray-100" />
+                                </Form.Item>
+                                <Form.Item name="username" label={<span><UserOutlined className="mr-2" />Username</span>}>
+                                    <Input placeholder="Username" className="w-full p-4 rounded-md bg-gray-100" readOnly />
+                                </Form.Item>
                             </div>
-                            <div>
-                                <label className="block text-lg font-thin mb-1" htmlFor="username">
-                                    <UserOutlined className="mr-2" />
-                                    Username
-                                </label>
-                                <Input id="username" placeholder="Username" className="w-full p-4 rounded-md bg-gray-100" />
+
+                            <Form.Item name="email" label={<span><MailOutlined className="mr-2" />Email Address</span>}>
+                                <Input placeholder="Email" className="w-full p-4 rounded-md bg-gray-100" />
+                            </Form.Item>
+                            <Form.Item name="phoneNumber" label={<span><PhoneOutlined className="mr-2" />Phone Number</span>}>
+                                <Input placeholder="Phone Number" className="w-full p-4 rounded-md bg-gray-100" />
+                            </Form.Item>
+
+                            <Form.Item name="profilePic" label="Profile Photo">
+                                <Row gutter={16} className="flex items-center">
+                                    <Col span={12} className="flex justify-center items-center">
+                                        <div className="flex flex-col items-center">
+                                            <Image
+                                                src={profileImage}
+                                                width={64}
+                                                height={64}
+                                                className="h-16 w-16 rounded-full border-2 border-gray-300 object-cover"
+                                            />
+                                            <div className="mt-2 text-center">Current Profile Picture</div>
+                                        </div>
+                                    </Col>
+                                    <Col span={12} className="flex justify-center items-center">
+                                        {/* Upload Image */}
+                                        <div className="flex flex-col items-center">
+                                            <Upload
+                                                action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
+                                                listType="picture-circle"
+                                                fileList={fileList}
+                                                onPreview={handlePreview}
+                                                onChange={handleChange}
+                                            >
+                                                {fileList.length >= 1 ? null : uploadButton}
+                                            </Upload>
+                                            {previewImage && (
+                                                <Image
+                                                    preview={{
+                                                        visible: previewOpen,
+                                                        onVisibleChange: (visible) => setPreviewOpen(visible),
+                                                        afterOpenChange: (visible) => !visible && setPreviewImage(''),
+                                                    }}
+                                                    src={previewImage}
+                                                    className="mt-2"
+                                                />
+                                            )}
+                                        </div>
+                                    </Col>
+                                </Row>
+                            </Form.Item>
+
+                        </div>
+
+                        <Card title="Social Media Links" className="shadow-md mt-8">
+                            <Form.Item name="instagram" label={<span><InstagramOutlined className="mr-2 text-pink-600" />Instagram</span>}>
+                                <Input placeholder="Instagram" className="w-full p-4 rounded-md bg-gray-100" />
+                            </Form.Item>
+                            <Form.Item name="youtube" label={<span><YoutubeOutlined className="mr-2 text-red-600" />YouTube</span>}>
+                                <Input placeholder="YouTube" className="w-full p-4 rounded-md bg-gray-100" />
+                            </Form.Item>
+                            <Form.Item name="linkedin" label={<span><LinkedinOutlined className="mr-2 text-blue-600" />LinkedIn</span>}>
+                                <Input placeholder="LinkedIn" className="w-full p-4 rounded-md bg-gray-100" />
+                            </Form.Item>
+                            <Form.Item name="twitter" label={<span><TwitterOutlined className="mr-2 text-blue-400" />Twitter</span>}>
+                                <Input placeholder="Twitter" className="w-full p-4 rounded-md bg-gray-100" />
+                            </Form.Item>
+                        </Card>
+
+                        <Form.Item>
+                            <div className="flex justify-center mt-8">
+                                <Button
+                                    type="primary"
+                                    htmlType="submit"
+                                    className="bg-blue-500 text-white py-2 px-6 rounded-lg hover:bg-blue-600 transition-all duration-200 ease-in-out shadow-md transform hover:scale-105 focus:outline-none flex justify-center items-center"
+                                    loading={loading}
+                                >
+                                    Save Changes
+                                </Button>
                             </div>
-                        </div>
-
-                        <div>
-                            <label className="block text-lg font-thin mb-1" htmlFor="email">
-                                <MailOutlined className="mr-2" />
-                                Email Address
-                            </label>
-                            <Input id="email" placeholder="Email" className="w-full p-4 rounded-md bg-gray-100" />
-                        </div>
-                        <div>
-                            <label className="block text-lg font-thin mb-1" htmlFor="phoneNumber">
-                                <PhoneOutlined className="mr-2" />
-                                Phone Number
-                            </label>
-                            <Input id="phoneNumber" placeholder="Phone Number" className="w-full p-4 rounded-md bg-gray-100" />
-                        </div>
-                    </div>
-
-                    <div className="flex justify-end mt-6 space-x-4">
-                        <Button className="bg-gray-300 text-gray-700 hover:bg-gray-400 h-10">Cancel</Button>
-                        <Button type="primary" className="h-10">Submit</Button>
-                    </div>
+                        </Form.Item>
+                    </Form>
                 </Card>
-
-                <div className="col-span-1 space-y-8">
-                    {/* Your Photo Section */}
-                    <Card title="Your Photo" className="shadow-md">
-                        <Row>
-                            <Col span={24} className="flex flex-col items-center">
-                                <div className="mt-2 flex flex-col items-center">
-                                    <Image
-                                        src="https://wallpapers.com/images/hd/yuuichi-katagiri-anime-portrait-5xl430n009kmsg7l.jpg"
-                                        width={64}
-                                        height={64}
-                                        className="rounded-full"
-                                    />
-                                    <div className="mt-4 flex justify-center">
-                                        <Upload
-                                            action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
-                                            listType="picture-circle"
-                                            fileList={fileList}
-                                            onPreview={handlePreview}
-                                            onChange={handleChange}
-                                        >
-                                            {fileList.length >= 1 ? null : uploadButton}
-                                        </Upload>
-                                    </div>
-                                    {previewImage && (
-                                        <Image
-                                            wrapperStyle={{
-                                                display: 'none',
-                                            }}
-                                            preview={{
-                                                visible: previewOpen,
-                                                onVisibleChange: (visible) => setPreviewOpen(visible),
-                                                afterOpenChange: (visible) => !visible && setPreviewImage(''),
-                                            }}
-                                            src={previewImage}
-                                        />
-                                    )}
-                                </div>
-                            </Col>
-                            <Typography.Title level={5} className="mt-6 text-center lg:mt-0 lg:ml-18">
-                                Edit your Picture
-                            </Typography.Title>
-                            <Col span={24} className="flex justify-center items-center mt-12 lg:mt-12">
-                                <Button type="default" className="mr-4">Cancel</Button>
-                                <Button type="primary">Save</Button>
-                            </Col>
-                        </Row>
-                    </Card>
-                </div>
-
-            </div>
-
-            {/* Add gap here */}
-            <div className="mt-12 w-full px-4">
-
-                {/* Social Media Section */}
-                <Card title="Social Media" className="shadow-md col-span-1 lg:col-span-2">
-                    <div className="space-y-6">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label className="block text-lg font-thin mb-1" htmlFor="instagram">
-                                    <InstagramOutlined className="mr-2 text-pink-600 h-6 w-6" />
-                                    Instagram
-                                </label>
-                                <Input id="instagram" placeholder="Instagram" className="w-full p-4 rounded-md bg-gray-100" />
-                            </div>
-                            <div>
-                                <label className="block text-lg font-thin mb-1" htmlFor="youtube">
-                                    <YoutubeOutlined className="mr-2 text-red-600 h-6 w-6" />
-                                    YouTube
-                                </label>
-                                <Input id="youtube" placeholder="YouTube" className="w-full p-4 rounded-md bg-gray-100" />
-                            </div>
-                        </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label className="block text-lg font-thin mb-1" htmlFor="linkedin">
-                                    <LinkedinOutlined className="mr-2 text-blue-400 h-6 w-6" />
-                                    LinkedIn
-                                </label>
-                                <Input id="linkedin" placeholder="LinkedIn" className="w-full p-4 rounded-md bg-gray-100" />
-                            </div>
-                            <div>
-                                <label className="block text-lg font-thin mb-1" htmlFor="twitter">
-                                    <TwitterOutlined className="mr-2 text-blue-700 h-6 w-6" />
-                                    Twitter
-                                </label>
-                                <Input id="twitter" placeholder="Twitter" className="w-full p-4 rounded-md bg-gray-100" />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="flex justify-end mt-6 space-x-4">
-                        <Button className="bg-gray-300 text-gray-700 hover:bg-gray-400 h-10">Cancel</Button>
-                        <Button type="primary" className="h-10">Submit</Button>
-                    </div>
-                </Card>
-
             </div>
         </div>
-
     );
 };
 

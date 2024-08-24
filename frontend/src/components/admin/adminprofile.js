@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { Tooltip, Breadcrumb } from 'antd';
 import { Link, useParams } from 'react-router-dom';
 import { FaYoutube, FaInstagram, FaTwitter, FaLinkedin, FaEnvelope, FaPhone } from 'react-icons/fa';
@@ -43,7 +42,6 @@ const ProfilePage = () => {
     fetchAdminData();
   }, [username]);
 
-
   return (
     <div className="justify-center items-center min-h-screen mb-2 ml-2 mt-4 md:ml-10">
       <div className="text-start -mt-4 mb-8">
@@ -56,10 +54,10 @@ const ProfilePage = () => {
         </div>
       </div>
 
-      <div className="max-w-5xl mx-auto bg-white shadow-lg overflow-hidden min-h-[500px]"> {/* Increased min height */}
+      <div className="max-w-5xl mx-auto bg-white shadow-lg overflow-hidden min-h-[200px]">
         {/* Profile Picture and Details Section */}
         <div className="text-center flex flex-col items-center justify-center mt-10 mb-10">
-          <div className="relative w-32 h-32 rounded-full overflow-hidden border-4 border-white shadow-lg transform transition duration-500 hover:scale-105">
+          <div className="relative w-32 h-32 rounded-full overflow-hidden border-4 border-black shadow-lg transform transition duration-500 hover:scale-105">
             <img src={profileImage} alt="Profile" className="w-full h-full object-cover" />
           </div>
           <h1 className="mt-4 text-xl font-bold text-black">{fullName}</h1>
@@ -67,7 +65,7 @@ const ProfilePage = () => {
         </div>
 
         {/* Animated Buttons with Tooltips */}
-        <div className="p-4 text-center">
+        <div className="p-4 text-center mb-4"> {/* Reduced margin-bottom to mb-4 */}
           <div className="flex justify-center space-x-8">
             <Tooltip title={email}>
               <button className="flex items-center space-x-2 bg-blue-500 text-white px-4 py-2 rounded-full transform transition duration-500 hover:scale-105">
@@ -84,14 +82,13 @@ const ProfilePage = () => {
           </div>
         </div>
 
-        {/* Follow Me On Section */}
         <div className="p-4 text-center">
           <h2 className="font-bold text-gray-700 mb-2">Follow me on</h2>
           <div className="flex justify-center space-x-4">
-            <a href={socialMediaLinks.youtube || '#'} target = "_blank" className="text-red-600"><FaYoutube size={24} /></a>
-            <a href={socialMediaLinks.instagram || '#'} target = "_blank" className="text-pink-600"><FaInstagram size={24} /></a>
-            <a href={socialMediaLinks.twitter || '#'} target = "_blank" className="text-blue-600"><FaTwitter size={24} /></a>
-            <a href={socialMediaLinks.linkedin || '#'} target = "_blank" className="text-blue-700"><FaLinkedin size={24} /></a>
+            <a href={socialMediaLinks.youtube || '#'} target="_blank" className="text-red-600"><FaYoutube size={24} /></a>
+            <a href={socialMediaLinks.instagram || '#'} target="_blank" className="text-pink-600"><FaInstagram size={24} /></a>
+            <a href={socialMediaLinks.twitter || '#'} target="_blank" className="text-blue-600"><FaTwitter size={24} /></a>
+            <a href={socialMediaLinks.linkedin || '#'} target="_blank" className="text-blue-700"><FaLinkedin size={24} /></a>
           </div>
         </div>
       </div>

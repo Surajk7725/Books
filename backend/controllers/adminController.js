@@ -161,7 +161,7 @@ export const updateAdminPassword = asyncHandler(async (request, response) => {
             return response.status(404).json({ message: 'Admin not found' });
         }
 
-        const isMatch = bcrypt.compare(oldPassword, admin.password);
+        const isMatch = await bcrypt.compare(oldPassword, admin.password);
         if (!isMatch) {
             return response.status(400).json({ message: 'Incorrect old password' });
         }
