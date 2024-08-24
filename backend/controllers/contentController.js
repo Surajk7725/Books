@@ -3,7 +3,8 @@ import Content from '../models/content.js';
 
 // Add Content
 export const createContent = asyncHandler(async (request, response) => {
-    const { title, content, username, fullName } = request.body;
+    const { title, content } = request.body;
+    const { username, fullName } = request.user;  // Assuming req.user is populated by authentication middleware
 
     const coverImage = request.files.coverImage ? `/uploads/${request.files.coverImage[0].filename}` : null;
     const iconImage = request.files.iconImage ? `/uploads/${request.files.iconImage[0].filename}` : null;
@@ -13,14 +14,13 @@ export const createContent = asyncHandler(async (request, response) => {
         coverImage,
         iconImage,
         content,
-        username,
-        fullName
+        username,    
+        fullName     
     });
 
     const createdContent = await newContent.save();
     response.status(201).json(createdContent);
 });
-
 
 // Display All Contents
 export const displayAllContents = asyncHandler(async (request, response) => {
@@ -29,7 +29,6 @@ export const displayAllContents = asyncHandler(async (request, response) => {
         .populate('fullName', 'fullName'); 
     response.json(contents);
 });
-
 
 // Display Particular Content
 export const displayParticularContent = asyncHandler(async (request, response) => {
@@ -63,12 +62,17 @@ export const updateFeedback = asyncHandler(async (request, response) => {
     }
 });
 
-
 // Delete Content
 export const deleteContent = asyncHandler(async (request, response) => {
     const content = await Content.findById(request.params.id);
 
     if (content) {
+        // Optional: Check if the user is allowed to delete this content
+        // if (content.username.toString() !== request.user._id.toString()) {
+        //     response.status(403);
+        //     throw new Error('You do not have permission to delete this content');
+        // }
+
         await content.remove();
         response.json({ message: 'Content removed' });
     } else {

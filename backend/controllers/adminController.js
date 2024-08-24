@@ -8,55 +8,69 @@ import Staff from '../models/staff.js';
 import Book from '../models/books.js';
 
 // Adding a admin member
-export const addAdmin = asyncHandler(async (request,response) => {
+export const addAdmin = asyncHandler(async (request, response) => {
     uploadProfilePic(request, response, async (err) => {
         if (err) {
             return response.status(400).json({ message: 'Error uploading image', error: err });
         }
-    
-        const {fullName, username, email, password, phoneNumber, address, socialMediaLinks,role,permission} = request.body;
+
+        const { fullName, username, email, password, phoneNumber, address, role, permission } = request.body;
         const profilePic = request.file ? request.file.path : null;
+
+        // Social Media Links handling
+        const socialMediaLinks = {
+            linkedin: request.body.linkedin,
+            instagram: request.body.instagram,
+            twitter: request.body.twitter,
+            youtube: request.body.youtube,
+        };
+
         try {
-            const hashedPassword = await bcrypt.hash(password,12);
+            const hashedPassword = await bcrypt.hash(password, 12);
 
             const newAdmin = await Admin.create({
                 fullName,
                 username,
                 email,
-                password : hashedPassword,
+                password: hashedPassword,
                 phoneNumber,
                 address,
                 profilePic,
                 socialMediaLinks,
                 role,
-                permission
+                permission,
             });
 
-            // Send email with username and password
             const emailSubject = 'Welcome to Our Service';
             const emailText = `Hello ${fullName},\n\nYour account has been created.\nUsername: ${username}\nPassword: ${password}\n\nPlease keep this information safe.`;
 
             await sendEmail(email, emailSubject, emailText);
 
-            response.status(201).json({message: "Admin Added Successfully", admin: newAdmin});
+            response.status(201).json({ message: 'Admin Added Successfully', admin: newAdmin });
         } catch (error) {
-            response.status(500).json({message:"Server error", error: error.message});
+            response.status(500).json({ message: 'Server error', error: error.message });
         }
-    });    
+    });
 });
 
-// Editing the admin member
-
-export const editAdmin = asyncHandler (async (request,response) => {
+// Edit a Admin
+export const editAdmin = asyncHandler(async (request, response) => {
     uploadProfilePic(request, response, async (err) => {
         if (err) {
             return response.status(400).json({ message: 'Error uploading image', error: err });
         }
-        
-        const { username } = request.params;
 
-        const {fullName, email, password, phoneNumber, address, socialMediaLinks,role,permission} = request.body;
+        const { username } = request.params;
+        const { fullName, email, phoneNumber, address, role, permission } = request.body;
         const profilePic = request.file ? request.file.path : null;
+
+        // Social Media Links handling
+        const socialMediaLinks = {
+            linkedin: request.body.linkedin,
+            instagram: request.body.instagram,
+            twitter: request.body.twitter,
+            youtube: request.body.youtube,
+        };
 
         try {
             const existingUser = await Admin.findOne({ username });
@@ -72,18 +86,24 @@ export const editAdmin = asyncHandler (async (request,response) => {
                 role: role || existingUser.role,
                 permission: permission || existingUser.permission,
                 address: address || existingUser.address,
-                socialMediaLinks: socialMediaLinks || existingUser.socialMediaLinks,
+                socialMediaLinks: {
+                    linkedin: socialMediaLinks.linkedin || existingUser.socialMediaLinks.linkedin,
+                    instagram: socialMediaLinks.instagram || existingUser.socialMediaLinks.instagram,
+                    twitter: socialMediaLinks.twitter || existingUser.socialMediaLinks.twitter,
+                    youtube: socialMediaLinks.youtube || existingUser.socialMediaLinks.youtube,
+                },
                 profilePic: profilePic || existingUser.profilePic,
             };
 
             const updatedAdmin = await Admin.findOneAndUpdate({ username }, updateData, { new: true });
 
             response.status(200).json({ message: 'Admin updated successfully', user: updatedAdmin });
-        }catch (error) {
-            response.status(500).json({message:"Server Error", error:error.message});
+        } catch (error) {
+            response.status(500).json({ message: 'Server Error', error: error.message });
         }
     });
 });
+
 
 
 //Display All Admin

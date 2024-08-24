@@ -9,7 +9,7 @@ const adminSchema = new mongoose.Schema({
     phoneNumber: { type: String },
     profilePic: {type:String},
     socialMediaLinks: {
-        insta:String,
+        instagram:String,
         twitter:String,
         youtube:String,
         linkedin:String

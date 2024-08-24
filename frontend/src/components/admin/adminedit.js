@@ -17,16 +17,21 @@ const AdminEdit = () => {
     const fetchAdminData = async () => {
       try {
         const response = await axiosInstance.get(`/admin/display/${username}`);
-        form.setFieldsValue(response.data);
+        const { socialMediaLinks, ...otherData } = response.data;
+        form.setFieldsValue({
+          ...otherData,
+          ...socialMediaLinks, 
+        });
         setLoading(false);
       } catch (error) {
         toast.error(`Error fetching admin data: ${error.response?.data?.message || 'Something went wrong'}`);
         setLoading(false);
       }
     };
-
+  
     fetchAdminData();
   }, [username, form]);
+  
 
   const handleFinish = async (values) => {
     try {
@@ -109,18 +114,18 @@ const AdminEdit = () => {
             </Form.Item>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Form.Item label="LinkedIn" name="linkedin">
-                <Input prefix={<FaLinkedin className="text-blue-700" />} />
+               <Input prefix={<FaLinkedin className="text-blue-700" />} placeholder="Enter LinkedIn URL" />
               </Form.Item>
               <Form.Item label="Instagram" name="instagram">
-                <Input prefix={<FaInstagram className="text-pink-600" />} />
+               <Input prefix={<FaInstagram className="text-pink-600" />} placeholder="Enter Instagram URL" />
               </Form.Item>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Form.Item label="Twitter" name="twitter">
-                <Input prefix={<FaTwitter className="text-blue-500" />} />
+               <Input prefix={<FaTwitter className="text-blue-500" />} placeholder="Enter Twitter URL" />
               </Form.Item>
               <Form.Item label="YouTube" name="youtube">
-                <Input prefix={<FaYoutube className="text-red-600" />} />
+               <Input prefix={<FaYoutube className="text-red-600" />} placeholder="Enter YouTube URL" />
               </Form.Item>
             </div>
             <Form.Item label="Profile Image" name="profilePic">

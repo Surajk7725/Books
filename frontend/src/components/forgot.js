@@ -9,11 +9,11 @@ export default function Forgot() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log('Email to be sent:', email);  // Debugging log
+    console.log('Email to be sent:', email);  
 
     try {
         const response = await axiosInstance.post('/auth/forget-password', { email });
-        console.log('Server response:', response.data);  // Debugging log
+        console.log('Server response:', response.data); 
         setEmailSent(true);
         setError('');
     } catch (error) {

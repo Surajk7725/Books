@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Card, Input, Button, Upload, Form, Select, Breadcrumb } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { FaLinkedin, FaInstagram, FaTwitter, FaYoutube } from 'react-icons/fa';
@@ -11,7 +11,6 @@ const { Option } = Select;
 
 const AdminCreate = () => {
   const [form] = Form.useForm();
-  const navigate = useNavigate();
 
   const handleFinish = async (values) => {
     const formData = new FormData();
@@ -24,11 +23,11 @@ const AdminCreate = () => {
     formData.append('role', values.role);
     formData.append('permission', values.permission);
 
-    // Adding social media links as individual fields
-    formData.append('socialMediaLinks[linkedin]', values.linkedin);
-    formData.append('socialMediaLinks[instagram]', values.instagram);
-    formData.append('socialMediaLinks[twitter]', values.twitter);
-    formData.append('socialMediaLinks[youtube]', values.youtube);
+    // Append social media links directly
+    formData.append('linkedin', values.linkedin);
+    formData.append('instagram', values.instagram);
+    formData.append('twitter', values.twitter);
+    formData.append('youtube', values.youtube);
 
     if (values.profilePic && values.profilePic.file) {
       formData.append('profilePic', values.profilePic.file);
@@ -41,11 +40,11 @@ const AdminCreate = () => {
         },
       });
       toast.success('Admin created successfully');
-      navigate('/admin/home');
     } catch (error) {
       toast.error(`Error: ${error.response?.data?.message || 'Something went wrong'}`);
     }
   };
+
 
   return (
     <div className="justify-center items-center min-h-screen mb-2 ml-2 mt-4 md:ml-10">
@@ -99,19 +98,35 @@ const AdminCreate = () => {
             </Select>
           </Form.Item>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Form.Item label="LinkedIn" name="linkedin">
-              <Input prefix={<FaLinkedin className="text-blue-700" />} />
+            <Form.Item
+              label="LinkedIn"
+              name="linkedin"
+              rules={[{ required: true, message: 'Please input your LinkedIn URL!' }]}
+            >
+              <Input prefix={<FaLinkedin className="text-blue-700" />} placeholder="Enter LinkedIn URL" />
             </Form.Item>
-            <Form.Item label="Instagram" name="instagram">
-              <Input prefix={<FaInstagram className="text-pink-600" />} />
+            <Form.Item
+              label="Instagram"
+              name="instagram"
+              rules={[{ required: true, message: 'Please input your Instagram URL!' }]}
+            >
+              <Input prefix={<FaInstagram className="text-pink-600" />} placeholder="Enter Instagram URL" />
             </Form.Item>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Form.Item label="Twitter" name="twitter">
-              <Input prefix={<FaTwitter className="text-blue-500" />} />
+            <Form.Item
+              label="Twitter"
+              name="twitter"
+              rules={[{ required: true, message: 'Please input your Twitter URL!' }]}
+            >
+              <Input prefix={<FaTwitter className="text-blue-500" />} placeholder="Enter Twitter URL" />
             </Form.Item>
-            <Form.Item label="YouTube" name="youtube">
-              <Input prefix={<FaYoutube className="text-red-600" />} />
+            <Form.Item
+              label="YouTube"
+              name="youtube"
+              rules={[{ required: true, message: 'Please input your YouTube URL!' }]}
+            >
+              <Input prefix={<FaYoutube className="text-red-600" />} placeholder="Enter YouTube URL" />
             </Form.Item>
           </div>
           <Form.Item label="Profile Image" name="profilePic">

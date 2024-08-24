@@ -142,7 +142,7 @@ function App() {
           <Route path='staff-edit/:username' element={<StaffEdit />} />
           <Route path='staff-create' element={<StaffCreate />} />
           <Route path='user-display' element={<UserDisplay />} />
-          <Route path='profile' element={<ProfilePage />} />
+          <Route path='profile/:username' element={<ProfilePage />} />
           <Route path='settings' element={<SettingsPage />} />
           <Route path='contact-resolve' element={<Contactresolve />} />
           <Route path='security' element={<SecurityPage />} />

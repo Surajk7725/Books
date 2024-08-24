@@ -1,13 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, Outlet } from 'react-router-dom';
 import { Layout, Input, Dropdown, Menu, Avatar } from 'antd';
-import { AiOutlineTool } from "react-icons/ai";
-import { GrUserAdmin } from "react-icons/gr";
-import { FcLibrary } from "react-icons/fc";
 import { FaBookBookmark } from "react-icons/fa6";
 import { BellOutlined, SearchOutlined, UserOutlined, DashboardOutlined, SettingOutlined, ProfileOutlined, LoginOutlined, LogoutOutlined, PlusOutlined, ReadOutlined, CustomerServiceOutlined, LockOutlined, DesktopOutlined } from '@ant-design/icons';
 import 'tailwindcss/tailwind.css';
 import NotificationCard from './notification';
+import { useAuth } from '../authcontext';
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -16,6 +14,14 @@ const { SubMenu } = Menu;
 
 const Sidebar = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [username, setUsername] = useState('');
+  const { user } = useAuth();
+
+  useEffect(() => {
+    if (user) {
+        setUsername(user.username);
+    }
+  }, [user]);
 
   const menu = (
     <div className="max-h-48">
@@ -23,11 +29,16 @@ const Sidebar = () => {
     </div>
   );
 
+   // Construct the image URL
+   const baseURL = 'http://localhost:5000/api/';
+   const profilePicURL = user.profilePic ? `${baseURL}${user.profilePic.replace('\\', '/')}` : '';
+
+
 
   const dropdown = (
     <Menu>
       <Menu.Item key="1" icon={<ProfileOutlined />}>
-        <Link to="/admin/profile"> View Profile</Link>
+        <Link to={`/admin/profile/${username}`}> View Profile</Link>
       </Menu.Item>
       <Menu.Item key="2" icon={<LogoutOutlined />} className="text-red-500">
         <Link to="/">Logout</Link>
@@ -88,7 +99,7 @@ const Sidebar = () => {
             <Link to="/admin/books">Books</Link>
           </Menu.Item>
           <Menu.Item key="10" icon={<UserOutlined />}>
-            <Link to="/admin/profile">Profile</Link>
+            <Link to={`/admin/profile/${username}`}>Profile</Link>
           </Menu.Item>
           <SubMenu key="sub4" icon={<SettingOutlined />} title="Settings">
             <Menu.Item key="11" icon={<UserOutlined />}>
@@ -126,7 +137,7 @@ const Sidebar = () => {
             <div className="w-4 md:w-[1.0cm]"></div>
             <Dropdown overlay={dropdown} trigger={['click']}>
               <Avatar
-                src="https://wallpapers.com/images/hd/yuuichi-katagiri-anime-portrait-5xl430n009kmsg7l.jpg"
+                src={profilePicURL}
                 className="cursor-pointer h-10 w-10 rounded-full border-2 border-gray-300 object-cover"
                 size="large"
               />

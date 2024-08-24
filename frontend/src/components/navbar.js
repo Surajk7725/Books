@@ -4,7 +4,6 @@ import Notifications from './user/notification';
 import { Dropdown } from 'antd';
 import { BellOutlined } from '@ant-design/icons';
 import { useAuth } from './authcontext';
-import { useNavigate } from 'react-router-dom';
 import { ChevronDownIcon, BookOpenIcon, PencilIcon, MailIcon, UserCircleIcon, CogIcon, QuestionMarkCircleIcon, LogoutIcon, StarIcon } from '@heroicons/react/outline';
 
 export default function NavBar() {
@@ -13,17 +12,12 @@ export default function NavBar() {
     const [menuOpen, setMenuOpen] = useState(false); // State for mobile menu toggle
     const [username, setUsername] = useState('');
     const { user } = useAuth();
-    const navigate = useNavigate();
 
     useEffect(() => {
         if (user) {
             setUsername(user.username);
         }
     }, [user]);
-
-    const handleSignOut = () => {
-        navigate("/")
-    };
 
     const menu = (
         <div className="max-h-48">
@@ -128,7 +122,7 @@ export default function NavBar() {
                                 <Link to="/help-center" className="px-4 py-2 flex items-center hover:bg-gray-100">
                                     <QuestionMarkCircleIcon className="h-5 w-5 mr-2" /> Help
                                 </Link>
-                                <Link className="px-4 py-2 flex items-center hover:bg-gray-100" onClick={handleSignOut}>
+                                <Link to="/" className="px-4 py-2 flex items-center hover:bg-gray-100">
                                     <LogoutIcon className="h-5 w-5 mr-2" /> Logout
                                 </Link>
                             </div>
