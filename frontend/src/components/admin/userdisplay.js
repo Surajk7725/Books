@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { Link } from 'react-router-dom';
 import {
   DownloadOutlined,
@@ -15,6 +15,7 @@ import { Table, Button, Space, Image, Breadcrumb } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import axiosInstance from './../axiosInstance';
 
 const onDownload = (imgUrl) => {
   fetch(imgUrl)
@@ -33,13 +34,42 @@ const onDownload = (imgUrl) => {
 
 const UserDisplay = () => {
   const navigate = useNavigate();
+  const [data, setData] = useState([]);
 
-  const handleEdit = (key) => {
-    navigate(`/admin/user-edit/${key}`);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axiosInstance.get('/user/display');
+        const baseURL = 'http://localhost:5000/api/';
+        const formattedData = response.data.map((user, index) => ({
+          key: user._id,
+          srNo: index + 1,
+          image: user.profilePic ? `${baseURL}${user.profilePic.replace(/\\/g, '/')}` : 'default-image-url.png',
+          fullName: user.fullName,
+          userName: user.username,
+          email: user.email,
+          phoneNumber: user.phoneNumber || 'N/A',
+        }));
+        setData(formattedData);
+      } catch (error) {
+        toast.error(`Error fetching user data: ${error.response?.data?.message || 'Something went wrong'}`);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const handleEdit = (userName) => {
+    navigate(`/admin/user-edit/${userName}`);
   };
 
-  const handleDelete = (key) => {
-    toast.success(`User with key ${key} deleted successfully`);
+  const handleDelete = async (key, userName) => {
+    try {
+      await axiosInstance.delete(`/user/delete/${userName}`);
+      toast.success(`User with username ${userName} deleted successfully`);
+      setData((prevData) => prevData.filter((item) => item.key !== key));
+    } catch (error) {
+      toast.error(`Error deleting user: ${error.response?.data?.message || 'Something went wrong'}`);
+    }
   };
 
   const onChange = (pagination, filters, sorter, extra) => {
@@ -118,7 +148,7 @@ const UserDisplay = () => {
           <div className="flex flex-col space-y-2">
               <Button
                   type="primary"
-                  onClick={() => handleEdit(record.key)}
+                  onClick={() => handleEdit(record.userName)}
                   className="flex items-center space-x-2"
               >
                   <EditOutlined />
@@ -126,7 +156,7 @@ const UserDisplay = () => {
               </Button>
               <Button
                   type="danger"
-                  onClick={() => handleDelete(record.key)}
+                  onClick={() => handleDelete(record.key, record.userName)}
                   className="flex items-center space-x-2"
               >
                   <DeleteOutlined />
@@ -146,44 +176,6 @@ const UserDisplay = () => {
     },
   ];
 
-  const data = [
-    {
-      key: '1',
-      srNo: 1,
-      image: 'https://wallpapers.com/images/hd/yuuichi-katagiri-anime-portrait-5xl430n009kmsg7l.jpg',
-      fullName: 'John Brown',
-      userName: 'johnbrown',
-      email: 'john.brown@example.com',
-      phoneNumber: '123-456-7890',
-    },
-    {
-      key: '2',
-      srNo: 2,
-      image: 'https://i.pinimg.com/originals/84/d3/fa/84d3fa68414aecbc3172909302cb5144.jpg',
-      fullName: 'Jim Green',
-      userName: 'jimgreen',
-      email: 'jim.green@example.com',
-      phoneNumber: '123-456-7891',
-    },
-    {
-      key: '3',
-      srNo: 3,
-      image: 'https://i.pinimg.com/736x/b3/ec/2c/b3ec2c350eafdab61055934f47f05b02.jpg',
-      fullName: 'Joe Black',
-      userName: 'joeblack',
-      email: 'joe.black@example.com',
-      phoneNumber: '123-456-7892',
-    },
-    {
-      key: '4',
-      srNo: 4,
-      image: 'https://dthezntil550i.cloudfront.net/ec/latest/ec2305160145567360024742816/1280_960/33c8e334-53bd-4beb-8ef4-8873b4468ce2.png',
-      fullName: 'Jim Red',
-      userName: 'jimred',
-      email: 'jim.red@example.com',
-      phoneNumber: '123-456-7893',
-    },
-  ];
 
   return (
     <div className="justify-center items-center min-h-screen mb-2 ml-2 mt-4 md:ml-10">

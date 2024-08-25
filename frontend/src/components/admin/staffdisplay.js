@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { Link } from 'react-router-dom';
 import {
     DownloadOutlined,
@@ -10,11 +10,12 @@ import {
     ZoomOutOutlined,
     EditOutlined, 
     DeleteOutlined,
-  } from '@ant-design/icons';
-  import { Table, Button, Space, Image, Breadcrumb } from 'antd';
-  import { useNavigate } from 'react-router-dom';
-  import { toast, ToastContainer } from 'react-toastify';
-  import 'react-toastify/dist/ReactToastify.css';
+} from '@ant-design/icons';
+import { Table, Button, Space, Image, Breadcrumb } from 'antd';
+import { useNavigate } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import axiosInstance from './../axiosInstance';
   
   const onDownload = (imgUrl) => {
     fetch(imgUrl)
@@ -33,13 +34,43 @@ import {
   
   const StaffDisplay = () => {
     const navigate = useNavigate();
+    const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axiosInstance.get('/staff/display');
+        const baseURL = 'http://localhost:5000/api/';
+        const formattedData = response.data.map((staff, index) => ({
+          key: staff._id,
+          srNo: index + 1,
+          image: staff.profilePic ? `${baseURL}${staff.profilePic.replace(/\\/g, '/')}` : 'default-image-url.png',
+          fullName: staff.fullName,
+          userName: staff.username,
+          email: staff.email,
+          jobTitle: staff.professionalDetails?.jobTitle || 'N/A',
+          phoneNumber: staff.phoneNumber || 'N/A',
+        }));
+        setData(formattedData);
+      } catch (error) {
+        toast.error(`Error fetching staff data: ${error.response?.data?.message || 'Something went wrong'}`);
+      }
+    };
+    fetchData();
+  }, []);
   
-    const handleEdit = (key) => {
-      navigate(`/admin/staff-edit/${key}`);
+    const handleEdit = (userName) => {
+      navigate(`/admin/staff-edit/${userName}`);
     };
   
-    const handleDelete = (key) => {
-      toast.success(`User with key ${key} deleted successfully`);
+    const handleDelete = async (key, userName) => {
+      try {
+        await axiosInstance.delete(`/staff/delete/${userName}`);
+        toast.success(`Staff with username ${userName} deleted successfully`);
+        setData((prevData) => prevData.filter((item) => item.key !== key));
+      } catch (error) {
+        toast.error(`Error deleting staff: ${error.response?.data?.message || 'Something went wrong'}`);
+      }
     };
   
     const onChange = (pagination, filters, sorter, extra) => {
@@ -100,10 +131,10 @@ import {
         sorter: (a, b) => a.userName.localeCompare(b.userName),
       },
       {
-        title: 'Role',
-        dataIndex: 'userRole',
-        key: 'userRole',
-        sorter: (a, b) => a.userRole.localeCompare(b.userRole),
+        title: 'Job Title',
+        dataIndex: 'jobTitle',
+        key: 'jobtitle',
+        sorter: (a, b) => a.jobTitle.localeCompare(b.jobTitle),
       },
       {
         title: 'Email',
@@ -123,21 +154,21 @@ import {
         render: (_, record) => (
             <div className="flex flex-col space-y-2">
                 <Button
-                    type="primary"
-                    onClick={() => handleEdit(record.key)}
-                    className="flex items-center space-x-2"
-                >
-                    <EditOutlined />
-                    <span>Edit</span>
-                </Button>
-                <Button
-                    type="danger"
-                    onClick={() => handleDelete(record.key)}
-                    className="flex items-center space-x-2"
-                >
-                    <DeleteOutlined />
-                    <span>Delete</span>
-                </Button>
+                  type="primary"
+                  onClick={() => handleEdit(record.userName)}
+                  className="flex items-center space-x-2"
+              >
+                  <EditOutlined />
+                  <span>Edit</span>
+              </Button>
+              <Button
+                  type="danger"
+                  onClick={() => handleDelete(record.key, record.userName)}
+                  className="flex items-center space-x-2"
+              >
+                  <DeleteOutlined />
+                  <span>Delete</span>
+              </Button>
             </div>
         ),
       },
@@ -149,49 +180,6 @@ import {
             <Button type="default" style={{ backgroundColor: 'green', color: 'white' }} onClick={() => console.log(`Display user ${record.key}`)}>View</Button>
           </Space>
         ),
-      },
-    ];
-  
-    const data = [
-      {
-        key: '1',
-        srNo: 1,
-        image: 'https://wallpapers.com/images/hd/yuuichi-katagiri-anime-portrait-5xl430n009kmsg7l.jpg',
-        fullName: 'John Brown',
-        userName: 'johnbrown',
-        userRole: 'Assistant librarian',
-        email: 'john.brown@example.com',
-        phoneNumber: '123-456-7890',
-      },
-      {
-        key: '2',
-        srNo: 2,
-        image: 'https://i.pinimg.com/originals/84/d3/fa/84d3fa68414aecbc3172909302cb5144.jpg',
-        fullName: 'Jim Green',
-        userName: 'jimgreen',
-        userRole: 'Assistant',
-        email: 'jim.green@example.com',
-        phoneNumber: '123-456-7891',
-      },
-      {
-        key: '3',
-        srNo: 3,
-        image: 'https://i.pinimg.com/736x/b3/ec/2c/b3ec2c350eafdab61055934f47f05b02.jpg',
-        fullName: 'Joe Black',
-        userName: 'joeblack',
-        userRole: 'Assistant',
-        email: 'joe.black@example.com',
-        phoneNumber: '123-456-7892',
-      },
-      {
-        key: '4',
-        srNo: 4,
-        image: 'https://dthezntil550i.cloudfront.net/ec/latest/ec2305160145567360024742816/1280_960/33c8e334-53bd-4beb-8ef4-8873b4468ce2.png',
-        fullName: 'Jim Red',
-        userName: 'jimred',
-        userRole: 'Assistant',
-        email: 'jim.red@example.com',
-        phoneNumber: '123-456-7893',
       },
     ];
   

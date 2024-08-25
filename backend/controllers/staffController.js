@@ -8,7 +8,6 @@ import Book from '../models/books.js';
 
 
 // Adding a Staff Member
-
 export const addStaff = asyncHandler(async (request, response) => {
     uploadProfilePic(request, response, async (err) => {
         if (err) {
@@ -24,6 +23,13 @@ export const addStaff = asyncHandler(async (request, response) => {
         try {
             const hashedPassword = await bcrypt.hash(password, 12);
 
+            // Parsing the JSON strings into objects
+            const parsedSocialMediaLinks = socialMediaLinks ? JSON.parse(socialMediaLinks) : {};
+            const parsedProfessionalDetails = professionalDetails ? JSON.parse(professionalDetails) : {};
+            const parsedQualifications = qualifications ? JSON.parse(qualifications) : {};
+            const parsedWorkExperience = workExperience ? JSON.parse(workExperience) : {};
+            const parsedSkills = skills ? JSON.parse(skills) : { languagesSpoken: [], computerSkills: [] };
+
             const newStaff = await Staff.create({
                 fullName,
                 username,
@@ -33,14 +39,13 @@ export const addStaff = asyncHandler(async (request, response) => {
                 dob,
                 address,
                 profilePic,
-                socialMediaLinks,
-                professionalDetails,
-                qualifications,
-                workExperience,
-                skills
+                socialMediaLinks: parsedSocialMediaLinks,
+                professionalDetails: parsedProfessionalDetails, 
+                qualifications: parsedQualifications, 
+                workExperience: parsedWorkExperience, 
+                skills: parsedSkills,
             });
 
-            // Send email with username and password
             const emailSubject = 'Welcome to Our BookHub';
             const emailText = `Hello ${fullName},\n\nYour account has been created.\nUsername: ${username}\nPassword: ${password}\n\nPlease keep this information safe.`;
 
@@ -59,46 +64,75 @@ export const addStaff = asyncHandler(async (request, response) => {
 });
 
 // Editing a Staff Member
-
 export const editStaff = asyncHandler(async (request, response) => {
     uploadProfilePic(request, response, async (err) => {
-        if (err) {
-            return response.status(400).json({ message: 'Error uploading image', error: err });
+      if (err) {
+        return response.status(400).json({ message: 'Error uploading image', error: err.message });
+      }
+  
+      const { username } = request.params;
+      const {
+        fullName,
+        email,
+        password,
+        phoneNumber,
+        dob,
+        address,
+        socialMediaLinks,
+        professionalDetails,
+        qualifications,
+        workExperience,
+        skills,
+      } = request.body;
+  
+      const profilePic = request.file ? request.file.path : null;
+  
+      try {
+        const existingStaff = await Staff.findOne({ username });
+  
+        if (!existingStaff) {
+          return response.status(404).json({ message: 'Staff not found' });
         }
-
-        const { username } = request.params;
-        const { 
-            fullName, email, password, phoneNumber, dob, address, socialMediaLinks, 
-            professionalDetails, qualifications, workExperience, skills 
-        } = request.body;
-        const profilePic = request.file ? request.file.path : null;
-
-        try {
-            const updateData = { 
-                fullName, email, phoneNumber, dob, address, socialMediaLinks, 
-                professionalDetails, qualifications, workExperience, skills 
-            };
-
-            if (profilePic) 
-                updateData.profilePic = profilePic;
-
-            if (password) {
-                const hashedPassword = await bcrypt.hash(password, 12);
-                updateData.password = hashedPassword;
-            }
-
-            const updateStaff = await Staff.findOneAndUpdate({ username }, updateData, { new: true });
-
-            if (!updateStaff) {
-                return response.status(404).json({ message: "Staff not found" });
-            }
-
-            response.status(200).json({ message: "Staff updated successfully", staff: updateStaff });
-        } catch (error) {
-            response.status(500).json({ message: "Server Error", error: error.message });
+  
+        const parsedSocialMediaLinks = socialMediaLinks ? JSON.parse(socialMediaLinks) : existingStaff.socialMediaLinks;
+        const parsedProfessionalDetails = professionalDetails ? JSON.parse(professionalDetails) : existingStaff.professionalDetails;
+        const parsedQualifications = qualifications ? JSON.parse(qualifications) : existingStaff.qualifications;
+        const parsedWorkExperience = workExperience ? JSON.parse(workExperience) : existingStaff.workExperience;
+        const parsedSkills = skills ? JSON.parse(skills) : existingStaff.skills;
+  
+        const updateData = {
+          fullName: fullName || existingStaff.fullName,
+          email: email || existingStaff.email,
+          phoneNumber: phoneNumber || existingStaff.phoneNumber,
+          dob: dob || existingStaff.dob,
+          address: address || existingStaff.address,
+          socialMediaLinks: parsedSocialMediaLinks,
+          professionalDetails: parsedProfessionalDetails,
+          qualifications: parsedQualifications,
+          workExperience: parsedWorkExperience,
+          skills: parsedSkills,
+          profilePic: profilePic || existingStaff.profilePic,
+        };
+  
+        if (password) {
+          const salt = await bcrypt.genSalt(12);
+          const hashedPassword = await bcrypt.hash(password, salt);
+          updateData.password = hashedPassword;
         }
+  
+        const updatedStaff = await Staff.findOneAndUpdate({ username }, updateData, { new: true });
+  
+        return response.status(200).json({
+          message: 'Staff updated successfully',
+          staff: updatedStaff,
+        });
+      } catch (error) {
+        console.error('Error updating staff:', error);
+        return response.status(500).json({ message: 'Server Error', error: error.message });
+      }
     });
-});
+  });
+  
 
 // Display all Staff
 

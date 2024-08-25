@@ -56,10 +56,10 @@ const AdminDisplay = () => {
   const handleDelete = async (key, userName) => {
     try {
       await axiosInstance.delete(`/admin/delete/${userName}`);
-      toast.success(`User with username ${userName} deleted successfully`);
+      toast.success(`Admin with username ${userName} deleted successfully`);
       setData((prevData) => prevData.filter((item) => item.key !== key));
     } catch (error) {
-      toast.error(`Error deleting user: ${error.response?.data?.message || 'Something went wrong'}`);
+      toast.error(`Error deleting admin: ${error.response?.data?.message || 'Something went wrong'}`);
     }
   };
   

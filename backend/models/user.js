@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema({
     profilePic: { type: String },
     bookmarks: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Book' }],  
     socialMediaLinks: {
-        insta: String,
+        instagram: String,
         twitter: String,
         youtube: String,
         linkedin: String

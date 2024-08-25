@@ -11,22 +11,23 @@ export const addUser = asyncHandler(async (request, response) => {
             return response.status(400).json({ message: 'Error uploading image', error: err });
         }
 
-        const { fullName, username, email, phonenumber, dob, address, password, socialMediaLinks } = request.body;
+        const { fullName, username, email, phoneNumber, dob, address, password, socialMediaLinks } = request.body;
         const profilePic = request.file ? request.file.path : null;
 
         try {
             const hashedPassword = await bcrypt.hash(password, 12);
+            const parsedSocialMediaLinks = socialMediaLinks ? JSON.parse(socialMediaLinks) : {};
 
             const newUser = await User.create({
                 fullName,
                 username,
                 email,
-                phonenumber,
+                phoneNumber,
                 dob,
                 address,
                 password: hashedPassword,
                 profilePic,
-                socialMediaLinks
+                socialMediaLinks: parsedSocialMediaLinks,
             });
 
             // Send email with username and password
@@ -67,7 +68,7 @@ export const editUser = asyncHandler(async (request, response) => {
                 phoneNumber: phoneNumber || existingUser.phoneNumber,
                 dob: dob || existingUser.dob,
                 address: address || existingUser.address,
-                socialMediaLinks: socialMediaLinks || existingUser.socialMediaLinks,
+                socialMediaLinks: socialMediaLinks ? JSON.parse(socialMediaLinks) : existingUser.socialMediaLinks,
                 profilePic: profilePic || existingUser.profilePic,
             };
 
@@ -115,12 +116,12 @@ export const getUserById = asyncHandler(async (request, response) => {
 });
 
 
-// Delete a Staff
+// Delete a User
 
 export const deleteUser = asyncHandler (async(request,response) => {
     const { username } = request.params;
     try {
-        const deleteUser = await Staff.findOneAndDelete({ username });
+        const deleteUser = await User.findOneAndDelete({ username });
 
         if(!deleteUser) {
             return response.status(404).json({message:"User Not Found"});

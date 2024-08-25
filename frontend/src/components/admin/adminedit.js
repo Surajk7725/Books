@@ -4,6 +4,7 @@ import { UploadOutlined } from '@ant-design/icons';
 import { Link, useParams } from 'react-router-dom';
 import axiosInstance from './../axiosInstance';
 import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { FaLinkedin, FaInstagram, FaTwitter, FaYoutube } from 'react-icons/fa';
 
 const { Option } = Select;
@@ -61,6 +62,7 @@ const AdminEdit = () => {
 
   return (
     <div className="justify-center items-center min-h-screen mb-2 ml-2 mt-4 md:ml-10">
+      <ToastContainer />
       <div className="text-start -mt-4 mb-8">
         <div className="bg-white p-4 rounded-lg shadow-md mb-6 flex flex-col md:flex-row justify-between items-center">
           <h1 className="text-2xl font-bold text-gray-800 ml-4 mb-4 md:mb-0">Edit Admin</h1>

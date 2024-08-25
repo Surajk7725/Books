@@ -15,7 +15,7 @@ const AdminCreate = () => {
   const handleFinish = async (values) => {
     const formData = new FormData();
     formData.append('fullName', values.fullName);
-    formData.append('username', values.userName);
+    formData.append('username', values.username);
     formData.append('email', values.email);
     formData.append('password', values.password);
     formData.append('phoneNumber', values.phoneNumber);
@@ -23,11 +23,14 @@ const AdminCreate = () => {
     formData.append('role', values.role);
     formData.append('permission', values.permission);
 
-    // Append social media links directly
-    formData.append('linkedin', values.linkedin);
-    formData.append('instagram', values.instagram);
-    formData.append('twitter', values.twitter);
-    formData.append('youtube', values.youtube);
+    // Append social media links as a single JSON object
+    const socialMediaLinks = {
+      linkedin: values.linkedin,
+      instagram: values.instagram,
+      twitter: values.twitter,
+      youtube: values.youtube,
+    };
+    formData.append('socialMediaLinks', JSON.stringify(socialMediaLinks));
 
     if (values.profilePic && values.profilePic.file) {
       formData.append('profilePic', values.profilePic.file);
@@ -44,7 +47,6 @@ const AdminCreate = () => {
       toast.error(`Error: ${error.response?.data?.message || 'Something went wrong'}`);
     }
   };
-
 
   return (
     <div className="justify-center items-center min-h-screen mb-2 ml-2 mt-4 md:ml-10">
@@ -65,7 +67,7 @@ const AdminCreate = () => {
             <Form.Item label="Full Name" name="fullName" rules={[{ required: true, message: 'Please enter your full name' }]}>
               <Input />
             </Form.Item>
-            <Form.Item label="User Name" name="userName" rules={[{ required: true, message: 'Please enter your user name' }]}>
+            <Form.Item label="User Name" name="username" rules={[{ required: true, message: 'Please enter your user name' }]}>
               <Input />
             </Form.Item>
           </div>

@@ -17,16 +17,9 @@ export const addAdmin = asyncHandler(async (request, response) => {
         const { fullName, username, email, password, phoneNumber, address, role, permission } = request.body;
         const profilePic = request.file ? request.file.path : null;
 
-        // Social Media Links handling
-        const socialMediaLinks = {
-            linkedin: request.body.linkedin,
-            instagram: request.body.instagram,
-            twitter: request.body.twitter,
-            youtube: request.body.youtube,
-        };
-
         try {
             const hashedPassword = await bcrypt.hash(password, 12);
+            const parsedSocialMediaLinks = socialMediaLinks ? JSON.parse(socialMediaLinks) : {};
 
             const newAdmin = await Admin.create({
                 fullName,
@@ -36,7 +29,7 @@ export const addAdmin = asyncHandler(async (request, response) => {
                 phoneNumber,
                 address,
                 profilePic,
-                socialMediaLinks,
+                socialMediaLinks: parsedSocialMediaLinks,
                 role,
                 permission,
             });
@@ -180,14 +173,14 @@ export const updateAdminPassword = asyncHandler(async (request, response) => {
 export const getAdminDashboardStats = asyncHandler(async (request, response) => {
     try {
         
-        const totalUsers = await User.countDocuments(); // Get the total number of users        
-        const totalStaff = await Staff.countDocuments(); // Get the total number of staff        
-        const totalBooks = await Book.countDocuments(); // Get the total number of books        
-        const totalAdmins = await Admin.countDocuments(); // Get the total number of admins
+        const totalUsers = await User.countDocuments();       
+        const totalStaffs = await Staff.countDocuments();        
+        const totalBooks = await Book.countDocuments();       
+        const totalAdmins = await Admin.countDocuments(); 
         
         response.status(200).json({
             totalUsers,
-            totalStaff,
+            totalStaffs,
             totalBooks,
             totalAdmins
         });
