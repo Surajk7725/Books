@@ -7,7 +7,7 @@ const staffSchema = new mongoose.Schema({
     password: {type: String, required: true},
     phoneNumber: {type: String},
     address: {type: String},
-    dob: {type: Date},
+    dob: {type: String},
     profilePic: { type: String },
     socialMediaLinks: {
         instagram: String,
@@ -17,7 +17,6 @@ const staffSchema = new mongoose.Schema({
     },
     professionalDetails: {
         jobTitle:  String,
-        startDate:  String,
         employeeId:  String
     },
     qualifications: {

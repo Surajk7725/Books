@@ -1,44 +1,47 @@
 import asyncHandler from 'express-async-handler';
 import Book from '../models/books.js';
 import User from '../models/user.js';
+import mongoose from 'mongoose';
 import sendNotification from '../utils/sendNotification.js';
 import { uploadProfilePic } from '../utils/pics.js';
 
 
 // Add Book by Staff
 export const addBookByStaff = asyncHandler(async (request, response) => {
-    uploadProfilePic(request, response, async (err) => {
-        if (err) {
-            return response.status(400).json({ message: 'Error uploading image', error: err });
-        }
-        const { authors, title, genre, category, isbn, publisher, language, description } = request.body;
+    const { authors, title, genre, category, isbn, publisher, language, description, coverImageUrl } = request.body;
 
-        const coverImage = request.files.coverImage ? request.files.coverImage[0].path : null;
-        const bookFile = request.files.bookFile ? request.files.bookFile[0].path : null;
+    const coverImage = request.files?.coverImage ? request.files.coverImage[0].path : null;
+    const bookFile = request.files?.bookFile ? request.files.bookFile[0].path : null;
 
-        const newBook = new Book({
-            authors,
-            title,
-            genre,
-            category,
-            coverImage,
-            isbn,
-            publisher,
-            language,
-            bookFile,
-            description,
-            addedByStaff: true
-        });
+    if (!title || !genre || !description) {
+        return response.status(400).json({ message: 'Title, genre, and description are required fields.' });
+    }
 
+    const newBook = new Book({
+        authors,
+        title,
+        genre,
+        category,
+        coverImage,
+        coverImageUrl,
+        isbn,
+        publisher,
+        language,
+        bookFile,
+        description,
+        addedByStaff: true
+    });
+
+    try {
         const createdBook = await newBook.save();
-
-        // Send notification (assuming this is a general notification system)
         const notificationText = `Book Title: ${title}, Date: ${new Date().toLocaleDateString()}, Time: ${new Date().toLocaleTimeString()}`;
         sendNotification(notificationText, `link_to_book/${createdBook._id}`);
-
         response.status(201).json({ message: 'Book added successfully', book: createdBook });
-    });
+    } catch (error) {
+        response.status(400).json({ message: 'Error adding book.', error: error.message });
+    }
 });
+
 
 // Add Book by User
 export const addBookByUser = asyncHandler(async (request, response) => {
@@ -115,6 +118,24 @@ export const displayAllBooks = asyncHandler(async (request, response) => {
 });
 
 
+// Controller to display books by category using route parameters
+export const displayBooksByCategory = asyncHandler(async (request, response) => {
+    const { category } = request.params; 
+
+    const validCategories = ['kids', 'popular', 'academics'];
+    if (!validCategories.includes(category)) {
+        return response.status(400).json({ message: 'Invalid category provided.' });
+    }
+
+    try {
+        const books = await Book.find({ category });
+        response.json(books);
+    } catch (error) {
+        response.status(500).json({ message: 'Error fetching books by category.', error: error.message });
+    }
+});
+
+
 // Display Particular Book
 export const displayParticularBook = asyncHandler(async (request, response) => {
     const { title } = request.params;
@@ -129,15 +150,24 @@ export const displayParticularBook = asyncHandler(async (request, response) => {
 
 // Delete Book
 export const deleteBook = asyncHandler(async (request, response) => {
-    const { id } = request.params;
-    const book = await Book.findById(id);
-    if (book) {
-        await book.remove();
+    const { id } = request.params; 
+    if (!id) {
+        return response.status(400).json({ message: 'Book ID is required' });
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return response.status(400).json({ message: 'Invalid book ID' });
+    }
+
+    const result = await Book.findByIdAndDelete(id); 
+    
+    if (result) {
         response.json({ message: 'Book deleted successfully' });
     } else {
         response.status(404).json({ message: 'Book not found' });
     }
 });
+
 
 // Display Only Bookmarked Books of Particular User
 export const displayBookmarkedBooks = asyncHandler(async (request, response) => {

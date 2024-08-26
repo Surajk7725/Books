@@ -4,10 +4,12 @@ import Footer from './footer';
 import { FaLinkedin, FaInstagram, FaTwitter, FaYoutube } from 'react-icons/fa';
 import { PlusOutlined } from '@ant-design/icons';
 import { Image, Upload, DatePicker, Select } from 'antd';
+import { useNavigate } from 'react-router-dom';
 
 const { Option } = Select;
 
 const Staff_Settings = () => {
+  const navigate = useNavigate();
   const [selectedSection, setSelectedSection] = useState('account');
 
   const [passwordDetails, setPasswordDetails] = useState({
@@ -26,12 +28,11 @@ const Staff_Settings = () => {
   };
 
   const handleHome = () => {
-    window.location.href = '/staff-home';
+    navigate('/staff-home');
   };
 
   const handleLogout = () => {
-    console.log('Logging out...');
-    window.location.href = '/';
+    navigate('/');
   };
 
   const handlePasswordSubmit = (e) => {
@@ -147,7 +148,6 @@ const Staff_Settings = () => {
   const [houseAddress, setHouseAddress] = useState('');
   const [socialLinks, setSocialLinks] = useState({ youtube: '', instagram: '', twitter: '', linkedin: '' });
   const [jobTitle, setJobTitle] = useState('');
-  const [startDate, setStartDate] = useState(null);
   const [employeeID, setEmployeeID] = useState('');
   const [highestEducation, setHighestEducation] = useState('');
   const [degrees, setDegrees] = useState('');
@@ -161,13 +161,6 @@ const Staff_Settings = () => {
     setDob(date);
     console.log(date, dateString);
   };
-
-  const startChange = (date, dateString) => {
-    setStartDate(date);
-    console.log(date, dateString);
-  };
-
-
 
   const fileInputRef = useRef(null);
 
@@ -396,10 +389,6 @@ const Staff_Settings = () => {
                         value={jobTitle}
                         onChange={(e) => setJobTitle(e.target.value)}
                       />
-                    </div>
-                    <div className="col-span-1">
-                      <label className="block text-gray-700">Start Date</label>
-                      <DatePicker onChange={startChange} value={startDate} className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md" />
                     </div>
                     <div className="col-span-1">
                       <label className="block text-gray-700">Employee ID or Code</label>

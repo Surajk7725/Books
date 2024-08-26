@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import { PlusCircleIcon } from '@heroicons/react/outline';
 import NavBar from '../staff/navbar';
 import Footer from './footer';
-
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import axiosInstance from '../axiosInstance';
 
 function AddBook() {
     const [authors, setAuthors] = useState(['']);
@@ -15,7 +17,7 @@ function AddBook() {
     const [isbn, setIsbn] = useState('');
     const [publisher, setPublisher] = useState('');
     const [language, setLanguage] = useState('');
-    const [bookDescription, setBookDescription] = useState('');
+    const [description, setDescription] = useState('');
 
     const addAuthorField = () => {
         setAuthors([...authors, '']);
@@ -32,15 +34,59 @@ function AddBook() {
         setCoverImage(file);
     };
 
-    const handleFormSubmit = (e) => {
+    const handleBookFileUpload = (e) => {
+        const file = e.target.files[0];
+        setBookFile(file);
+    };
+
+    const handleFormSubmit = async (e) => {
         e.preventDefault();
-        // Handle form submission logic
-        console.log({ title, authors, genre, category, coverImage, coverImageUrl, bookFile, isbn, publisher, language, bookDescription });
+        
+        const formData = new FormData();
+        formData.append('title', title);
+        formData.append('genre', genre);
+        formData.append('category', category);
+        formData.append('isbn', isbn);
+        formData.append('publisher', publisher);
+        formData.append('language', language);
+        formData.append('description', description);
+        formData.append('coverImageUrl', coverImageUrl);
+        if (coverImage) formData.append('coverImage', coverImage);
+        if (bookFile) formData.append('bookFile', bookFile);
+
+        authors.forEach((author, index) => {
+            formData.append(`authors[${index}]`, author);
+        });
+
+        try {
+            const response = await axiosInstance.post('/books/add', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+
+            toast.success(response.data.message);
+            // Reset form fields
+            setTitle('');
+            setAuthors(['']);
+            setGenre('');
+            setCategory('');
+            setCoverImage(null);
+            setCoverImageUrl('');
+            setBookFile(null);
+            setIsbn('');
+            setPublisher('');
+            setLanguage('');
+            setDescription('');
+        } catch (error) {
+            toast.error(error.response?.data?.message || 'Error adding book.');
+        }
     };
 
     return (
         <div className="min-h-screen bg-gray-100 flex flex-col">
             <NavBar />
+            <ToastContainer />
             <main className="flex-grow mt-8 mb-8">
                 <div className="max-w-4xl mx-auto bg-white p-4 sm:p-8 rounded-lg shadow-md">
                     <h2 className="text-2xl font-bold mb-4 sm:mb-6 text-gray-800">Add Book</h2>
@@ -169,27 +215,28 @@ function AddBook() {
                         </div>
 
                         <div className="mb-4">
-                            <label className="block text-gray-700 font-bold mb-2" htmlFor="bookDescription">
+                            <label className="block text-gray-700 font-bold mb-2" htmlFor="description">
                                 Book Description <span className="text-red-500">*</span>
                             </label>
                             <textarea
                                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                id="bookDescription"
+                                id="description"
                                 rows="5"
-                                value={bookDescription}
-                                onChange={(e) => setBookDescription(e.target.value)}
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
                                 placeholder="Enter detailed book description"
+                                required
                             ></textarea>
                         </div>
 
                         <div className="mb-4">
-                            <label className="block text-gray-700 font-bold mb-2" htmlFor="cover-image">
+                            <label className="block text-gray-700 font-bold mb-2" htmlFor="coverImage">
                                 Cover Image <span className="text-red-500">*</span>
                             </label>
                             <div className="flex flex-col sm:flex-row items-center">
                                 <input
                                     className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-2 sm:mb-0 sm:mr-2"
-                                    id="cover-image"
+                                    id="coverImage"
                                     type="file"
                                     accept="image/*"
                                     onChange={handleImageUpload}
@@ -206,14 +253,14 @@ function AddBook() {
                             </div>
                         </div>
                         <div className="mb-6">
-                            <label className="block text-gray-700 font-bold mb-2" htmlFor="book-file">
+                            <label className="block text-gray-700 font-bold mb-2" htmlFor="bookFile">
                                 Book File <span className="text-red-500">*</span>
                             </label>
                             <input
                                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                id="book-file"
+                                id="bookFile"
                                 type="file"
-                                onChange={(e) => setBookFile(e.target.files[0])}
+                                onChange={handleBookFileUpload}
                                 accept=".pdf,.doc,.docx"
                                 required
                             />

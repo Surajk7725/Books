@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axiosInstance from '../axiosInstance';
 import { PlusCircleIcon } from '@heroicons/react/outline';
 import NavBar from '../navbar';
@@ -43,6 +43,7 @@ function BookForm() {
         formData.append('description', description);
         if (coverImage) formData.append('coverImage', coverImage);
         if (bookFile) formData.append('bookFile', bookFile);
+
         authors.forEach((author, index) => {
             formData.append(`authors[${index}]`, author);
         });

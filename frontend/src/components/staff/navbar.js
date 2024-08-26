@@ -14,18 +14,13 @@ export default function NavBar() {
     const [menuOpen, setMenuOpen] = useState(false); // State for mobile menu toggle
     const [displayDropdownOpen, setDisplayDropdownOpen] = useState(false);
     const [username, setUsername] = useState('');
-    const { user, logout } = useAuth();
+    const { user } = useAuth();
 
     useEffect(() => {
         if (user) {
             setUsername(user.username);
         }
     }, [user]);
-
-    const handleSignOut = () => {
-        console.log("User signed out");
-        logout();
-    };
 
     // Construct the image URL
     const baseURL = 'http://localhost:5000/api/';

@@ -122,7 +122,7 @@ function App() {
         <Route path='/staff-editbook' element={<EditBook />} />
         <Route path='/staff-allbooks/description' element={<Book_Description />} />
         <Route path='/staff-settings' element={<Staff_Settings />} />
-        <Route path='/staff-profile' element={<Staff_Profile />} />
+        <Route path='/staff-profile/:username' element={<Staff_Profile />} />
         <Route path='/staff-writeinfo' element={<UserContent />} />
         <Route path='/novel-data' element={<NovelData />} />
         <Route path='/userbooks-data' element={<UserBooks />} />

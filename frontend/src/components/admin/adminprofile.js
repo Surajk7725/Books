@@ -5,7 +5,7 @@ import { FaYoutube, FaInstagram, FaTwitter, FaLinkedin, FaEnvelope, FaPhone } fr
 import axiosInstance from '../axiosInstance';
 
 const ProfilePage = () => {
-  const { username } = useParams(); 
+  const { username } = useParams();
   const [profileImage, setProfileImage] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -55,26 +55,28 @@ const ProfilePage = () => {
       </div>
 
       <div className="max-w-5xl mx-auto bg-white shadow-lg overflow-hidden min-h-[200px]">
-        {/* Profile Picture and Details Section */}
-        <div className="text-center flex flex-col items-center justify-center mt-10 mb-10">
-          <div className="relative w-32 h-32 rounded-full overflow-hidden border-4 border-black shadow-lg transform transition duration-500 hover:scale-105">
+
+        <div className="flex flex-col items-center justify-center py-10">
+          <div className="relative w-32 h-32 rounded-full overflow-hidden border-4 border-black shadow-lg transform transition-transform duration-500 hover:scale-105">
             <img src={profileImage} alt="Profile" className="w-full h-full object-cover" />
           </div>
-          <h1 className="mt-4 text-xl font-bold text-black">{fullName}</h1>
-          <p className="text-gray-600 bg-yellow-200 px-4 py-2 rounded-lg shadow-lg font-semibold inline-block transform transition duration-500 hover:scale-105 mt-2">{role}</p>
+          <h1 className="mt-4 text-2xl font-bold text-black">{fullName}</h1>
+          <p className="text-gray-700 bg-yellow-200 px-4 py-2 rounded-lg shadow-lg font-semibold inline-block transform transition-transform duration-500 hover:scale-105 mt-2">
+            {role}
+          </p>
         </div>
 
-        {/* Animated Buttons with Tooltips */}
-        <div className="p-4 text-center mb-4"> {/* Reduced margin-bottom to mb-4 */}
-          <div className="flex justify-center space-x-8">
+        {/* Contact Section */}
+        <div className="p-4 text-center">
+          <div className="flex justify-center space-x-6">
             <Tooltip title={email}>
-              <button className="flex items-center space-x-2 bg-blue-500 text-white px-4 py-2 rounded-full transform transition duration-500 hover:scale-105">
+              <button className="flex items-center space-x-2 bg-blue-500 text-white px-5 py-2 rounded-full transform transition-transform duration-500 hover:scale-105">
                 <FaEnvelope />
                 <span>Email Us</span>
               </button>
             </Tooltip>
             <Tooltip title={phone}>
-              <button className="flex items-center space-x-2 bg-green-500 text-white px-4 py-2 rounded-full transform transition duration-500 hover:scale-105">
+              <button className="flex items-center space-x-2 bg-green-500 text-white px-5 py-2 rounded-full transform transition-transform duration-500 hover:scale-105">
                 <FaPhone />
                 <span>Call Us</span>
               </button>
@@ -82,15 +84,25 @@ const ProfilePage = () => {
           </div>
         </div>
 
+        {/* Social Media Section */}
         <div className="p-4 text-center">
-          <h2 className="font-bold text-gray-700 mb-2">Follow me on</h2>
-          <div className="flex justify-center space-x-4">
-            <a href={socialMediaLinks.youtube || '#'} target="_blank" className="text-red-600"><FaYoutube size={24} /></a>
-            <a href={socialMediaLinks.instagram || '#'} target="_blank" className="text-pink-600"><FaInstagram size={24} /></a>
-            <a href={socialMediaLinks.twitter || '#'} target="_blank" className="text-blue-600"><FaTwitter size={24} /></a>
-            <a href={socialMediaLinks.linkedin || '#'} target="_blank" className="text-blue-700"><FaLinkedin size={24} /></a>
+          <h2 className="font-bold text-gray-700 mb-4">Follow me on</h2>
+          <div className="flex justify-center space-x-5">
+            <a href={socialMediaLinks.youtube || '#'} target="_blank" rel="noreferrer" className="text-red-600 transform transition-transform duration-500 hover:scale-110">
+              <FaYoutube size={28} />
+            </a>
+            <a href={socialMediaLinks.instagram || '#'} target="_blank" rel="noreferrer" className="text-pink-600 transform transition-transform duration-500 hover:scale-110">
+              <FaInstagram size={28} />
+            </a>
+            <a href={socialMediaLinks.twitter || '#'} target="_blank" rel="noreferrer" className="text-blue-600 transform transition-transform duration-500 hover:scale-110">
+              <FaTwitter size={28} />
+            </a>
+            <a href={socialMediaLinks.linkedin || '#'} target="_blank" rel="noreferrer" className="text-blue-700 transform transition-transform duration-500 hover:scale-110">
+              <FaLinkedin size={28} />
+            </a>
           </div>
         </div>
+
       </div>
     </div>
   );

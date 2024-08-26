@@ -60,7 +60,7 @@ const Books = () => {
       </div>
 
       {/* Search bar */}
-      <div className="fixed top-10 left-36 mr-14 flex items-center space-x-2 mt-48 md:mr-14 md:top-4 md:right-4 md:left-auto">
+      <div className="relative flex w-full justify-end items-center space-x-2">
         <input
           type="text"
           placeholder="Search books..."
@@ -70,6 +70,7 @@ const Books = () => {
         />
         <SearchIcon className="h-6 w-6 text-gray-500" />
       </div>
+
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-24">
         {/* Render books */}
@@ -103,9 +104,8 @@ const Books = () => {
             <li key={page}>
               <button
                 onClick={() => paginate(page + 1)}
-                className={`px-3 py-1 rounded-md ${
-                  currentPage === page + 1 ? 'bg-indigo-500 text-white' : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
-                }`}
+                className={`px-3 py-1 rounded-md ${currentPage === page + 1 ? 'bg-indigo-500 text-white' : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
+                  }`}
               >
                 {page + 1}
               </button>

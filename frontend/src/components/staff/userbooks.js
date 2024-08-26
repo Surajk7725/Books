@@ -1,37 +1,42 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Table, Image, Button } from 'antd';
-import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
+import { DeleteOutlined } from '@ant-design/icons';
 import NavBar from './navbar';
 import Footer from './footer';
-import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
+import axiosInstance from '../axiosInstance';
 import 'react-toastify/dist/ReactToastify.css';
 
-const sampleData = [
-    { id: 1, title: 'Book A', authors: ['Author 1'], genre: 'Fantasy', description: 'Description 1', coverImageUrl: 'https://via.placeholder.com/150', bookFile: 'file1.pdf' },
-    { id: 2, title: 'Book B', authors: ['Author 2'], genre: 'Romance', description: 'Description 2', coverImageUrl: 'https://via.placeholder.com/150', bookFile: 'file2.pdf' },
-    { id: 3, title: 'Book C', authors: ['Author 3'], genre: 'Science Fiction', description: 'Description 3', coverImageUrl: 'https://via.placeholder.com/150', bookFile: 'file3.pdf' },
-    { id: 4, title: 'Book D', authors: ['Author 4'], genre: 'Mystery', description: 'Description 4', coverImageUrl: 'https://via.placeholder.com/150', bookFile: 'file4.pdf' },
-    { id: 5, title: 'Book E', authors: ['Author 5'], genre: 'Horror', description: 'Description 5', coverImageUrl: 'https://via.placeholder.com/150', bookFile: 'file5.pdf' },
-    { id: 6, title: 'Book F', authors: ['Author 6'], genre: 'Biography', description: 'Description 6', coverImageUrl: 'https://via.placeholder.com/150', bookFile: 'file6.pdf' },
-    { id: 7, title: 'Book G', authors: ['Author 7'], genre: 'Thriller', description: 'Description 7', coverImageUrl: 'https://via.placeholder.com/150', bookFile: 'file7.pdf' },
-    { id: 8, title: 'Book H', authors: ['Author 8'], genre: 'Historical Fiction', description: 'Description 8', coverImageUrl: 'https://via.placeholder.com/150', bookFile: 'file8.pdf' },
-    { id: 9, title: 'Book I', authors: ['Author 9'], genre: 'Dystopian', description: 'Description 9', coverImageUrl: 'https://via.placeholder.com/150', bookFile: 'file9.pdf' },
-    { id: 10, title: 'Book J', authors: ['Author 10'], genre: 'Fantasy', description: 'Description 10', coverImageUrl: 'https://via.placeholder.com/150', bookFile: 'file10.pdf' },
-];
+const baseURL = 'http://localhost:5000/api/';
 
 const UserBooks = () => {
-    const [data, setData] = useState(sampleData);
+    const [data, setData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 5;
-    const navigate = useNavigate();
+
+    useEffect(() => {
+        axiosInstance.get('/books/user/display')
+            .then(response => {
+                if (response.data && Array.isArray(response.data)) {
+                    setData(response.data);
+                } else {
+                    setData([]);
+                    toast.error('Unexpected data format from the server.');
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+                setData([]);
+                toast.error('Failed to fetch data. Please try again later.');
+            });
+    }, []);
 
     const columns = [
         {
             title: 'Sr.No',
-            dataIndex: 'id',
-            key: 'id',
-            sorter: (a, b) => a.id - b.id,
+            key: 'srno',
+            render: (_, __, index) => currentPage * itemsPerPage - itemsPerPage + index + 1,
+            sorter: (a, b) => a._id.localeCompare(b._id),
         },
         {
             title: 'Title',
@@ -43,8 +48,8 @@ const UserBooks = () => {
             title: 'Author(s)',
             dataIndex: 'authors',
             key: 'authors',
-            render: authors => authors.join(', '),
-            sorter: (a, b) => a.authors[0].localeCompare(b.authors[0]),
+            render: (authors) => (Array.isArray(authors) ? authors.join(', ') : ''),
+            sorter: (a, b) => (a.authors[0] || '').localeCompare(b.authors[0] || ''),
         },
         {
             title: 'Genre',
@@ -59,15 +64,15 @@ const UserBooks = () => {
         },
         {
             title: 'Cover Image',
-            dataIndex: 'coverImageUrl',
-            key: 'coverImageUrl',
-            render: coverImageUrl => coverImageUrl ? <Image src={coverImageUrl} alt="cover" height={100} /> : 'No image',
+            dataIndex: 'coverImage',
+            key: 'coverImage',
+            render: coverImage => coverImage ? <Image src={`${baseURL}${coverImage.replace('\\', '/')}`} alt="cover" height={100} /> : 'No image',
         },
         {
             title: 'Book File',
             dataIndex: 'bookFile',
             key: 'bookFile',
-            render: bookFile => <a href={bookFile} target="_blank" rel="noopener noreferrer">View File</a>,
+            render: bookFile => bookFile ? <a href={`${baseURL}${bookFile.replace('\\', '/')}`} target="_blank" rel="noopener noreferrer">View File</a> : 'No file',
         },
         {
             title: 'Actions',
@@ -75,16 +80,8 @@ const UserBooks = () => {
             render: (_, record) => (
                 <div className="flex flex-col space-y-2">
                     <Button
-                        icon={<PlusOutlined />}
-                        onClick={() => navigate('/staff-addbook')}
-                        type="primary"
-                        className="w-full"
-                    >
-                        Add
-                    </Button>
-                    <Button
                         icon={<DeleteOutlined />}
-                        onClick={() => handleRemove(record.id)}
+                        onClick={() => handleRemove(record._id)}
                         danger
                         className="w-full"
                     >
@@ -92,7 +89,7 @@ const UserBooks = () => {
                     </Button>
                 </div>
             ),
-        },        
+        },
     ];
 
     const handleTableChange = (pagination) => {
@@ -100,37 +97,47 @@ const UserBooks = () => {
     };
 
     const handleRemove = (id) => {
-        setData(prevData => {
-            const newData = prevData.filter(item => item.id !== id);
-            if (newData.length === prevData.length) {
-                toast.error('Item not found');
-            } else {
-                toast.success('Successfully deleted');
-            }
-            return newData;
-        });
+        if (!id) {
+            toast.error('Invalid book ID');
+            return;
+        }
+    
+        axiosInstance.delete(`/books/delete/${id}`)
+            .then(response => {
+                if (response.status === 200) {
+                    setData(prevData => {
+                        const newData = prevData.filter(item => item._id !== id);
+                        toast.success('Successfully deleted');
+                        return newData;
+                    });
+                } else {
+                    toast.error('Failed to delete the book. Please try again.');
+                }
+            })
+            .catch(error => {
+                console.error('Error deleting book:', error);
+                toast.error('Error deleting the book. Please try again later.');
+            });
     };
-
+    
     return (
         <div className="min-h-screen bg-gray-100 flex flex-col">
-        <NavBar />
-        <main className="flex-grow mt-4 mb-4 md:mt-8 md:mb-8 px-4 md:px-0">
-            <div className="max-w-full md:max-w-6xl mx-auto bg-white p-4 md:p-8 rounded-lg shadow-md mb-6 md:mb-14 mt-4 md:mt-8 overflow-x-auto">
-                <h2 className="text-xl md:text-2xl font-bold mb-4 md:mb-6 text-gray-800">Book List</h2>
-                <Table
-                    dataSource={data}
-                    columns={columns}
-                    pagination={{ current: currentPage, pageSize: itemsPerPage, total: data.length }}
-                    onChange={handleTableChange}
-                    rowKey="id"
-                />
-            </div>
-        </main>
-        <Footer />
-        <ToastContainer />
-    </div>
-    
-
+            <NavBar />
+            <main className="flex-grow mt-4 mb-4 md:mt-8 md:mb-8 px-4 md:px-0">
+                <div className="max-w-full md:max-w-6xl mx-auto bg-white p-4 md:p-8 rounded-lg shadow-md mb-6 md:mb-14 mt-4 md:mt-8 overflow-x-auto">
+                    <h2 className="text-xl md:text-2xl font-bold mb-4 md:mb-6 text-gray-800">Book List</h2>
+                    <Table
+                        dataSource={data}
+                        columns={columns}
+                        pagination={{ current: currentPage, pageSize: itemsPerPage, total: data.length }}
+                        onChange={handleTableChange}
+                        rowKey="_id" // Ensure rowKey is _id
+                    />
+                </div>
+            </main>
+            <Footer />
+            <ToastContainer />
+        </div>
     );
 };
 

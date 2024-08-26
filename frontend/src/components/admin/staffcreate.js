@@ -67,7 +67,6 @@ const StaffCreate = () => {
 
       const professionalDetails = {
         jobTitle: values.jobTitle,
-        startDate: values.startDate,
         employeeId: values.employeeId,
       };
       formData.append('professionalDetails', JSON.stringify(professionalDetails));
@@ -165,9 +164,6 @@ const StaffCreate = () => {
           </Form.Item>
           <Form.Item label="Job Title" name="jobTitle" rules={[{ required: true, message: 'Please enter your job title' }]}>
             <Input />
-          </Form.Item>
-          <Form.Item label="Start Date" name="startDate" rules={[{ required: true, message: 'Please select your start date' }]}>
-            <DatePicker style={{ width: '100%' }} />
           </Form.Item>
           <Form.Item label="Employee ID" name="employeeID" rules={[{ required: true, message: 'Please enter your employee ID' }]}>
             <Input />

@@ -1,13 +1,13 @@
 import mongoose from 'mongoose';
 
 const bookCommentSchema = new mongoose.Schema({
-    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    username: { type: String, required: true },
-    comment: { type: String, required: true },
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User'},
+    username: { type: String},
+    comment: { type: String},
     replies: [{
-        user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-        username: { type: String, required: true },
-        comment: { type: String, required: true },
+        user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+        username: { type: String},
+        comment: { type: String},
         createdAt: { type: Date, default: Date.now }
     }],
     createdAt: { type: Date, default: Date.now }
@@ -15,8 +15,8 @@ const bookCommentSchema = new mongoose.Schema({
 
 const bookSchema = new mongoose.Schema({
     authors: [{ type: String, required: true }],
-    title: { type: String, required: true },
-    genre: { type: String, required: true },
+    title: { type: String},
+    genre: { type: String },
     category: { type: String },
     coverImage: { type: String, default: '' },
     coverImageUrl: { type: String, default: '' },
@@ -24,9 +24,9 @@ const bookSchema = new mongoose.Schema({
     isbn: { type: String },
     publisher: { type: String },
     language: { type: String},
-    description: { type: String, required: true },
+    description: { type: String },
     bookmarkedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-    user : { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    user : { type: mongoose.Schema.Types.ObjectId, ref: 'User'},
     addedByStaff: { type: Boolean, default: false },
     addedDate: { type: Date, default: Date.now },
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'Staff' }, // Added by a staff member
@@ -34,8 +34,8 @@ const bookSchema = new mongoose.Schema({
     deletedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'Staff' }, // Deleted by a staff member
     ratings: [{
         user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-        username: { type: String, required: true },
-        rating: { type: Number, required: true },
+        username: { type: String},
+        rating: { type: Number },
         comment: { type: String }
     }],
     bookComments: [bookCommentSchema]
