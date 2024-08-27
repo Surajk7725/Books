@@ -13,6 +13,7 @@ function BookForm() {
     const [description, setDescription] = useState('');
     const [coverImage, setCoverImage] = useState(null);
     const [bookFile, setBookFile] = useState(null);
+    const [category, setCategory] = useState('');
 
     const addAuthorField = () => {
         setAuthors([...authors, '']);
@@ -41,6 +42,7 @@ function BookForm() {
         formData.append('title', title);
         formData.append('genre', genre);
         formData.append('description', description);
+        formData.append('category', category);
         if (coverImage) formData.append('coverImage', coverImage);
         if (bookFile) formData.append('bookFile', bookFile);
 
@@ -55,7 +57,15 @@ function BookForm() {
                 }
             });
             toast.success('Book added successfully!');
-            console.log(response.data);
+
+            setTitle('');
+            setAuthors(['']);
+            setGenre('');
+            setCoverImage(null);
+            setDescription('');
+            setBookFile(null);
+            setCategory('');
+
         } catch (error) {
             toast.error('Error adding book. Please try again.');
             console.error('Error adding book:', error.response ? error.response.data : error.message);
@@ -124,10 +134,27 @@ function BookForm() {
                                 <option value="Biography">Biography</option>
                                 <option value="Horror">Horror</option>
                                 <option value="Science Fiction">Science Fiction</option>
+                                <option value="Education">Education</option>
                                 <option value="Mystery">Mystery</option>
                                 <option value="Thriller">Thriller</option>
                                 <option value="Historical Fiction">Historical Fiction</option>
                                 <option value="Dystopian">Dystopian</option>
+                            </select>
+                        </div>
+                        <div className="mb-4">
+                            <label className="block text-gray-700 font-bold mb-2" htmlFor="genre">
+                                Category
+                            </label>
+                            <select
+                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                id="category"
+                                value={category}
+                                onChange={(e) => setCategory(e.target.value)}
+                            >
+                                <option value="">Select a category</option>
+                                <option value="Kids">Kids</option>
+                                <option value="Popular">Popular</option>
+                                <option value="Academics">Academics</option>
                             </select>
                         </div>
                         <div className="mb-4">

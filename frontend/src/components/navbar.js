@@ -65,9 +65,9 @@ export default function NavBar() {
                         </button>
                         {booksDropdownOpen && (
                             <div className="absolute z-10 mt-2 w-48 bg-white text-black rounded-md shadow-lg">
-                                <Link to="/display-books/kids" className="block px-4 py-2 hover:bg-gray-100"> Kids</Link>
-                                <Link to="/display-books/popular" className="block px-4 py-2 hover:bg-gray-100">Popular</Link>
-                                <Link to="/display-books/academics" className="block px-4 py-2 hover:bg-gray-100">Academics</Link>
+                                <Link to="/display-books/Kids" className="block px-4 py-2 hover:bg-gray-100"> Kids</Link>
+                                <Link to="/display-books/Popular" className="block px-4 py-2 hover:bg-gray-100">Popular</Link>
+                                <Link to="/display-books/Academics" className="block px-4 py-2 hover:bg-gray-100">Academics</Link>
                             </div>
                         )}
                     </div>
@@ -148,9 +148,9 @@ export default function NavBar() {
                         </button>
                         {booksDropdownOpen && (
                             <div className="absolute left-0 mt-2 w-full bg-white text-black rounded-md shadow-lg">
-                                <Link to="/display-books/kids" className="block px-4 py-2 hover:bg-gray-100">Kids</Link>
-                                <Link to="/display-books/popular" className="block px-4 py-2 hover:bg-gray-100">Popular</Link>
-                                <Link to="/display-books/academics" className="block px-4 py-2 hover:bg-gray-100">Academics</Link>
+                                <Link to="/display-books/Kids" className="block px-4 py-2 hover:bg-gray-100">Kids</Link>
+                                <Link to="/display-books/Popular" className="block px-4 py-2 hover:bg-gray-100">Popular</Link>
+                                <Link to="/display-books/Academics" className="block px-4 py-2 hover:bg-gray-100">Academics</Link>
                             </div>
                         )}
                     </div>

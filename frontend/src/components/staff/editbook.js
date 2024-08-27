@@ -131,6 +131,7 @@ function EditBook({ match }) {
                                 <option value="Biography">Biography</option>
                                 <option value="Horror">Horror</option>
                                 <option value="Science Fiction">Science Fiction</option>
+                                <option value="Education">Education</option>
                                 <option value="Mystery">Mystery</option>
                                 <option value="Thriller">Thriller</option>
                                 <option value="Historical Fiction">Historical Fiction</option>

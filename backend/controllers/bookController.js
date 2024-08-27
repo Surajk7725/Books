@@ -76,16 +76,31 @@ export const addBookByUser = asyncHandler(async (request, response) => {
     response.status(201).json({ message: 'Book added successfully by user', book: createdBook });
 });
 
+// New function to update book as added by staff
+export const markBookAsAddedByStaff = asyncHandler(async (request, response) => {
+    const { bookId } = request.body; 
+
+    const book = await Book.findById(bookId);
+
+    if (!book) {
+        response.status(404);
+        throw new Error('Book not found');
+    }
+
+    book.addedByStaff = true;
+    const updatedBook = await book.save();
+    
+    response.status(200).json({ message: 'Book marked as added by staff', book: updatedBook });
+});
+
 
 // Edit Book
 export const editBook = asyncHandler(async (request, response) => {
-    uploadProfilePic(request, response, async (err) => {
-        if (err) {
-            return response.status(400).json({ message: 'Error uploading image', error: err });
-        }
-        const { bookTitle } = request.params; // Use bookTitle instead of id
+        const { bookTitle } = request.params; 
         const { authors, title, genre, category, isbn, publisher, language, description } = request.body;
-        const coverImage = request.file ? request.file.path : '';
+        
+        const coverImage = request.files?.coverImage ? request.files.coverImage[0].path : null;
+        const bookFile = request.files?.bookFile ? request.files.bookFile[0].path : null;
 
         // Find the book by title
         const book = await Book.findOne({ title: bookTitle });
@@ -107,14 +122,17 @@ export const editBook = asyncHandler(async (request, response) => {
         } else {
             response.status(404).json({ message: 'Book not found' });
         }
-    });
 });
 
 
 // Display All Books
 export const displayAllBooks = asyncHandler(async (request, response) => {
-    const books = await Book.find();
-    response.json(books);
+    try {
+        const books = await Book.find({ addedByStaff: true });
+        response.json(books);
+    } catch (error) {
+        response.status(500).json({ message: error.message });
+    }
 });
 
 
@@ -122,13 +140,13 @@ export const displayAllBooks = asyncHandler(async (request, response) => {
 export const displayBooksByCategory = asyncHandler(async (request, response) => {
     const { category } = request.params; 
 
-    const validCategories = ['kids', 'popular', 'academics'];
+    const validCategories = ['Kids', 'Popular', 'Academics'];
     if (!validCategories.includes(category)) {
         return response.status(400).json({ message: 'Invalid category provided.' });
     }
 
     try {
-        const books = await Book.find({ category });
+        const books = await Book.find({'category': category });
         response.json(books);
     } catch (error) {
         response.status(500).json({ message: 'Error fetching books by category.', error: error.message });
@@ -139,6 +157,7 @@ export const displayBooksByCategory = asyncHandler(async (request, response) => 
 // Display Particular Book
 export const displayParticularBook = asyncHandler(async (request, response) => {
     const { title } = request.params;
+
     const book = await Book.findOne({ title });
     if (book) {
         response.json(book);

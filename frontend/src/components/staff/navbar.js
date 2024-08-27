@@ -82,9 +82,9 @@ export default function NavBar() {
                                     </div>
                                     {displayDropdownOpen && (
                                         <div className="absolute left-full top-0 mt-2 w-48 bg-white text-black rounded-md shadow-lg">
-                                            <Link to="/staff-allbooks/kids" className="block px-4 py-2 hover:bg-gray-100">Kids</Link>
-                                            <Link to="/staff-allbooks/popular" className="block px-4 py-2 hover:bg-gray-100">Popular</Link>
-                                            <Link to="/staff-allbooks/academics" className="block px-4 py-2 hover:bg-gray-100">Academics</Link>
+                                            <Link to="/staff-allbooks/Kids" className="block px-4 py-2 hover:bg-gray-100">Kids</Link>
+                                            <Link to="/staff-allbooks/Popular" className="block px-4 py-2 hover:bg-gray-100">Popular</Link>
+                                            <Link to="/staff-allbooks/Academics" className="block px-4 py-2 hover:bg-gray-100">Academics</Link>
                                         </div>
                                     )}
                                 </div>
@@ -205,9 +205,9 @@ export default function NavBar() {
                                     </div>
                                     {displayDropdownOpen && (
                                         <div className="absolute left-full top-0 mt-2 w-48 bg-white text-black rounded-md shadow-lg">
-                                            <Link to="/staff-allbooks/kids" className="block px-4 py-2 hover:bg-gray-100">Kids</Link>
-                                            <Link to="/staff-allbooks/popular" className="block px-4 py-2 hover:bg-gray-100">Popular</Link>
-                                            <Link to="/staff-allbooks/academics" className="block px-4 py-2 hover:bg-gray-100">Academics</Link>
+                                            <Link to="/staff-allbooks/Kids" className="block px-4 py-2 hover:bg-gray-100">Kids</Link>
+                                            <Link to="/staff-allbooks/Popular" className="block px-4 py-2 hover:bg-gray-100">Popular</Link>
+                                            <Link to="/staff-allbooks/Academics" className="block px-4 py-2 hover:bg-gray-100">Academics</Link>
                                         </div>
                                     )}
                                 </div>

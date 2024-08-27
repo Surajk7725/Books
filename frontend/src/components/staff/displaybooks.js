@@ -1,43 +1,41 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { SearchIcon, PencilAltIcon, TrashIcon } from '@heroicons/react/outline';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import NavBar from '../staff/navbar';
 import Footer from './footer';
 import { useNavigate } from 'react-router-dom';
+import axiosInstance from '../axiosInstance';
 
-
-export const booksData = [
-  { id: 1, title: 'To Kill a Mockingbird', imageUrl: 'https://images.gr-assets.com/books/1553383690l/2657.jpg' },
-  { id: 2, title: '1984', imageUrl: 'https://images.gr-assets.com/books/1348990566l/5470.jpg' },
-  { id: 3, title: 'The Great Gatsby', imageUrl: 'https://images.gr-assets.com/books/1490528560l/4671.jpg' },
-  { id: 4, title: 'Pride and Prejudice', imageUrl: 'https://images.gr-assets.com/books/1320399351l/1885.jpg' },
-  { id: 5, title: 'The Catcher in the Rye', imageUrl: 'https://images.gr-assets.com/books/1398034300l/5107.jpg' },
-  { id: 6, title: 'The Lord of the Rings', imageUrl: 'https://images.gr-assets.com/books/1411114164l/33.jpg' },
-  { id: 7, title: 'The Hobbit', imageUrl: 'https://images.gr-assets.com/books/1546071216l/5907.jpg' },
-  { id: 8, title: 'Moby Dick', imageUrl: 'https://images.gr-assets.com/books/1327940656l/153747.jpg' },
-  { id: 9, title: 'War and Peace', imageUrl: 'https://images.gr-assets.com/books/1413215930l/656.jpg' },
-  { id: 10, title: 'The Odyssey', imageUrl: 'https://images.gr-assets.com/books/1390173285l/1381.jpg' },
-  { id: 11, title: 'Jane Eyre', imageUrl: 'https://images.gr-assets.com/books/1327867269l/10210.jpg' },
-  { id: 12, title: 'Wuthering Heights', imageUrl: 'https://images.gr-assets.com/books/1388212715l/6185.jpg' },
-  { id: 13, title: 'The Picture of Dorian Gray', imageUrl: 'https://images.gr-assets.com/books/1424596966l/5297.jpg' },
-  { id: 14, title: 'One Hundred Years of Solitude', imageUrl: 'https://images.gr-assets.com/books/1327881361l/320.jpg' },
-  { id: 15, title: 'The Hitchhiker\'s Guide to the Galaxy', imageUrl: 'https://images.gr-assets.com/books/1327656754l/11.jpg' },
-  { id: 16, title: 'The Alchemist', imageUrl: 'https://images.gr-assets.com/books/1483412266l/865.jpg' },
-  { id: 17, title: 'Catch-22', imageUrl: 'https://images.gr-assets.com/books/1359882576l/168668.jpg' },
-  { id: 18, title: 'Slaughterhouse-Five', imageUrl: 'https://images.gr-assets.com/books/1440319389l/4981.jpg' },
-  { id: 19, title: 'The Handmaid\'s Tale', imageUrl: 'https://images.gr-assets.com/books/1498057733l/38447.jpg' },
-];
-
+const baseURL = 'http://localhost:5000/api/';
 
 const All_Books = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
+  const [data, setData] = useState([]);
   const booksPerPage = 12;
   const navigate = useNavigate();
 
+  // Fetch books data from server on component mount
+  useEffect(() => {
+    axiosInstance.get('/books/display')
+      .then(response => {
+        if (response.data && Array.isArray(response.data)) {
+          setData(response.data);
+        } else {
+          setData([]);
+          toast.error('Unexpected data format from the server.');
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+        setData([]);
+        toast.error('Failed to fetch data. Please try again later.');
+      });
+  }, []);
+
   // Filtered books based on search term
-  const filteredBooks = booksData.filter(book =>
+  const filteredBooks = data.filter(book =>
     book.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -49,19 +47,45 @@ const All_Books = () => {
   // Change page
   const paginate = pageNumber => setCurrentPage(pageNumber);
 
-  const deleteBook = () => {
-    toast.success('Deleted Book Successfully');
+  const handleRemove = (id) => {
+    if (!id) {
+      toast.error('Invalid book ID');
+      return;
+    }
+
+    axiosInstance.delete(`/books/delete/${id}`)
+      .then(response => {
+        if (response.status === 200) {
+          setData(prevData => {
+            const newData = prevData.filter(item => item._id !== id);
+            toast.success('Successfully deleted');
+            return newData;
+          });
+        } else {
+          toast.error('Failed to delete the book. Please try again.');
+        }
+      })
+      .catch(error => {
+        console.error('Error deleting book:', error);
+        toast.error('Error deleting the book. Please try again later.');
+      });
   };
 
-  const editBook = () => {
-    navigate('/staff-editbook'); // Use navigate instead of history.push
+  const editBook = (title) => {
+    // Replace spaces with hyphens and convert to lowercase
+    const normalizedTitle = title.replace(/-/g, ' ');
+    navigate(`/staff-editbook/${normalizedTitle}`);
   };
 
-
+  const viewBook = (bookTitle) => {
+    const normalizedTitle = bookTitle.replace(/-/g, ' ');
+    navigate(`/staff-allbooks/${normalizedTitle}/description`);
+  };
 
   return (
     <div>
       <NavBar />
+      <ToastContainer />
       <div className="container mx-auto px-4 py-6 relative">
         {/* Search bar */}
         <div className="absolute top-4 right-4 flex items-center space-x-2">
@@ -75,43 +99,43 @@ const All_Books = () => {
           <SearchIcon className="h-6 w-6 text-gray-500" />
         </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-20">
-        {/* Render books */}
-        {currentBooks.map(book => (
-          <div key={book.id} className="max-w-sm rounded-lg overflow-hidden shadow-lg">
-            <div className="relative">
-              <img
-                alt={`Cover of ${book.title}`}
-                src={book.imageUrl}
-                className="w-full h-48 object-contain"
-              />
-              <div
-                className="absolute top-2 right-2 bg-white rounded-full p-1 cursor-pointer"
-                onClick={editBook}
-              >
-                <PencilAltIcon className="h-6 w-6 text-gray-500" />
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-20">
+          {/* Render books */}
+          {currentBooks.map(book => (
+            <div key={book._id} className="max-w-sm rounded-lg overflow-hidden shadow-lg">
+              <div className="relative">
+                <img
+                  alt={`Cover of ${book.title}`}
+                  src={book.coverImage ? `${baseURL}${book.coverImage.replace(/\\/g, '/')}` : 'default-image-path.jpg'}
+                  className="w-full h-48 object-contain"
+                />
+                <div
+                  className="absolute top-2 right-2 bg-white rounded-full p-1 cursor-pointer"
+                  onClick={() => editBook(book.title)}
+                >
+                  <PencilAltIcon className="h-6 w-6 text-gray-500" />
+                </div>
+                <div
+                  className="absolute top-10 right-2 bg-white rounded-full p-1 cursor-pointer"
+                  onClick={() => handleRemove(book._id)}
+                >
+                  <TrashIcon className="h-6 w-6 text-gray-500" />
+                </div>
               </div>
-              <div
-                className="absolute top-10 right-2 bg-white rounded-full p-1 cursor-pointer"
-                onClick={deleteBook}
-              >
-                <TrashIcon className="h-6 w-6 text-gray-500" />
+              <div className="px-6 py-4">
+                <div className="font-bold text-xl mb-2 text-center">{book.title}</div>
+                <div className="flex justify-center">
+                  <button
+                    className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded transition-colors duration-300"
+                    onClick={() => viewBook(book.title)}
+                  >
+                    View Book
+                  </button>
+                </div>
               </div>
-              <ToastContainer />
             </div>
-            <div className="px-6 py-4">
-              <div className="font-bold text-xl mb-2 text-center">{book.title}</div>
-              <div className="flex justify-center">
-                <button className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded transition-colors duration-300">
-                  View Book
-                </button>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-
-
+          ))}
+        </div>
 
         {/* Pagination */}
         <div className="mt-6">

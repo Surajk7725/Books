@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Image, Button } from 'antd';
-import { DeleteOutlined } from '@ant-design/icons';
+import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import NavBar from './navbar';
 import Footer from './footer';
 import { toast, ToastContainer } from 'react-toastify';
@@ -30,6 +30,52 @@ const UserBooks = () => {
                 toast.error('Failed to fetch data. Please try again later.');
             });
     }, []);
+
+    const handleAddByStaff = (id) => {
+        axiosInstance.post('/books/user2staff-books', { bookId: id })
+            .then(response => {
+                if (response.status === 200) {
+                    setData(prevData => prevData.map(book => {
+                        if (book._id === id) {
+                            return { ...book, addedByStaff: true };
+                        }
+                        return book;
+                    }));
+                    toast.success('Book successfully marked as added by staff');
+                } else {
+                    toast.error('Failed to mark the book as added by staff.');
+                }
+            })
+            .catch(error => {
+                console.error('Error marking book as added by staff:', error);
+                toast.error('Error occurred. Please try again later.');
+            });
+    };
+
+    const handleRemove = (id) => {
+        if (!id) {
+            toast.error('Invalid book ID');
+            return;
+        }
+    
+        axiosInstance.delete(`/books/delete/${id}`)
+            .then(response => {
+                if (response.status === 200) {
+                    setData(prevData => {
+                        const newData = prevData.filter(item => item._id !== id);
+                        toast.success('Successfully deleted');
+                        return newData;
+                    });
+                } else {
+                    toast.error('Failed to delete the book. Please try again.');
+                }
+            })
+            .catch(error => {
+                console.error('Error deleting book:', error);
+                toast.error('Error deleting the book. Please try again later.');
+            });
+    };
+
 
     const columns = [
         {
@@ -79,6 +125,15 @@ const UserBooks = () => {
             key: 'actions',
             render: (_, record) => (
                 <div className="flex flex-col space-y-2">
+                     <Button
+                        icon={<PlusOutlined />}
+                        type="primary"
+                        className="w-full"
+                        onClick={() => handleAddByStaff(record._id)}
+                        disabled={record.addedByStaff} 
+                    >
+                        Add
+                    </Button>
                     <Button
                         icon={<DeleteOutlined />}
                         onClick={() => handleRemove(record._id)}
@@ -96,29 +151,6 @@ const UserBooks = () => {
         setCurrentPage(pagination.current);
     };
 
-    const handleRemove = (id) => {
-        if (!id) {
-            toast.error('Invalid book ID');
-            return;
-        }
-    
-        axiosInstance.delete(`/books/delete/${id}`)
-            .then(response => {
-                if (response.status === 200) {
-                    setData(prevData => {
-                        const newData = prevData.filter(item => item._id !== id);
-                        toast.success('Successfully deleted');
-                        return newData;
-                    });
-                } else {
-                    toast.error('Failed to delete the book. Please try again.');
-                }
-            })
-            .catch(error => {
-                console.error('Error deleting book:', error);
-                toast.error('Error deleting the book. Please try again later.');
-            });
-    };
     
     return (
         <div className="min-h-screen bg-gray-100 flex flex-col">
@@ -131,7 +163,7 @@ const UserBooks = () => {
                         columns={columns}
                         pagination={{ current: currentPage, pageSize: itemsPerPage, total: data.length }}
                         onChange={handleTableChange}
-                        rowKey="_id" // Ensure rowKey is _id
+                        rowKey="_id"
                     />
                 </div>
             </main>

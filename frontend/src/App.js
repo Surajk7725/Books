@@ -96,10 +96,10 @@ function App() {
         <Route element={<ProtectedRoute allowedRoles={['user']} />}>
         <Route path="/home" element={<Home />} />
         <Route path="/display-books" element={<AllBooks bookmarkedBooks={bookmarkedBooks} toggleBookmark={toggleBookmark} />} />
-        <Route path="/display-books/description" element={<BookDescription />} />
-        <Route path="/display-books/kids" element={<KidsBooks bookmarkedBooks={bookmarkedBooks} toggleBookmark={toggleBookmark} />} />
-        <Route path="/display-books/popular" element={<PopularBooks bookmarkedBooks={bookmarkedBooks} toggleBookmark={toggleBookmark} />} />
-        <Route path="/display-books/academics" element={<AcademicBooks bookmarkedBooks={bookmarkedBooks} toggleBookmark={toggleBookmark} />} />
+        <Route path="/display-books/:title/description" element={<BookDescription />} />
+        <Route path="/display-books/Kids" element={<KidsBooks bookmarkedBooks={bookmarkedBooks} toggleBookmark={toggleBookmark} />} />
+        <Route path="/display-books/Popular" element={<PopularBooks bookmarkedBooks={bookmarkedBooks} toggleBookmark={toggleBookmark} />} />
+        <Route path="/display-books/Academics" element={<AcademicBooks bookmarkedBooks={bookmarkedBooks} toggleBookmark={toggleBookmark} />} />
         <Route path="/display-books/rating" element={<Rating />} />
         <Route path="/my-wishlist" element={<MyWishlist bookmarkedBooks={bookmarkedBooks} toggleBookmark={toggleBookmark} />} />
         <Route path="/user-addbook" element={<BookForm />} />
@@ -115,12 +115,12 @@ function App() {
         <Route element={<ProtectedRoute allowedRoles={['staff']} />}>
         <Route path='/staff-home' element={<Staff_home />} />
         <Route path='/staff-allbooks' element={<All_Books />} />
-        <Route path='/staff-allbooks/kids' element={<Kids_Books />} />
-        <Route path='/staff-allbooks/popular' element={<Popular_Books />} />
-        <Route path='/staff-allbooks/academics' element={<Academic_Books />} />
+        <Route path='/staff-allbooks/Kids' element={<Kids_Books />} />
+        <Route path='/staff-allbooks/Popular' element={<Popular_Books />} />
+        <Route path='/staff-allbooks/Academics' element={<Academic_Books />} />
         <Route path='/staff-addbook' element={<AddBook />} />
-        <Route path='/staff-editbook' element={<EditBook />} />
-        <Route path='/staff-allbooks/description' element={<Book_Description />} />
+        <Route path='/staff-editbook/:title' element={<EditBook />} />
+        <Route path='/staff-allbooks/:title/description' element={<Book_Description />} />
         <Route path='/staff-settings' element={<Staff_Settings />} />
         <Route path='/staff-profile/:username' element={<Staff_Profile />} />
         <Route path='/staff-writeinfo' element={<UserContent />} />
@@ -149,7 +149,7 @@ function App() {
           <Route path='admin-display' element={<AdminDisplay />} />
           <Route path='staff-display' element={<StaffDisplay />} />
           <Route path='books' element={<Books />} />
-          <Route path='books/view' element={<ViewBook />} />
+          <Route path='books/view/:title' element={<ViewBook />} />
           <Route path='user-display/view' element={<ViewUser />} />
           <Route path='staff-display/view' element={<ViewStaff />} />
  

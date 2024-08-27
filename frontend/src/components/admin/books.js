@@ -1,42 +1,42 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Breadcrumb } from 'antd';
 import { Link } from 'react-router-dom';
 import { SearchIcon } from '@heroicons/react/outline';
+import axiosInstance from '../axiosInstance';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from 'react-router-dom';
 
-// Sample books data
-const booksData = [
-  { id: 1, title: 'To Kill a Mockingbird', imageUrl: 'https://images.gr-assets.com/books/1553383690l/2657.jpg' },
-  { id: 2, title: '1984', imageUrl: 'https://images.gr-assets.com/books/1348990566l/5470.jpg' },
-  { id: 3, title: 'The Great Gatsby', imageUrl: 'https://images.gr-assets.com/books/1490528560l/4671.jpg' },
-  { id: 4, title: 'Pride and Prejudice', imageUrl: 'https://images.gr-assets.com/books/1320399351l/1885.jpg' },
-  { id: 5, title: 'The Catcher in the Rye', imageUrl: 'https://images.gr-assets.com/books/1398034300l/5107.jpg' },
-  { id: 6, title: 'The Lord of the Rings', imageUrl: 'https://images.gr-assets.com/books/1411114164l/33.jpg' },
-  { id: 7, title: 'The Hobbit', imageUrl: 'https://images.gr-assets.com/books/1546071216l/5907.jpg' },
-  { id: 8, title: 'Moby Dick', imageUrl: 'https://images.gr-assets.com/books/1327940656l/153747.jpg' },
-  { id: 9, title: 'War and Peace', imageUrl: 'https://images.gr-assets.com/books/1413215930l/656.jpg' },
-  { id: 10, title: 'The Odyssey', imageUrl: 'https://images.gr-assets.com/books/1390173285l/1381.jpg' },
-  { id: 11, title: 'Jane Eyre', imageUrl: 'https://images.gr-assets.com/books/1327867269l/10210.jpg' },
-  { id: 12, title: 'Wuthering Heights', imageUrl: 'https://images.gr-assets.com/books/1388212715l/6185.jpg' },
-  { id: 13, title: 'The Picture of Dorian Gray', imageUrl: 'https://images.gr-assets.com/books/1424596966l/5297.jpg' },
-  { id: 14, title: 'One Hundred Years of Solitude', imageUrl: 'https://images.gr-assets.com/books/1327881361l/320.jpg' },
-  { id: 15, title: 'The Hitchhiker\'s Guide to the Galaxy', imageUrl: 'https://images.gr-assets.com/books/1327656754l/11.jpg' },
-  { id: 16, title: 'The Alchemist', imageUrl: 'https://images.gr-assets.com/books/1483412266l/865.jpg' },
-  { id: 17, title: 'Catch-22', imageUrl: 'https://images.gr-assets.com/books/1359882576l/168668.jpg' },
-  { id: 18, title: 'Slaughterhouse-Five', imageUrl: 'https://images.gr-assets.com/books/1440319389l/4981.jpg' },
-  { id: 19, title: 'The Handmaid\'s Tale', imageUrl: 'https://images.gr-assets.com/books/1498057733l/38447.jpg' },
-];
+const baseURL = 'http://localhost:5000/api/';
 
 const Books = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
+  const [data, setData] = useState([]);
   const booksPerPage = 12;
+  const navigate = useNavigate();
+
+  // Fetch books data from server on component mount
+  useEffect(() => {
+    axiosInstance.get('/books/display')
+      .then(response => {
+        if (response.data && Array.isArray(response.data)) {
+          setData(response.data);
+        } else {
+          setData([]);
+          toast.error('Unexpected data format from the server.');
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+        setData([]);
+        toast.error('Failed to fetch data. Please try again later.');
+      });
+  }, []);
 
   // Filtered books based on search term
-  const filteredBooks = useMemo(
-    () => booksData.filter(book =>
-      book.title.toLowerCase().includes(searchTerm.toLowerCase())
-    ),
-    [searchTerm]
+  const filteredBooks = data.filter(book =>
+    book.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   // Calculate pagination based on filtered books
@@ -47,8 +47,15 @@ const Books = () => {
   // Change page
   const paginate = pageNumber => setCurrentPage(pageNumber);
 
+  const viewBook = (bookTitle) => {
+    const formattedTitle = bookTitle.replace(/\s+/g, '-').toLowerCase();
+    navigate(`/admin/books/view/${formattedTitle}`);
+  };
+
+
   return (
     <div className="justify-center items-center min-h-screen mb-2 ml-2 mt-4 md:ml-10">
+      <ToastContainer />
       <div className="text-start -mt-4 mb-8">
         <div className="bg-white p-4 rounded-lg shadow-md mb-6 flex flex-col md:flex-row justify-between items-center">
           <h1 className="text-2xl font-bold text-gray-800 ml-4 mb-4 md:mb-0">Books</h1>
@@ -75,12 +82,12 @@ const Books = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-24">
         {/* Render books */}
         {currentBooks.map(book => (
-          <div key={book.id} className="max-w-sm rounded-lg overflow-hidden shadow-lg">
+          <div key={book._id} className="max-w-sm rounded-lg overflow-hidden shadow-lg">
             <div className="relative">
               <img
                 alt={`Cover of ${book.title}`}
-                src={book.imageUrl}
-                className="w-full h-48 object-cover"
+                src={book.coverImage ? `${baseURL}${book.coverImage.replace(/\\/g, '/')}` : 'default-image-path.jpg'}
+                className="w-full h-48 object-contain"
               />
             </div>
             <div className="px-6 py-4">
@@ -88,6 +95,7 @@ const Books = () => {
               <div className="flex justify-center">
                 <button
                   className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded transition-colors duration-300"
+                  onClick={() => viewBook(book.title)}
                 >
                   View Book
                 </button>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { PlusCircleIcon } from '@heroicons/react/outline';
 import NavBar from '../staff/navbar';
 import Footer from './footer';
@@ -39,6 +39,10 @@ function AddBook() {
         setBookFile(file);
     };
 
+    // Refs for file inputs
+    const coverImageInputRef = useRef(null);
+    const bookFileInputRef = useRef(null);
+
     const handleFormSubmit = async (e) => {
         e.preventDefault();
         
@@ -66,6 +70,7 @@ function AddBook() {
             });
 
             toast.success(response.data.message);
+
             // Reset form fields
             setTitle('');
             setAuthors(['']);
@@ -78,6 +83,11 @@ function AddBook() {
             setPublisher('');
             setLanguage('');
             setDescription('');
+
+             // Clear file input values
+             if (coverImageInputRef.current) coverImageInputRef.current.value = '';
+             if (bookFileInputRef.current) bookFileInputRef.current.value = '';
+
         } catch (error) {
             toast.error(error.response?.data?.message || 'Error adding book.');
         }
@@ -145,6 +155,7 @@ function AddBook() {
                                 <option value="Biography">Biography</option>
                                 <option value="Horror">Horror</option>
                                 <option value="Science Fiction">Science Fiction</option>
+                                <option value="Education">Education</option>
                                 <option value="Mystery">Mystery</option>
                                 <option value="Thriller">Thriller</option>
                                 <option value="Historical Fiction">Historical Fiction</option>
@@ -180,7 +191,6 @@ function AddBook() {
                                 placeholder="Enter ISBN"
                                 value={isbn}
                                 onChange={(e) => setIsbn(e.target.value)}
-                                required
                             />
                         </div>
 
@@ -240,6 +250,7 @@ function AddBook() {
                                     type="file"
                                     accept="image/*"
                                     onChange={handleImageUpload}
+                                    ref={coverImageInputRef}
                                 />
                                 <span className="text-gray-500">or</span>
                                 <input
@@ -261,6 +272,7 @@ function AddBook() {
                                 id="bookFile"
                                 type="file"
                                 onChange={handleBookFileUpload}
+                                ref={bookFileInputRef}
                                 accept=".pdf,.doc,.docx"
                                 required
                             />
