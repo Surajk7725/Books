@@ -51,7 +51,7 @@ const UserEdit = ({ userData }) => {
             if (key === 'profilePic' && values[key]?.file) {
                 formData.append(key, values[key].file);
             } else if (key === 'dob') {
-                formData.append(key, values[key] ? values[key].format('YYYY-MM-DD') : '');
+                formData.append(key, values[key] ? values[key].format('DD-MM-YYYY') : '');
             } else if (['linkedin', 'instagram', 'twitter', 'youtube'].includes(key)) {
                 // Do not append individual social links, handled by socialLinks
             } else {
@@ -111,10 +111,7 @@ const UserEdit = ({ userData }) => {
             <Input />
           </Form.Item>
           <Form.Item label="Date of Birth" name="dob" rules={[{ required: true, message: 'Please select your date of birth' }]}>
-            <DatePicker format="YYYY-MM-DD" />
-          </Form.Item>
-          <Form.Item label="Password" name="password" rules={[{ required: true, message: 'Please enter your password' }]}>
-            <Input.Password />
+            <DatePicker format="DD-MM-YYYY" />
           </Form.Item>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Form.Item label="LinkedIn" name="linkedin">

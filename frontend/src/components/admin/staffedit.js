@@ -128,7 +128,7 @@ const StaffEdit = ({ staffData }) => {
             if (key === 'profilePic' && values[key]?.file) {
                 formData.append(key, values[key].file);
             }else if (key === 'dob') {
-              formData.append(key, values[key] ? values[key].format('YYYY-MM-DD') : '');
+              formData.append(key, values[key] ? values[key].format('DD-MM-YYYY') : '');
              } 
             else if (['linkedin', 'instagram', 'twitter', 'youtube'].includes(key)) {
                 // Do not append individual social links, handled by socialLinks
@@ -181,19 +181,16 @@ const StaffEdit = ({ staffData }) => {
               <Input />
             </Form.Item>
           </div>
-          <Form.Item label="Password" name="password" rules={[{ required: true, message: 'Please enter a password' }]}>
-            <Input.Password />
-          </Form.Item>
           <Form.Item label="Address" name="address" rules={[{ required: true, message: 'Please enter your address' }]}>
             <Input />
           </Form.Item>
           <Form.Item label="Date of Birth" name="dob" rules={[{ required: true, message: 'Please select your date of birth' }]}>
-             <DatePicker format="YYYY-MM-DD" />
+             <DatePicker format="DD-MM-YYYY" />
           </Form.Item>
           <Form.Item label="Job Title" name="jobTitle" rules={[{ required: true, message: 'Please enter your job title' }]}>
             <Input />
           </Form.Item>
-          <Form.Item label="Employee ID" name="employeeID" rules={[{ required: true, message: 'Please enter your employee ID' }]}>
+          <Form.Item label="Employee Id" name="employeeId" rules={[{ required: true, message: 'Please enter your employee ID' }]}>
             <Input />
           </Form.Item>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

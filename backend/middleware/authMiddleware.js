@@ -22,7 +22,6 @@ const authMiddleware = async (request, response, next) => {
 
         request.user = user;
         request.role = decoded.role;
-        console.log('User authenticated:', user); 
 
         next();
     } catch (error) {

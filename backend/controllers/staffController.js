@@ -74,7 +74,6 @@ export const editStaff = asyncHandler(async (request, response) => {
       const {
         fullName,
         email,
-        password,
         phoneNumber,
         dob,
         address,
@@ -94,31 +93,27 @@ export const editStaff = asyncHandler(async (request, response) => {
           return response.status(404).json({ message: 'Staff not found' });
         }
   
+        // Parsing JSON strings if they are provided in the request body
         const parsedSocialMediaLinks = socialMediaLinks ? JSON.parse(socialMediaLinks) : existingStaff.socialMediaLinks;
         const parsedProfessionalDetails = professionalDetails ? JSON.parse(professionalDetails) : existingStaff.professionalDetails;
         const parsedQualifications = qualifications ? JSON.parse(qualifications) : existingStaff.qualifications;
         const parsedWorkExperience = workExperience ? JSON.parse(workExperience) : existingStaff.workExperience;
         const parsedSkills = skills ? JSON.parse(skills) : existingStaff.skills;
   
+        // Update data only with provided fields, else retain the existing value
         const updateData = {
-          fullName: fullName || existingStaff.fullName,
-          email: email || existingStaff.email,
-          phoneNumber: phoneNumber || existingStaff.phoneNumber,
-          dob: dob || existingStaff.dob,
-          address: address || existingStaff.address,
+          ...(fullName && { fullName }),
+          ...(email && { email }),
+          ...(phoneNumber && { phoneNumber }),
+          ...(dob && { dob }),
+          ...(address && { address }),
+          ...(profilePic && { profilePic }),
           socialMediaLinks: parsedSocialMediaLinks,
           professionalDetails: parsedProfessionalDetails,
           qualifications: parsedQualifications,
           workExperience: parsedWorkExperience,
           skills: parsedSkills,
-          profilePic: profilePic || existingStaff.profilePic,
         };
-  
-        if (password) {
-          const salt = await bcrypt.genSalt(12);
-          const hashedPassword = await bcrypt.hash(password, salt);
-          updateData.password = hashedPassword;
-        }
   
         const updatedStaff = await Staff.findOneAndUpdate({ username }, updateData, { new: true });
   
@@ -132,6 +127,7 @@ export const editStaff = asyncHandler(async (request, response) => {
       }
     });
   });
+  
   
 
 // Display all Staff

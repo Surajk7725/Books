@@ -1,27 +1,21 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { MenuAlt1Icon, UserCircleIcon, LockClosedIcon, BookOpenIcon, LogoutIcon } from '@heroicons/react/outline';
 import Footer from './footer';
 import { FaLinkedin, FaInstagram, FaTwitter, FaYoutube } from 'react-icons/fa';
 import { PlusOutlined } from '@ant-design/icons';
 import { Image, Upload, DatePicker, Select } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import axiosInstance from '../axiosInstance';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useAuth } from '../authcontext';
+import moment from 'moment';
 
 const { Option } = Select;
 
 const Staff_Settings = () => {
   const navigate = useNavigate();
   const [selectedSection, setSelectedSection] = useState('account');
-
-  const [passwordDetails, setPasswordDetails] = useState({
-    oldPassword: '',
-    newPassword: '',
-    confirmPassword: '',
-  });
-
-  const handlePasswordChange = (e) => {
-    const { name, value } = e.target;
-    setPasswordDetails((prevDetails) => ({ ...prevDetails, [name]: value }));
-  };
 
   const handleSectionClick = (section) => {
     setSelectedSection(section);
@@ -35,12 +29,63 @@ const Staff_Settings = () => {
     navigate('/');
   };
 
-  const handlePasswordSubmit = (e) => {
-    e.preventDefault();
-    console.log('Password details:', passwordDetails);
-    // Implement your password update logic here
+  // Fetching username from login page
+  const [username, setUserName] = useState('');
+  const { user } = useAuth();
+
+  useEffect(() => {
+    if (user && user.username) {
+      setUserName(user.username);
+      setFullName(user.fullName);
+      setEmail(user.email);
+      setAddress(user.address);
+      setPhoneNumber(user.phoneNumber);
+    }
+  }, [user]);
+
+
+  // Security
+  const [passwordDetails, setPasswordDetails] = useState({
+    oldPassword: '',
+    newPassword: '',
+    confirmPassword: '',
+  });
+
+  const handlePasswordChange = (e) => {
+    const { name, value } = e.target;
+    setPasswordDetails((prevDetails) => ({
+      ...prevDetails,
+      [name]: value,
+    }));
   };
 
+
+  const handlePasswordSubmit = async (e) => {
+    e.preventDefault();
+
+    if (passwordDetails.newPassword !== passwordDetails.confirmPassword) {
+      toast.error('New password and confirm password do not match.');
+      return;
+    }
+
+    try {
+      const response = await axiosInstance.put(`/staff/update-password/${username}`, {
+        oldPassword: passwordDetails.oldPassword,
+        newPassword: passwordDetails.newPassword
+      }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      if (response.status === 200) {
+        toast.success('Password updated successfully');
+        navigate("/login")
+      }
+    } catch (error) {
+      console.error('Error updating password:', error);
+      toast.error('Failed to update password. Please try again.');
+    }
+  };
 
   // For Book Categories
   const genres = [
@@ -141,26 +186,106 @@ const Staff_Settings = () => {
   const [fileList, setFileList] = useState([]);
   const [profileImage, setProfileImage] = useState(null);
   const [fullName, setFullName] = useState('');
-  const [userName, setUserName] = useState('');
   const [dob, setDob] = useState(null);
   const [email, setEmail] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [houseAddress, setHouseAddress] = useState('');
+  const [address, setAddress] = useState('');
   const [socialLinks, setSocialLinks] = useState({ youtube: '', instagram: '', twitter: '', linkedin: '' });
   const [jobTitle, setJobTitle] = useState('');
-  const [employeeID, setEmployeeID] = useState('');
+  const [employeeId, setEmployeeId] = useState('');
   const [highestEducation, setHighestEducation] = useState('');
   const [degrees, setDegrees] = useState('');
-  const [affiliations, setAffiliations] = useState('');
-  const [workExperience, setWorkExperience] = useState('');
+  const [professionalAffiliations, setProfessionalAffiliations] = useState('');
+  const [previousPosition, setPreviousPosition] = useState('');
   const [yearsExperience, setYearsExperience] = useState('');
   const [languagesSpoken, setLanguagesSpoken] = useState([]);
   const [computerSkills, setComputerSkills] = useState([]);
 
   const onChange = (date, dateString) => {
-    setDob(date);
+    setDob(date); 
     console.log(date, dateString);
   };
+
+  const handleFinish = async (e) => {
+    e.preventDefault();
+    try {
+      // Fetch existing data
+      const { data: existingData } = await axiosInstance.get(`/staff/display/${username}`);
+
+      const formData = new FormData();
+
+      // Merge social media links
+      const updatedSocialLinks = {
+        ...existingData.socialMediaLinks,
+        ...Object.fromEntries(Object.entries(socialLinks).filter(([key, value]) => value)),
+      };
+      if (Object.keys(updatedSocialLinks).length > 0) {
+        formData.append('socialMediaLinks', JSON.stringify(updatedSocialLinks));
+      }
+
+      // Merge professional details
+      const updatedProfessionalDetails = {
+        ...existingData.professionalDetails,
+        jobTitle: jobTitle || existingData.professionalDetails.jobTitle,
+        employeeId: employeeId || existingData.professionalDetails.employeeId,
+      };
+      formData.append('professionalDetails', JSON.stringify(updatedProfessionalDetails));
+
+      // Merge qualifications
+      const updatedQualifications = {
+        ...existingData.qualifications,
+        highestEducation: highestEducation || existingData.qualifications.highestEducation,
+        degrees: degrees || existingData.qualifications.degrees,
+        professionalAffiliations: professionalAffiliations || existingData.qualifications.professionalAffiliations,
+      };
+      formData.append('qualifications', JSON.stringify(updatedQualifications));
+
+      // Merge work experience
+      const updatedWorkExperience = {
+        ...existingData.workExperience,
+        previousPosition: previousPosition || existingData.workExperience.previousPosition,
+        yearsExperience: yearsExperience || existingData.workExperience.yearsExperience,
+      };
+      formData.append('workExperience', JSON.stringify(updatedWorkExperience));
+
+      // Merge skills
+      const updatedSkills = {
+        ...existingData.skills,
+        languagesSpoken: languagesSpoken.length > 0 ? languagesSpoken : existingData.skills.languagesSpoken,
+        computerSkills: computerSkills.length > 0 ? computerSkills : existingData.skills.computerSkills,
+      };
+      formData.append('skills', JSON.stringify(updatedSkills));
+
+      // Append other fields only if they are filled
+      formData.append('fullName', fullName || existingData.fullName);
+      formData.append('username', username);
+      const formattedDob = dob ? dob.format('DD-MM-YYYY') : existingData.dob;
+      formData.append('dob', formattedDob);
+      formData.append('email', email || existingData.email);
+      formData.append('phoneNumber', phoneNumber || existingData.phoneNumber);
+      formData.append('address', address || existingData.address);
+
+      // Append profile picture if available
+      if (fileList.length > 0) {
+        const file = fileList[0].originFileObj || fileList[0];
+        formData.append('profilePic', file);
+      }
+
+      await axiosInstance.put(`/staff/update/${username}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      toast.success('Staff data updated successfully');
+      navigate("/login");
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      toast.error(`Error updating staff data: ${error.response?.data?.message || 'Something went wrong'}`);
+    }
+  };
+
+
 
   const fileInputRef = useRef(null);
 
@@ -252,7 +377,7 @@ const Staff_Settings = () => {
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
       <div className="flex flex-col lg:flex-row">
-
+        <ToastContainer />
         <div className="w-full lg:w-64 bg-white text-black p-4 sm:p-6 lg:p-8">
           <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Settings</h2>
 
@@ -326,7 +451,7 @@ const Staff_Settings = () => {
                   </div>
                 </div>
 
-                <form className="flex-1">
+                <form className="flex-1" onSubmit={handleFinish}>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="col-span-1">
                       <label className="block text-gray-700">Full Name</label>
@@ -342,13 +467,19 @@ const Staff_Settings = () => {
                       <input
                         type="text"
                         className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
-                        value={userName}
+                        value={username}
+                        readOnly
                         onChange={(e) => setUserName(e.target.value)}
                       />
                     </div>
                     <div className="col-span-1">
                       <label className="block text-gray-700">Date of Birth</label>
-                      <DatePicker onChange={onChange} value={dob} className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md" />
+                      <DatePicker
+                        onChange={onChange}
+                        value={dob}  
+                        className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
+                        format="DD-MM-YYYY"
+                      />
                     </div>
                     <div className="col-span-1">
                       <label className="block text-gray-700">Email Address</label>
@@ -373,8 +504,8 @@ const Staff_Settings = () => {
                       <input
                         type="text"
                         className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
-                        value={houseAddress}
-                        onChange={(e) => setHouseAddress(e.target.value)}
+                        value={address}
+                        onChange={(e) => setAddress(e.target.value)}
                       />
                     </div>
                   </div>
@@ -391,12 +522,12 @@ const Staff_Settings = () => {
                       />
                     </div>
                     <div className="col-span-1">
-                      <label className="block text-gray-700">Employee ID or Code</label>
+                      <label className="block text-gray-700">Employee ID</label>
                       <input
                         type="text"
                         className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
-                        value={employeeID}
-                        onChange={(e) => setEmployeeID(e.target.value)}
+                        value={employeeId}
+                        onChange={(e) => setEmployeeId(e.target.value)}
                       />
                     </div>
                   </div>
@@ -437,8 +568,8 @@ const Staff_Settings = () => {
                       <label className="block text-gray-700">Professional Affiliations</label>
                       <select
                         className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
-                        value={affiliations}
-                        onChange={(e) => setAffiliations(e.target.value)}
+                        value={professionalAffiliations}
+                        onChange={(e) => setProfessionalAffiliations(e.target.value)}
                       >
                         <option value=""></option>
                         <option value="ALA (American Library Association)">ALA (American Library Association)</option>
@@ -457,8 +588,8 @@ const Staff_Settings = () => {
                       <input
                         type="text"
                         className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
-                        value={workExperience}
-                        onChange={(e) => setWorkExperience(e.target.value)}
+                        value={previousPosition}
+                        onChange={(e) => setPreviousPosition(e.target.value)}
                       />
                     </div>
                     <div className="col-span-1">

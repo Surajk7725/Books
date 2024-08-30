@@ -1,7 +1,7 @@
 import express from 'express';
 import {addBookByStaff,addBookByUser,editBook,deleteBook,markBookAsAddedByStaff,
     displayAllBooks,displayParticularBook,displayBookmarkedBooks,displayUserAddedBooks,
-    createBookRating,displayBookRatings,addBookComment, addCommentReply, displayBookComments,displayBooksByCategory
+    createBookRating,addBookComment, addCommentReply, displayBookComments,displayBooksByCategory
 } from '../controllers/bookController.js';
 import authMiddleware from '../middleware/authMiddleware.js';
 import { upload } from '../utils/pics.js';
@@ -19,8 +19,7 @@ router.route('/user/:username/bookmarks').get(displayBookmarkedBooks);
 router.post('/user/add', authMiddleware, upload.fields([{ name: 'coverImage', maxCount: 1 }, { name: 'bookFile', maxCount: 1 }]), addBookByUser);
 router.route('/user/display').get(displayUserAddedBooks);
 router.route('/user2staff-books').post(markBookAsAddedByStaff);
-router.post('/rating', authMiddleware, createBookRating);
-router.get('/display-ratings', displayBookRatings);
+router.patch('/rating', authMiddleware, createBookRating);
 
 router.post('/comment', authMiddleware, addBookComment);
 router.post('/comment/reply', authMiddleware, addCommentReply);

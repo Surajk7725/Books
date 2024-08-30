@@ -165,7 +165,7 @@ const StaffCreate = () => {
           <Form.Item label="Job Title" name="jobTitle" rules={[{ required: true, message: 'Please enter your job title' }]}>
             <Input />
           </Form.Item>
-          <Form.Item label="Employee ID" name="employeeID" rules={[{ required: true, message: 'Please enter your employee ID' }]}>
+          <Form.Item label="Employee Id" name="employeeId" rules={[{ required: true, message: 'Please enter your employee ID' }]}>
             <Input />
           </Form.Item>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

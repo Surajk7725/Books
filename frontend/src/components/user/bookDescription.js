@@ -42,6 +42,15 @@ function BookDescription() {
     });
   };
 
+  const handleDownload = () => {
+    const filePath = bookData.bookFile ? `${baseURL}${bookData.bookFile.replace(/\\/g, '/')}` : null;
+    if (filePath) {
+      window.open(filePath, '_blank');
+    } else {
+      toast.error('No document available for download.');
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       <NavBar />
@@ -92,9 +101,12 @@ function BookDescription() {
                   </button>
                 </div>
                 <div className="mt-6 flex space-x-4">
-                  <Link className="bg-blue-500 text-white px-4 py-2 rounded-md">View Document</Link>
-                  <Link to="/display-books/rating" className="bg-blue-500 text-white px-4 py-2 rounded-md">Rating</Link>
-                  <Link className="bg-blue-500 text-white px-4 py-2 rounded-md">Download Document</Link>
+                  <Link to={`/display-books/rating/${title}`} className="bg-blue-500 text-white px-4 py-2 rounded-md">
+                    Rating
+                  </Link>
+                  <button onClick={handleDownload} className="bg-blue-500 text-white px-4 py-2 rounded-md">
+                    View Document
+                  </button>
                 </div>
               </div>
             </div>
@@ -106,7 +118,7 @@ function BookDescription() {
             </div>
           </>
         ) : (
-          <p>Loading book details...</p> // Show loading state if bookData is null
+          <p>Loading book details...</p> 
         )}
       </div>
       <Footer />

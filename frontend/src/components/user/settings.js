@@ -9,6 +9,7 @@ import { Image, Upload, DatePicker, Table } from 'antd';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useAuth } from '../authcontext';
+import moment from 'moment';
 
 
 const Settings = () => {
@@ -55,8 +56,8 @@ const Settings = () => {
   const handlePasswordChange = (e) => {
     const { name, value } = e.target;
     setPasswordDetails((prevDetails) => ({
-        ...prevDetails,
-        [name]: value,
+      ...prevDetails,
+      [name]: value,
     }));
   };
 
@@ -73,13 +74,14 @@ const Settings = () => {
       const response = await axiosInstance.put(`/user/update-password/${username}`, {
         oldPassword: passwordDetails.oldPassword,
         newPassword: passwordDetails.newPassword
-    }, {
+      }, {
         headers: {
-            'Content-Type': 'application/json'
+          'Content-Type': 'application/json'
         }
-    });
+      });
       if (response.status === 200) {
         toast.success('Password updated successfully');
+        navigate("/login");
       }
     } catch (error) {
       console.error('Error updating password:', error);
@@ -229,11 +231,11 @@ const Settings = () => {
       reader.onerror = (error) => reject(error);
     });
 
-    const onChange = (date, dateString) => {
-      setDob(date);
-      console.log(date, dateString);
-    };
-    
+  const onChange = (date, dateString) => {
+    setDob(date);
+    console.log(date, dateString);
+  };
+
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const [fileList, setFileList] = useState([]);
@@ -252,7 +254,7 @@ const Settings = () => {
   const fileInputRef = useRef(null);
 
   const [error, setError] = useState('');
-  
+
   const handlePreview = async (file) => {
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj);
@@ -292,7 +294,8 @@ const Settings = () => {
     formData.append('username', username);
     formData.append('email', email);
     formData.append('phoneNumber', phoneNumber);
-    if (dob) formData.append('dob', dob.toISOString());
+    const formattedDob = dob ? dob.format('DD-MM-YYYY') : existingData.dob;
+    formData.append('dob', formattedDob);
     formData.append('address', houseAddress);
 
     const filledSocialLinks = Object.fromEntries(
@@ -305,7 +308,7 @@ const Settings = () => {
     if (fileList.length > 0) {
       const file = fileList[0].originFileObj || fileList[0];
       formData.append('profilePic', file);
-  }
+    }
 
     try {
       const response = await axiosInstance.put(
@@ -410,158 +413,163 @@ const Settings = () => {
         <div className="flex-grow p-6 mb-8">
 
 
-        {selectedSection === 'account' && (
-        <div className="max-w-4xl mx-auto p-4 sm:p-8 bg-white rounded-md shadow-md">
-          <h2 className="text-3xl font-bold mb-6">Edit Profile</h2>
-          <div className="flex flex-col sm:flex-row">
-            <div className="flex-shrink-0 mb-6 sm:mb-0 sm:mr-6">
-              <div className="relative w-24 h-24 mx-auto sm:mx-0">
-                <Upload
-                  action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
-                  listType="picture-circle"
-                  fileList={fileList}
-                  onPreview={handlePreview}
-                  onChange={handleChange}
-                >
-                  {fileList.length >= 1 ? null : uploadButton}
-                </Upload>
-                {previewImage && (
-                  <Image
-                    wrapperStyle={{ display: 'none' }}
-                    preview={{
-                      visible: previewOpen,
-                      onVisibleChange: (visible) => setPreviewOpen(visible),
-                      afterOpenChange: (visible) => !visible && setPreviewImage(''),
-                    }}
-                    src={previewImage}
-                  />
-                )}
+          {selectedSection === 'account' && (
+            <div className="max-w-4xl mx-auto p-4 sm:p-8 bg-white rounded-md shadow-md">
+              <h2 className="text-3xl font-bold mb-6">Edit Profile</h2>
+              <div className="flex flex-col sm:flex-row">
+                <div className="flex-shrink-0 mb-6 sm:mb-0 sm:mr-6">
+                  <div className="relative w-24 h-24 mx-auto sm:mx-0">
+                    <Upload
+                      action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
+                      listType="picture-circle"
+                      fileList={fileList}
+                      onPreview={handlePreview}
+                      onChange={handleChange}
+                    >
+                      {fileList.length >= 1 ? null : uploadButton}
+                    </Upload>
+                    {previewImage && (
+                      <Image
+                        wrapperStyle={{ display: 'none' }}
+                        preview={{
+                          visible: previewOpen,
+                          onVisibleChange: (visible) => setPreviewOpen(visible),
+                          afterOpenChange: (visible) => !visible && setPreviewImage(''),
+                        }}
+                        src={previewImage}
+                      />
+                    )}
+                  </div>
+                </div>
+
+                <form className="flex-1" onSubmit={handleSubmit}>
+                  {/* Input fields */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="col-span-1">
+                      <label className="block text-gray-700">Full Name</label>
+                      <input
+                        type="text"
+                        className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
+                        value={fullName}
+                        onChange={(e) => setFullName(e.target.value)}
+                      />
+                    </div>
+                    <div className="col-span-1">
+                      <label className="block text-gray-700">Username</label>
+                      <input
+                        type="text"
+                        className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
+                        value={username}
+                        readOnly
+                        onChange={(e) => setUserName(e.target.value)}
+                      />
+                    </div>
+                    <div className="col-span-1">
+                      <label className="block text-gray-700">Email Address</label>
+                      <input
+                        type="email"
+                        className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                      />
+                    </div>
+                    <div className="col-span-1">
+                      <label className="block text-gray-700">Date of Birth</label>
+                      <DatePicker
+                        onChange={onChange}
+                        value={dob}
+                        className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
+                        format="DD-MM-YYYY"
+                      />
+                    </div>
+                    <div className="col-span-1">
+                      <label className="block text-gray-700">Phone Number</label>
+                      <input
+                        type="text"
+                        className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
+                        value={phoneNumber}
+                        onChange={(e) => setPhoneNumber(e.target.value)}
+                      />
+                    </div>
+                    <div className="col-span-2">
+                      <label className="block text-gray-700">House Address</label>
+                      <input
+                        type="text"
+                        className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
+                        value={houseAddress}
+                        onChange={(e) => setHouseAddress(e.target.value)}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Social Media Links */}
+                  <div className="mt-6">
+                    <h3 className="text-lg font-bold">Social Media Links</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+                      <div className="col-span-1">
+                        <label className="flex items-center">
+                          <FaYoutube className="mr-2 text-red-500" /> YouTube
+                        </label>
+                        <input
+                          type="url"
+                          name="youtube"
+                          className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
+                          value={socialLinks.youtube}
+                          onChange={handleInputChange}
+                        />
+                      </div>
+                      <div className="col-span-1">
+                        <label className="flex items-center">
+                          <FaInstagram className="mr-2 text-pink-500" /> Instagram
+                        </label>
+                        <input
+                          type="url"
+                          name="instagram"
+                          className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
+                          value={socialLinks.instagram}
+                          onChange={handleInputChange}
+                        />
+                      </div>
+                      <div className="col-span-1">
+                        <label className="flex items-center">
+                          <FaTwitter className="mr-2 text-blue-500" /> Twitter
+                        </label>
+                        <input
+                          type="url"
+                          name="twitter"
+                          className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
+                          value={socialLinks.twitter}
+                          onChange={handleInputChange}
+                        />
+                      </div>
+                      <div className="col-span-1">
+                        <label className="flex items-center">
+                          <FaLinkedin className="mr-2 text-blue-700" /> LinkedIn
+                        </label>
+                        <input
+                          type="url"
+                          name="linkedin"
+                          className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
+                          value={socialLinks.linkedin}
+                          onChange={handleInputChange}
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Submit Button */}
+                  <div className="mt-6">
+                    <button
+                      type="submit"
+                      className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                    >
+                      Save Changes
+                    </button>
+                  </div>
+                </form>
               </div>
             </div>
-
-            <form className="flex-1" onSubmit={handleSubmit}>
-              {/* Input fields */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="col-span-1">
-                  <label className="block text-gray-700">Full Name</label>
-                  <input
-                    type="text"
-                    className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                  />
-                </div>
-                <div className="col-span-1">
-                  <label className="block text-gray-700">Username</label>
-                  <input
-                    type="text"
-                    className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
-                    value={username}
-                    readOnly
-                    onChange={(e) => setUserName(e.target.value)}
-                  />
-                </div>
-                <div className="col-span-1">
-                  <label className="block text-gray-700">Email Address</label>
-                  <input
-                    type="email"
-                    className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </div>
-                <div className="col-span-1">
-                  <label className="block text-gray-700">Date of Birth</label>
-                  <DatePicker onChange={onChange} value={dob} className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md" />
-                </div>
-                <div className="col-span-1">
-                  <label className="block text-gray-700">Phone Number</label>
-                  <input
-                    type="text"
-                    className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
-                    value={phoneNumber}
-                    onChange={(e) => setPhoneNumber(e.target.value)}
-                  />
-                </div>
-                <div className="col-span-2">
-                  <label className="block text-gray-700">House Address</label>
-                  <input
-                    type="text"
-                    className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
-                    value={houseAddress}
-                    onChange={(e) => setHouseAddress(e.target.value)}
-                  />
-                </div>
-              </div>
-
-              {/* Social Media Links */}
-              <div className="mt-6">
-                <h3 className="text-lg font-bold">Social Media Links</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-                  <div className="col-span-1">
-                    <label className="flex items-center">
-                      <FaYoutube className="mr-2 text-red-500" /> YouTube
-                    </label>
-                    <input
-                      type="url"
-                      name="youtube"
-                      className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
-                      value={socialLinks.youtube}
-                      onChange={handleInputChange}
-                    />
-                  </div>
-                  <div className="col-span-1">
-                    <label className="flex items-center">
-                      <FaInstagram className="mr-2 text-pink-500" /> Instagram
-                    </label>
-                    <input
-                      type="url"
-                      name="instagram"
-                      className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
-                      value={socialLinks.instagram}
-                      onChange={handleInputChange}
-                    />
-                  </div>
-                  <div className="col-span-1">
-                    <label className="flex items-center">
-                      <FaTwitter className="mr-2 text-blue-500" /> Twitter
-                    </label>
-                    <input
-                      type="url"
-                      name="twitter"
-                      className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
-                      value={socialLinks.twitter}
-                      onChange={handleInputChange}
-                    />
-                  </div>
-                  <div className="col-span-1">
-                    <label className="flex items-center">
-                      <FaLinkedin className="mr-2 text-blue-700" /> LinkedIn
-                    </label>
-                    <input
-                      type="url"
-                      name="linkedin"
-                      className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
-                      value={socialLinks.linkedin}
-                      onChange={handleInputChange}
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Submit Button */}
-              <div className="mt-6">
-                <button
-                  type="submit"
-                  className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-                >
-                  Save Changes
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+          )}
 
           {selectedSection === 'security' && (
             <form onSubmit={handlePasswordSubmit} className="bg-white rounded-lg shadow-md p-6 mb-8">

@@ -100,7 +100,7 @@ function App() {
         <Route path="/display-books/Kids" element={<KidsBooks bookmarkedBooks={bookmarkedBooks} toggleBookmark={toggleBookmark} />} />
         <Route path="/display-books/Popular" element={<PopularBooks bookmarkedBooks={bookmarkedBooks} toggleBookmark={toggleBookmark} />} />
         <Route path="/display-books/Academics" element={<AcademicBooks bookmarkedBooks={bookmarkedBooks} toggleBookmark={toggleBookmark} />} />
-        <Route path="/display-books/rating" element={<Rating />} />
+        <Route path="/display-books/rating/:title" element={<Rating />} />
         <Route path="/my-wishlist" element={<MyWishlist bookmarkedBooks={bookmarkedBooks} toggleBookmark={toggleBookmark} />} />
         <Route path="/user-addbook" element={<BookForm />} />
         <Route path="/profile/:username" element={<Profile />} />
