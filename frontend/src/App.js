@@ -62,24 +62,6 @@ import { AuthProvider } from './components/authcontext.js';
 
 
 function App() {
-  // Initialize state from localStorage if available
-  const initialBookmarkedBooks = JSON.parse(localStorage.getItem('bookmarkedBooks')) || [];
-  const [bookmarkedBooks, setBookmarkedBooks] = useState(initialBookmarkedBooks);
-
-  // Update localStorage whenever bookmarkedBooks changes
-  useEffect(() => {
-    localStorage.setItem('bookmarkedBooks', JSON.stringify(bookmarkedBooks));
-  }, [bookmarkedBooks]);
-
-  const toggleBookmark = (bookId) => {
-    setBookmarkedBooks((prevBookmarkedBooks) => {
-      if (prevBookmarkedBooks.includes(bookId)) {
-        return prevBookmarkedBooks.filter((id) => id !== bookId);
-      } else {
-        return [...prevBookmarkedBooks, bookId];
-      }
-    });
-  };
 
   return (
     <Router>
@@ -95,13 +77,13 @@ function App() {
 
         <Route element={<ProtectedRoute allowedRoles={['user']} />}>
         <Route path="/home" element={<Home />} />
-        <Route path="/display-books" element={<AllBooks bookmarkedBooks={bookmarkedBooks} toggleBookmark={toggleBookmark} />} />
+        <Route path="/display-books" element={<AllBooks />} />
         <Route path="/display-books/:title/description" element={<BookDescription />} />
-        <Route path="/display-books/Kids" element={<KidsBooks bookmarkedBooks={bookmarkedBooks} toggleBookmark={toggleBookmark} />} />
-        <Route path="/display-books/Popular" element={<PopularBooks bookmarkedBooks={bookmarkedBooks} toggleBookmark={toggleBookmark} />} />
-        <Route path="/display-books/Academics" element={<AcademicBooks bookmarkedBooks={bookmarkedBooks} toggleBookmark={toggleBookmark} />} />
+        <Route path="/display-books/Kids" element={<KidsBooks  />} />
+        <Route path="/display-books/Popular" element={<PopularBooks  />} />
+        <Route path="/display-books/Academics" element={<AcademicBooks  />} />
         <Route path="/display-books/rating/:title" element={<Rating />} />
-        <Route path="/my-wishlist" element={<MyWishlist bookmarkedBooks={bookmarkedBooks} toggleBookmark={toggleBookmark} />} />
+        <Route path="/my-wishlist" element={<MyWishlist />} />
         <Route path="/user-addbook" element={<BookForm />} />
         <Route path="/profile/:username" element={<Profile />} />
         <Route path="/private-notes" element={<Notes />} />

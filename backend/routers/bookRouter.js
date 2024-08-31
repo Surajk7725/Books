@@ -1,6 +1,6 @@
 import express from 'express';
-import {addBookByStaff,addBookByUser,editBook,deleteBook,markBookAsAddedByStaff,
-    displayAllBooks,displayParticularBook,displayBookmarkedBooks,displayUserAddedBooks,
+import {addBookByStaff,addBookByUser,editBook,deleteBook,markBookAsAddedByStaff, addBookmark, getBookAverageRating,
+    displayAllBooks,displayParticularBook,displayBookmarkedBooks,displayUserAddedBooks, removeBookmark,
     createBookRating,addBookComment, addCommentReply, displayBookComments,displayBooksByCategory
 } from '../controllers/bookController.js';
 import authMiddleware from '../middleware/authMiddleware.js';
@@ -14,12 +14,17 @@ router.route('/display/:title').get(displayParticularBook);
 router.route('/edit/:title').put(editBook);
 router.route('/delete/:id').delete(deleteBook);
 router.get('/visible/:category', displayBooksByCategory);
-router.route('/user/:username/bookmarks').get(displayBookmarkedBooks);
+
+router.get('/user/:username/bookmarks',authMiddleware, displayBookmarkedBooks);
+router.post('/bookmark', authMiddleware, addBookmark);
+router.post('/unbookmark', authMiddleware, removeBookmark);
 
 router.post('/user/add', authMiddleware, upload.fields([{ name: 'coverImage', maxCount: 1 }, { name: 'bookFile', maxCount: 1 }]), addBookByUser);
 router.route('/user/display').get(displayUserAddedBooks);
 router.route('/user2staff-books').post(markBookAsAddedByStaff);
+
 router.patch('/rating', authMiddleware, createBookRating);
+router.get('/average-rating/:title', getBookAverageRating);
 
 router.post('/comment', authMiddleware, addBookComment);
 router.post('/comment/reply', authMiddleware, addCommentReply);

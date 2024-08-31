@@ -7,29 +7,79 @@ import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import axiosInstance from '../axiosInstance';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../authcontext';
 
 const baseURL = 'http://localhost:5000/api/';
 
-function AcademicBooks({ bookmarkedBooks, toggleBookmark }) {
+function AcademicBooks() {
   const [books, setBooks] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
+  const [bookmarkedBooks, setBookmarkedBooks] = useState([]);
+  const [username, setUsername] = useState('');
   const booksPerPage = 12;
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   useEffect(() => {
-    const fetchBooks = async () => {
+    if (user) {
+      setUsername(user.username);
+    }
+  }, [user]);
+
+
+  useEffect(() => {
+    const fetchBooksAndBookmarks = async () => {
       try {
-        const response = await axiosInstance.get('/books/visible/Academics');
-        setBooks(response.data);
-      } catch (err) {
-        console.error(err.message);
-        toast.error('Failed to fetch books.');
+        // Fetch kids books data
+        const bookResponse = await axiosInstance.get('/books/visible/Academics');
+        if (bookResponse.data && Array.isArray(bookResponse.data)) {
+          setBooks(bookResponse.data);
+        } else {
+          setBooks([]);
+          toast.error('Unexpected data format from the server.');
+        }
+
+        // Fetch bookmarked books if username exists
+        if (username) {
+          const bookmarkResponse = await axiosInstance.get(`/books/user/${username}/bookmarks`);
+          if (bookmarkResponse.data && Array.isArray(bookmarkResponse.data)) {
+            setBookmarkedBooks(bookmarkResponse.data.map(book => book._id));
+          } else {
+            setBookmarkedBooks([]);
+            toast.error('Unexpected data format for bookmarks.');
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setBooks([]);
+        toast.error('Failed to fetch data. Please try again later.');
       }
     };
 
-    fetchBooks();
-  }, []);
+    fetchBooksAndBookmarks();
+  }, [username]);
+
+  // Toggle bookmark status
+  const toggleBookmark = async (bookId) => {
+    const isBookmarked = bookmarkedBooks.includes(bookId);
+
+    try {
+      if (isBookmarked) {
+        await axiosInstance.post('/books/unbookmark', { bookId, username });
+        setBookmarkedBooks(prev => prev.filter(id => id !== bookId));
+        toast.success('Book removed from your wishlist.');
+      } else {
+        await axiosInstance.post('/books/bookmark', { bookId, username });
+        setBookmarkedBooks(prev => [...prev, bookId]);
+        toast.success('Book added to your wishlist.');
+      }
+    } catch (error) {
+      console.error('Error toggling bookmark:', error.response ? error.response.data : error.message);
+      toast.error(`Failed to ${isBookmarked ? 'remove' : 'add'} bookmark. Please try again later.`);
+    }
+  };
+
 
   // Filtered books based on search term
   const filteredBooks = books.filter(book =>
@@ -45,7 +95,7 @@ function AcademicBooks({ bookmarkedBooks, toggleBookmark }) {
   const paginate = pageNumber => setCurrentPage(pageNumber);
 
   const shareBook = (bookTitle) => {
-    const formattedTitle = bookTitle.replace(/\s+/g, '-').toLowerCase(); // Replace spaces with hyphens and convert to lowercase
+    const formattedTitle = bookTitle.replace(/-/g, ' ');
     const bookUrl = `${window.location.origin}/display-books/${formattedTitle}/description`;
     navigator.clipboard.writeText(bookUrl)
       .then(() => {
@@ -92,7 +142,7 @@ function AcademicBooks({ bookmarkedBooks, toggleBookmark }) {
                   className="absolute top-2 right-2 bg-white rounded-full p-1 cursor-pointer"
                   onClick={() => toggleBookmark(book._id)}
                 >
-                  {bookmarkedBooks.includes(book.id) ? (
+                  {bookmarkedBooks.includes(book._id) ? (
                     <HeartIconSolid className="h-6 w-6 text-red-500" />
                   ) : (
                     <HeartIcon className="h-6 w-6 text-gray-500" />

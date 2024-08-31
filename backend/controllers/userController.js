@@ -136,9 +136,9 @@ export const deleteUser = asyncHandler (async(request,response) => {
 // Book's History
 
 export const getUserBookHistory = asyncHandler(async (request, response) => {
-    const userId = request.user._id; 
+    const { username } = request.params;
 
-    const user = await User.findById(userId).populate('bookHistory.book');
+    const user = await User.findOne({username}).populate('bookHistory.book');
     if (!user) {
         return response.status(404).json({ message: 'User not found' });
     }
@@ -152,8 +152,8 @@ export const getUserBookHistory = asyncHandler(async (request, response) => {
     response.json(bookHistory);
 });
 
-// Display only downloaded books
 
+// Display only downloaded books
 export const getUserDownloadedBooks = asyncHandler(async (request, response) => {
     const userId = request.user._id; 
 

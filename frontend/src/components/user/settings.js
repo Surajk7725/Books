@@ -9,8 +9,6 @@ import { Image, Upload, DatePicker, Table } from 'antd';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useAuth } from '../authcontext';
-import moment from 'moment';
-
 
 const Settings = () => {
   const navigate = useNavigate();
@@ -40,7 +38,7 @@ const Settings = () => {
       setUserName(user.username);
       setFullName(user.fullName);
       setEmail(user.email);
-      setHouseAddress(user.address);
+      setAddress(user.address);
       setPhoneNumber(user.phoneNumber);
     }
   }, [user]);
@@ -231,10 +229,6 @@ const Settings = () => {
       reader.onerror = (error) => reject(error);
     });
 
-  const onChange = (date, dateString) => {
-    setDob(date);
-    console.log(date, dateString);
-  };
 
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
@@ -243,13 +237,18 @@ const Settings = () => {
   const [email, setEmail] = useState('');
   const [dob, setDob] = useState(null);
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [houseAddress, setHouseAddress] = useState('');
+  const [address, setAddress] = useState('');
   const [socialLinks, setSocialLinks] = useState({
     youtube: '',
     instagram: '',
     twitter: '',
     linkedin: ''
   });
+
+  const onChange = (date, dateString) => {
+    setDob(date);
+    console.log(date, dateString);
+  };
 
   const fileInputRef = useRef(null);
 
@@ -294,9 +293,9 @@ const Settings = () => {
     formData.append('username', username);
     formData.append('email', email);
     formData.append('phoneNumber', phoneNumber);
-    const formattedDob = dob ? dob.format('DD-MM-YYYY') : existingData.dob;
+    const formattedDob = dob ? dob.format('DD-MM-YYYY') : null;
     formData.append('dob', formattedDob);
-    formData.append('address', houseAddress);
+    formData.append('address', address);
 
     const filledSocialLinks = Object.fromEntries(
       Object.entries(socialLinks).filter(([key, value]) => value)
@@ -312,7 +311,7 @@ const Settings = () => {
 
     try {
       const response = await axiosInstance.put(
-        `/user/edit/${username}`,
+        `/user/update/${username}`,
         formData,
         {
           headers: {
@@ -496,8 +495,8 @@ const Settings = () => {
                       <input
                         type="text"
                         className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
-                        value={houseAddress}
-                        onChange={(e) => setHouseAddress(e.target.value)}
+                        value={address}
+                        onChange={(e) => setAddress(e.target.value)}
                       />
                     </div>
                   </div>
@@ -710,7 +709,6 @@ const Settings = () => {
                 />
               </div>
             </main>
-
           )}
 
           {selectedSection === 'offlineAccess' && (

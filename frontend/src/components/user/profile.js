@@ -18,9 +18,11 @@ const Profile = () => {
         const response = await axiosInstance.get(`/user/display/${username}`);
         setUser(response.data);
 
-        // Parse the social media links JSON string
         if (response.data.socialMediaLinks) {
-          setSocialLinks(JSON.parse(response.data.socialMediaLinks));
+          const links = typeof response.data.socialMediaLinks === 'string'
+            ? JSON.parse(response.data.socialMediaLinks)
+            : response.data.socialMediaLinks;
+          setSocialLinks(links);
         }
       } catch (err) {
         setError('Profile not found');
@@ -30,7 +32,6 @@ const Profile = () => {
     fetchProfile();
   }, [username]);
 
-  // Construct the image URL
   const baseURL = 'http://localhost:5000/api/';
   const profilePicURL = user.profilePic ? `${baseURL}${user.profilePic.replace('\\', '/')}` : '';
 
@@ -92,18 +93,26 @@ const Profile = () => {
             </div>
 
             <div className="flex items-center mt-6 text-gray-500">
-              <a href={socialLinks.twitter} target="_blank" rel="noopener noreferrer">
-                <FaTwitter className="hover:text-blue-400 mr-2 md:mr-4 h-6 w-6" />
-              </a>
-              <a href={socialLinks.linkedin} target="_blank" rel="noopener noreferrer">
-                <FaLinkedin className="hover:text-blue-700 mx-4 md:mx-6 h-6 w-6" />
-              </a>
-              <a href={socialLinks.instagram} target="_blank" rel="noopener noreferrer">
-                <FaInstagram className="hover:text-pink-600 mx-4 md:mx-6 h-6 w-6" />
-              </a>
-              <a href={socialLinks.youtube} target="_blank" rel="noopener noreferrer">
-                <FaYoutube className="hover:text-red-600 ml-4 md:ml-6 h-6 w-6" />
-              </a>
+              {socialLinks.twitter && (
+                <a href={socialLinks.twitter} target="_blank" rel="noopener noreferrer">
+                  <FaTwitter className="hover:text-blue-400 mr-2 md:mr-4 h-6 w-6" />
+                </a>
+              )}
+              {socialLinks.linkedin && (
+                <a href={socialLinks.linkedin} target="_blank" rel="noopener noreferrer">
+                  <FaLinkedin className="hover:text-blue-700 mx-4 md:mx-6 h-6 w-6" />
+                </a>
+              )}
+              {socialLinks.instagram && (
+                <a href={socialLinks.instagram} target="_blank" rel="noopener noreferrer">
+                  <FaInstagram className="hover:text-pink-600 mx-4 md:mx-6 h-6 w-6" />
+                </a>
+              )}
+              {socialLinks.youtube && (
+                <a href={socialLinks.youtube} target="_blank" rel="noopener noreferrer">
+                  <FaYoutube className="hover:text-red-600 ml-4 md:ml-6 h-6 w-6" />
+                </a>
+              )}
             </div>
           </div>
         </div>
@@ -125,3 +134,4 @@ const Profile = () => {
 };
 
 export default Profile;
+

@@ -3,7 +3,6 @@ import Book from '../models/books.js';
 import User from '../models/user.js';
 import mongoose from 'mongoose';
 import sendNotification from '../utils/sendNotification.js';
-import { uploadProfilePic } from '../utils/pics.js';
 
 
 // Add Book by Staff
@@ -188,6 +187,58 @@ export const deleteBook = asyncHandler(async (request, response) => {
 });
 
 
+// Add to bookmarks
+export const addBookmark = asyncHandler(async (req, res) => {
+    const { bookId } = req.body;
+    const username = req.user.username; 
+
+    const user = await User.findOne({ username });
+    const book = await Book.findById(bookId);
+
+    if (!user || !book) {
+        return res.status(404).json({ message: 'User or Book not found' });
+    }
+
+    // Check if the book is already bookmarked
+    if (!user.bookmarks.includes(bookId)) {
+        user.bookmarks.push(bookId);
+        book.bookmarkedBy.push(user._id);
+
+        await user.save();
+        await book.save();
+
+        return res.status(200).json({ message: 'Book added to bookmarks' });
+    } else {
+        return res.status(400).json({ message: 'Book is already bookmarked' });
+    }
+});
+
+// Remove from bookmarks
+export const removeBookmark = asyncHandler(async (req, res) => {
+    const { bookId } = req.body;
+    const username = req.user.username; // Get username from authenticated user
+
+    const user = await User.findOne({ username });
+    const book = await Book.findById(bookId);
+
+    if (!user || !book) {
+        return res.status(404).json({ message: 'User or Book not found' });
+    }
+
+    // Check if the book is in the user's bookmarks
+    if (user.bookmarks.includes(bookId)) {
+        user.bookmarks.pull(bookId);
+        book.bookmarkedBy.pull(user._id);
+
+        await user.save();
+        await book.save();
+
+        return res.status(200).json({ message: 'Book removed from bookmarks' });
+    } else {
+        return res.status(400).json({ message: 'Book is not in the bookmarks' });
+    }
+});
+
 // Display Only Bookmarked Books of Particular User
 export const displayBookmarkedBooks = asyncHandler(async (request, response) => {
     const { username } = request.params;
@@ -205,7 +256,6 @@ export const displayUserAddedBooks = asyncHandler(async (request, response) => {
     const books = await Book.find({ addedByStaff: false }).populate('createdBy', 'username email');
     response.json(books);
 });
-
 
 // Create Book Rating
 export const createBookRating = asyncHandler(async (request, response) => {
@@ -235,6 +285,25 @@ export const createBookRating = asyncHandler(async (request, response) => {
     response.status(201).json({ message: 'Rating added successfully' });
 });
 
+// Average Rating of a Book
+export const getBookAverageRating = asyncHandler(async (request, response) => {
+    const { title } = request.params;
+  
+    const book = await Book.findOne({ title });
+  
+    if (!book) {
+      return response.status(404).json({ message: 'Book not found' });
+    }
+  
+    const ratings = book.ratings;
+  
+    // Calculate the average rating
+    const averageRating = ratings.length > 0
+      ? (ratings.reduce((sum, rating) => sum + rating.rating, 0) / ratings.length).toFixed(2)
+      : 0;
+  
+    response.status(200).json({ averageRating });
+});
 
 // Add Comment to Book
 export const addBookComment = asyncHandler(async (request, response) => {
