@@ -105,21 +105,26 @@ const AllBooks = () => {
       });
   };
 
-  const viewBook = async (bookTitle, author) => {
+  const viewBook = async (bookId, bookTitle) => {
     const normalizedTitle = bookTitle.replace(/-/g, ' ');
-    navigate(`/display-books/${normalizedTitle}/description`);
 
-    try {
-      const timestamp = new Date().toISOString(); 
-      await axiosInstance.post('/user/books-history', {
-        bookName: bookTitle,
-        authorName: author || 'Author Name Placeholder', 
-        timestamp
-      });
-      toast.success('Book view recorded.');
-    } catch (error) {
-      console.error('Error saving reading history:', error.response ? error.response.data : error.message);
-      toast.error('Failed to save reading history.');
+    if (user && user.username) {
+      try {
+        const response = await axiosInstance.post('/user/save-history', {
+          username: user.username, 
+          bookId: bookId, 
+        });
+
+        if (response.status === 200) {
+          toast.success('Book view saved successfully');
+          navigate(`/display-books/${normalizedTitle}/description`); 
+        }
+      } catch (error) {
+        console.error('Error saving book view:', error);
+        toast.error('Failed to save book view. Please try again.');
+      }
+    } else {
+      toast.error('You need to be logged in to view this book.');
     }
   };
 
@@ -172,7 +177,7 @@ const AllBooks = () => {
                 <div className="flex justify-center">
                   <button
                     className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded transition-colors duration-300"
-                    onClick={() => viewBook(book.title, book.authors)}
+                    onClick={() => viewBook(book._id, book.title)}
                   >
                     View Book
                   </button>

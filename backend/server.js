@@ -13,6 +13,7 @@ import contactRoutes from './routers/contactRouter.js';
 import noteRoutes from './routers/noteRouter.js';
 import bookRoutes from './routers/bookRouter.js';
 import contentRoutes from './routers/contentRouter.js';
+import notificationRoutes from './routers/notificationRouter.js';
 
 dotenv.config();
 connectDB();
@@ -48,6 +49,7 @@ app.use('/api/notes',noteRoutes);
 app.use('/api/content',contentRoutes);
 app.use('/api/staff',staffRoutes);
 app.use('/api/admin',adminRoutes);
+app.use('/api/notifications',notificationRoutes);
 app.use('/api/contact',contactRoutes);
 
 

@@ -1,4 +1,5 @@
 import User from '../models/user.js';
+import Book from '../models/books.js';
 import bcrypt from 'bcryptjs';
 import sendEmail from '../utils/sendEmail.js';
 import asyncHandler from 'express-async-handler';
@@ -117,7 +118,6 @@ export const getUserById = asyncHandler(async (request, response) => {
 
 
 // Delete a User
-
 export const deleteUser = asyncHandler (async(request,response) => {
     const { username } = request.params;
     try {
@@ -133,46 +133,54 @@ export const deleteUser = asyncHandler (async(request,response) => {
 });
 
 
-// Book's History
+// Save Book View to History by bookID and username
+export const saveBookView = asyncHandler(async (request, response) => {
+    const { username, bookId } = request.body;
 
+    const user = await User.findOne({ username });
+    if (!user) {
+        return response.status(404).json({ message: 'User not found' });
+    }
+
+    const book = await Book.findById(bookId);
+    if (!book) {
+        return response.status(404).json({ message: 'Book not found' });
+    }
+
+    user.bookHistory.push({ book: bookId, viewedAt: new Date() });
+
+    await user.save();
+    response.status(200).json({ message: 'Book view saved successfully' });
+});
+
+// View Book's History
 export const getUserBookHistory = asyncHandler(async (request, response) => {
     const { username } = request.params;
 
-    const user = await User.findOne({username}).populate('bookHistory.book');
-    if (!user) {
-        return response.status(404).json({ message: 'User not found' });
+    try {
+        const user = await User.findOne({ username }).populate('bookHistory.book');
+
+        if (!user) {
+            return response.status(404).json({ message: 'User not found' });
+        }
+
+        const sortedBookHistory = user.bookHistory
+            .slice() 
+            .sort((a, b) => new Date(b.viewedAt) - new Date(a.viewedAt)); 
+
+        const bookHistory = sortedBookHistory.map((entry, index) => ({
+            id: index + 1,
+            bookName: entry.book.title,
+            authorName: entry.book.authors.join(', '),
+            viewedAt: entry.viewedAt
+        }));
+
+        response.status(200).json(bookHistory);
+    } catch (error) {
+        console.error('Error fetching user book history:', error);
+        response.status(500).json({ message: 'Error fetching user book history' });
     }
-
-    const bookHistory = user.bookHistory.map(entry => ({
-        bookName: entry.book.title,
-        authorName: entry.book.authors.join(', '),
-        viewedAt: entry.viewedAt
-    }));
-
-    response.json(bookHistory);
 });
-
-
-// Display only downloaded books
-export const getUserDownloadedBooks = asyncHandler(async (request, response) => {
-    const userId = request.user._id; 
-
-    const user = await User.findById(userId).populate('downloadedBooks.book');
-    if (!user) {
-        return response.status(404).json({ message: 'User not found' });
-    }
-
-    const downloadedBooks = user.downloadedBooks.map(entry => ({
-        bookImage: entry.book.coverImageUrl || entry.book.coverImage,
-        bookName: entry.book.title,
-        authorName: entry.book.authors.join(', '),
-        rating: entry.book.ratings.length > 0 ? (entry.book.ratings.reduce((sum, rating) => sum + rating.rating, 0) / entry.book.ratings.length).toFixed(2) : 'No ratings',
-        description: entry.book.bookDescription,
-    }));
-
-    response.json(downloadedBooks);
-});
-
 
 // Update the Password
 export const updateUserPassword = asyncHandler(async (request, response) => {

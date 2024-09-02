@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import axiosInstance from '../axiosInstance';
 import { FaLinkedin, FaInstagram, FaTwitter, FaYoutube } from 'react-icons/fa';
 import { PlusOutlined } from '@ant-design/icons';
-import { Image, Upload, DatePicker, Table } from 'antd';
+import { Image, Upload, DatePicker, Table, Spin } from 'antd';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useAuth } from '../authcontext';
@@ -167,54 +167,63 @@ const Settings = () => {
     },
   ];
 
-
-  // For Frontend Book Click History
-  const tableData = [
-    { id: 1, bookName: 'The Hobbit', authorName: 'J.R.R. Tolkien', timestamp: '2024-07-07 10:00:00' },
-    { id: 2, bookName: '1984', authorName: 'George Orwell', timestamp: '2024-07-06 14:30:00' },
-    { id: 3, bookName: 'To Kill a Mockingbird', authorName: 'Harper Lee', timestamp: '2024-07-05 16:45:00' },
-    { id: 4, bookName: 'Pride and Prejudice', authorName: 'Jane Austen', timestamp: '2024-07-04 09:20:00' },
-    { id: 5, bookName: 'The Catcher in the Rye', authorName: 'J.D. Salinger', timestamp: '2024-07-03 11:10:00' },
-    { id: 6, bookName: 'The Great Gatsby', authorName: 'F. Scott Fitzgerald', timestamp: '2024-07-02 08:00:00' },
-    { id: 7, bookName: 'Moby-Dick', authorName: 'Herman Melville', timestamp: '2024-07-01 13:45:00' },
-    { id: 8, bookName: 'The Lord of the Rings', authorName: 'J.R.R. Tolkien', timestamp: '2024-06-30 15:30:00' },
-    { id: 9, bookName: 'Jane Eyre', authorName: 'Charlotte Brontë', timestamp: '2024-06-29 12:20:00' },
-    { id: 10, bookName: 'Brave New World', authorName: 'Aldous Huxley', timestamp: '2024-06-28 18:00:00' },
-    { id: 11, bookName: 'Frankenstein', authorName: 'Mary Shelley', timestamp: '2024-06-27 10:45:00' },
-    { id: 12, bookName: 'Alice\'s Adventures in Wonderland', authorName: 'Lewis Carroll', timestamp: '2024-06-26 14:15:00' },
-  ];
-
+  // Books History
+  const [bookHistory, setBookHistory] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(5);
+
+  useEffect(() => {
+    const fetchBookHistory = async () => {
+      if (username) {
+        try {
+          setLoading(true);
+          const response = await axiosInstance.get(`/user/books-history/${username}`);
+          if (response.data && Array.isArray(response.data)) {
+            setBookHistory(response.data);
+          } else {
+            console.error('Unexpected data format from the server.');
+          }
+        } catch (error) {
+          console.error('Error fetching book history:', error);
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchBookHistory();
+  }, [username]);
 
   const columns = [
     {
       title: 'Sr.No',
       dataIndex: 'id',
-      sorter: (a, b) => a.id - b.id,
       key: 'id',
+      sorter: (a, b) => a.id - b.id,
     },
     {
       title: 'Book Name',
       dataIndex: 'bookName',
-      sorter: (a, b) => a.bookName.localeCompare(b.bookName),
       key: 'bookName',
+      sorter: (a, b) => a.bookName.localeCompare(b.bookName),
     },
     {
       title: 'Author Name',
       dataIndex: 'authorName',
-      sorter: (a, b) => a.authorName.localeCompare(b.authorName),
       key: 'authorName',
+      sorter: (a, b) => a.authorName.localeCompare(b.authorName),
     },
     {
-      title: 'Timestamp',
-      dataIndex: 'timestamp',
-      sorter: (a, b) => new Date(a.timestamp) - new Date(b.timestamp),
-      key: 'timestamp',
+      title: 'Viewed At',
+      dataIndex: 'viewedAt',
+      key: 'viewedAt',
+      sorter: (a, b) => new Date(a.viewedAt) - new Date(b.viewedAt),
+      render: (text) => new Date(text).toLocaleString(),
     },
   ];
 
-  const handleTableChange = (pagination, filters, sorter) => {
+  const handleTableChange = (pagination) => {
     setCurrentPage(pagination.current);
     setPageSize(pagination.pageSize);
   };
@@ -386,12 +395,6 @@ const Settings = () => {
                   onClick={() => handleSectionClick('readingHistory')}
                 >
                   <GlobeAltIcon className="h-6 w-6 inline-block mr-2" /> Reading History
-                </li>
-                <li
-                  className={`p-2 cursor-pointer rounded-lg ${selectedSection === 'offlineAccess' ? 'bg-transparent-700 border border-gray-300' : ''}`}
-                  onClick={() => handleSectionClick('offlineAccess')}
-                >
-                  <DesktopComputerIcon className="h-6 w-6 inline-block mr-2" /> Offline Access
                 </li>
                 <li
                   className={`p-2 cursor-pointer rounded-lg ${selectedSection === 'subscriptionPlans' ? 'bg-transparent-700 border border-gray-300' : ''}`}
@@ -694,56 +697,21 @@ const Settings = () => {
             <main className="flex-grow mt-8 mb-8">
               <div className="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md">
                 <h3 className="text-2xl font-bold mb-6 text-gray-800">Reading History</h3>
-                <Table
-                  columns={columns}
-                  dataSource={tableData}
-                  pagination={{
-                    current: currentPage,
-                    pageSize: pageSize,
-                    total: tableData.length,
-                    showSizeChanger: true,
-                  }}
-                  onChange={handleTableChange}
-                  rowKey="id"
-                  className="bg-white shadow-md rounded my-6 overflow-x-auto"
-                />
-              </div>
-            </main>
-          )}
-
-          {selectedSection === 'offlineAccess' && (
-            <div className="flex flex-col">
-              <h2 className="text-2xl font-bold mb-[0.5cm]">Downloaded Books</h2>
-              <div className="flex flex-col md:flex-row">
-                <div className="w-full p-3">
-                  <div className="bg-white rounded-md shadow p-4 w-full">
-                    <div className="flex items-center mb-4">
-                      <img
-                        alt="A book cover showing a scenic landscape with mountains and a lake, the title reads 'Wanderlust: Exploring the Great Outdoors'"
-                        className="mr-4 object-cover rounded"
-                        height="200"
-                        src="https://placehold.co/150x200"
-                        width="150"
-                      />
-                      <div>
-                        <h3 className="text-lg font-bold">Wanderlust: Exploring the Great Outdoors</h3>
-                        <p className="text-gray-600">By John Doe</p>
-                        <div className="flex items-center mt-2">
-                          <span className="bg-green-100 text-green-800 px-2 py-1 rounded-md mr-2">4.5 ⭐</span>
-                          <span className="text-gray-600">(12,345 reviews)</span>
-                        </div>
-                      </div>
-                    </div>
-                    <p className="text-gray-700 mb-4">
-                      Embark on an adventure through breathtaking landscapes and discover the beauty of nature with this captivating book. Filled with stunning photography and inspiring stories, "Wanderlust" will ignite your desire to explore the great outdoors.
-                    </p>
-                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors">
-                      Read Now
-                    </button>
-                  </div>
+                <div>
+                  {loading ? (
+                    <Spin size="large" />
+                  ) : (
+                    <Table
+                      columns={columns}
+                      dataSource={bookHistory}
+                      pagination={{ current: currentPage, pageSize }}
+                      onChange={handleTableChange}
+                      rowKey="id"
+                    />
+                  )}
                 </div>
               </div>
-            </div>
+            </main>
           )}
 
         </div>
