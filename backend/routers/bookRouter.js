@@ -11,7 +11,7 @@ const router = express.Router();
 router.post('/add', upload.fields([{ name: 'coverImage', maxCount: 1 }, { name: 'bookFile', maxCount: 1 }]), addBookByStaff);
 router.route('/display').get(displayAllBooks);
 router.route('/display/:title').get(displayParticularBook);
-router.route('/edit/:title').put(editBook);
+router.put('/edit/:title', upload.fields([{ name: 'coverImage', maxCount: 1 }, { name: 'bookFile', maxCount: 1 }]), editBook);
 router.route('/delete/:id').delete(deleteBook);
 router.get('/visible/:category', displayBooksByCategory);
 

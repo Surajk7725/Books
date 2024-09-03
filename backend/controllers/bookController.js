@@ -33,10 +33,14 @@ export const addBookByStaff = asyncHandler(async (request, response) => {
 
     try {
         const createdBook = await newBook.save();
-        const notificationText = `Book Title: ${title}, Date: ${new Date().toLocaleDateString()}, Time: ${new Date().toLocaleTimeString()}`;
-        sendNotification(notificationText, `link_to_book/${createdBook._id}`);
+        const notificationText = `New Book Added : ${title}`;
+        const formattedTitle = encodeURIComponent(title.replace(/-/g, ' ')); 
+        const link = `http://localhost:3000/display-books/${formattedTitle}/description`;
+
+        await sendNotification(notificationText, link);  
         response.status(201).json({ message: 'Book added successfully', book: createdBook });
     } catch (error) {
+        console.error('Error adding book:', error.message); 
         response.status(400).json({ message: 'Error adding book.', error: error.message });
     }
 });
@@ -44,7 +48,7 @@ export const addBookByStaff = asyncHandler(async (request, response) => {
 
 // Add Book by User
 export const addBookByUser = asyncHandler(async (request, response) => {
-    const { authors, title, genre, description } = request.body;
+    const { authors, title, genre, description, category, language } = request.body;
 
     const coverImage = request.files?.coverImage ? request.files.coverImage[0].path : null;
     const bookFile = request.files?.bookFile ? request.files.bookFile[0].path : null;
@@ -60,6 +64,8 @@ export const addBookByUser = asyncHandler(async (request, response) => {
         authors,
         title,
         genre,
+        category,
+        language,
         description,
         coverImage,
         bookFile,
@@ -69,8 +75,10 @@ export const addBookByUser = asyncHandler(async (request, response) => {
 
     const createdBook = await newBook.save();
 
-    const notificationText = `Book Title: ${title}, Date: ${new Date().toLocaleDateString()}, Time: ${new Date().toLocaleTimeString()}`;
-    sendNotification(request.user._id, notificationText, `link_to_book/${createdBook._id}`);
+    const notificationText = `User Added Book Title: ${title}`;
+    const formattedTitle = encodeURIComponent(title.replace(/-/g, ' ')); 
+    const link = `http://localhost:3000/display-books/${formattedTitle}/description`;
+    await sendNotification(notificationText, link);
 
     response.status(201).json({ message: 'Book added successfully by user', book: createdBook });
 });
@@ -95,33 +103,39 @@ export const markBookAsAddedByStaff = asyncHandler(async (request, response) => 
 
 // Edit Book
 export const editBook = asyncHandler(async (request, response) => {
-        const { bookTitle } = request.params; 
-        const { authors, title, genre, category, isbn, publisher, language, description } = request.body;
-        
-        const coverImage = request.files?.coverImage ? request.files.coverImage[0].path : null;
-        const bookFile = request.files?.bookFile ? request.files.bookFile[0].path : null;
+    const { title } = request.params;
+    const { authors, genre, category, isbn, publisher, language, description } = request.body;
 
-        // Find the book by title
-        const book = await Book.findOne({ title: bookTitle });
+    const coverImage = request.files?.coverImage ? request.files.coverImage[0].path : null;
+    const bookFile = request.files?.bookFile ? request.files.bookFile[0].path : null;
 
-        if (book) {
-            // Update the book details
-            book.authors = authors || book.authors;
-            book.title = title || book.title;
-            book.genre = genre || book.genre;
-            book.category = category || book.category;
-            book.coverImage = coverImage || book.coverImage;
-            book.isbn = isbn || book.isbn;
-            book.publisher = publisher || book.publisher;
-            book.language = language || book.language;
-            book.description = description || book.description;
+    const book = await Book.findOne({ title: title });
 
-            const updatedBook = await book.save();
-            response.json({ message: 'Book updated successfully', book: updatedBook });
-        } else {
-            response.status(404).json({ message: 'Book not found' });
+    if (book) {
+        if (authors) {
+            try {
+                book.authors = JSON.parse(authors);
+            } catch (error) {
+                return response.status(400).json({ message: 'Invalid authors data' });
+            }
         }
+
+        if (genre) book.genre = genre;
+        if (category) book.category = category;
+        if (isbn) book.isbn = isbn;
+        if (publisher) book.publisher = publisher;
+        if (language) book.language = language;
+        if (description) book.description = description;
+        if (coverImage) book.coverImage = coverImage;
+        if (bookFile) book.bookFile = bookFile;
+
+        const updatedBook = await book.save();
+        response.json({ message: 'Book updated successfully', book: updatedBook });
+    } else {
+        response.status(404).json({ message: 'Book not found' });
+    }
 });
+
 
 
 // Display All Books

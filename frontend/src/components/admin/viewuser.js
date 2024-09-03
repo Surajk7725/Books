@@ -1,7 +1,8 @@
-import React from 'react';
-import {Link} from 'react-router-dom';
+import React, {useState, useEffect} from 'react';
+import {Link, useParams} from 'react-router-dom';
 import {Breadcrumb, Card} from 'antd';
 import { Line, Bar } from 'react-chartjs-2';
+import axiosInstance from '../axiosInstance';
 import {Chart as ChartJS,RadarController, RadialLinearScale,LineElement,CategoryScale,LinearScale,PointElement,Title,Tooltip,Legend} from 'chart.js';
 
 ChartJS.register(RadarController, RadialLinearScale,LineElement,CategoryScale,LinearScale,PointElement,Title,Tooltip,Legend);
@@ -80,6 +81,27 @@ const data = {
 
 
 function ViewUser() {
+  const { username } = useParams(); 
+  const [bookmarkedBooks, setBookmarkedBooks] = useState([]);
+
+  const baseURL = 'http://localhost:5000/api/';
+
+  useEffect(() => {
+    const fetchBookmarkedBooks = async () => {
+      try {
+        const response = await axiosInstance.get(`/books/user/${username}/bookmarks`);
+        const allBookmarkedBooks = response.data;
+        const limitedBookmarkedBooks = allBookmarkedBooks.slice(0, 3); // Limit to 3 books
+        setBookmarkedBooks(limitedBookmarkedBooks);
+      } catch (error) {
+        console.error('Error fetching bookmarked books:', error);
+      }
+    };
+
+    fetchBookmarkedBooks();
+  }, [username]);
+
+
   return (
     
 
@@ -112,22 +134,18 @@ function ViewUser() {
     </div>
 
     <div className="bg-white p-8 rounded-lg shadow-md mt-8">
-        <h2 className="text-xl font-semibold mb-6">Top Books Read</h2>
+        <h2 className="text-xl font-semibold mb-6">Top Bookmarked Books</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            {topBooks.map((book, index) => (
-                <div key={index} className="bg-gray-100 p-4 rounded-lg shadow-lg flex flex-col items-center">
-                    <div className="w-24 h-36 mb-2 flex items-center justify-center">
-                        {typeof book.cover === 'string' ? (
-                            <img src={book.cover} alt={book.title} className="w-full h-full object-cover" />
-                        ) : (
-                            book.cover
-                        )}
-                    </div>
-                    <h3 className="text-lg font-medium text-center">{book.title}</h3>
-                </div>
-            ))}
+          {bookmarkedBooks.map((book, index) => (
+            <div key={index} className="bg-gray-100 p-4 rounded-lg shadow-lg flex flex-col items-center">
+              <div className="w-24 h-36 mb-2 flex items-center justify-center">
+                <img src={book.coverImage ? `${baseURL}${book.coverImage.replace(/\\/g, '/')}` : 'default-image-path.jpg'} alt={book.title} className="w-full h-full object-cover" />
+              </div>
+              <h3 className="text-lg font-medium text-center">{book.title}</h3>
+            </div>
+          ))}
         </div>
-    </div>
+      </div>
 </div>
 
   )

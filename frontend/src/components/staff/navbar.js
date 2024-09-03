@@ -96,23 +96,9 @@ export default function NavBar() {
 
                     </div>
 
-                    <span className="flex items-center">
-                        <UserIcon className="h-5 w-5" /> Users </span>
-
-                    <div className="relative mt-1.5">
-                        <button
-                            onClick={() => setUsersDropdownOpen(!usersDropdownOpen)}
-                            className="flex items-center text-white-700 hover:text-gray-300 transition duration-300 ease-in-out"
-                        >
-                            <ChevronDownIcon className="h-4 w-4 ml-[-1rem]" />
-                        </button>
-                        {usersDropdownOpen && (
-                            <div className="absolute z-10 mt-2 w-48 bg-white text-black rounded-md shadow-lg">
-                                <Link to="/manageuser-data" className="block px-4 py-2 hover:bg-gray-100">Manage User</Link>
-                                <Link to="/userbooks-data" className="block px-4 py-2 hover:bg-gray-100">User Books</Link>
-                            </div>
-                        )}
-                    </div>
+                    <Link to="/userbooks-data" className="text-gray-700 hover:text-gray-300 transition duration-300 ease-in-out"><span className="flex items-center">
+                        <UserIcon className="h-5 w-5" />Users</span>
+                    </Link>
 
                     <span className="flex items-center">
                         <PencilIcon className="h-5 w-5" /> Novels </span>
@@ -218,24 +204,9 @@ export default function NavBar() {
 
                     </div>
 
-                    <span className="flex items-center">
-                        <UserIcon className="h-5 w-5" /> Users </span>
-
-                    <div className="relative mt-1.5">
-                        <button
-                            onClick={() => setUsersDropdownOpen(!usersDropdownOpen)}
-                            className="flex items-center text-white-700 hover:text-gray-300 transition duration-300 ease-in-out"
-                        >
-                            <ChevronDownIcon className="h-4 w-4 ml-16 mt-[-2rem]" />
-                        </button>
-
-                        {usersDropdownOpen && (
-                            <div className="absolute z-10 mt-2 w-48 bg-white text-black rounded-md shadow-lg">
-                                <Link to="/manageuser-data" className="block px-4 py-2 hover:bg-gray-100">Manage User</Link>
-                                <Link to="/userbooks-data" className="block px-4 py-2 hover:bg-gray-100">User Books</Link>
-                            </div>
-                        )}
-                    </div>
+                    <Link to="/userbooks-data" className="block py-2 bg-white text-black hover:text-gray-300"><span className="flex items-center">
+                        <UserIcon className="h-5 w-5" />Users</span>
+                    </Link>
 
                     <span className="flex items-center">
                         <PencilIcon className="h-5 w-5" /> Novels </span>
@@ -254,15 +225,6 @@ export default function NavBar() {
                             </div>
                         )}
                     </div>
-
-
-                    <Link to="#" className="block py-2 bg-white text-black hover:text-gray-300"><span className="flex items-center">
-                        <UserIcon className="h-5 w-5" /> Manage Users</span>
-                    </Link>
-                    <Link to="/staff-writeinfo" className="block py-2 bg-white text-black hover:text-gray-300"><span className="flex items-center">
-                        <PencilIcon className="h-5 w-5" /> Written Notes</span>
-                    </Link>
-
 
 
                     <Link to="/staff-contact" className="block py-2 bg-white text-black hover:text-gray-300"><span className="flex items-center">

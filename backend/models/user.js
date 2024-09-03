@@ -37,7 +37,6 @@ const userSchema = new mongoose.Schema({
             count: { type: Number, default: 0 }
         }
     ],
-    bookmarks: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Book' }],
     
 }, { timestamps: true });
 

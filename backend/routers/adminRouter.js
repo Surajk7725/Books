@@ -1,5 +1,5 @@
 import express from 'express';
-import { addAdmin, deleteAdmin, editAdmin, getAdminById, getAdminDashboardStats, getAllAdmin, getBookDetails, getStaffHistory, getUserHistory, updateAdminPassword } from '../controllers/adminController.js';
+import { addAdmin, deleteAdmin, editAdmin, getAdminById, getAdminDashboardStats, getAllAdmin, getStaffHistory, getUserHistory, updateAdminPassword } from '../controllers/adminController.js';
 
 
 const router = express.Router();
@@ -13,7 +13,6 @@ router.put('/update-password/:username', updateAdminPassword);
 router.get('/counts', getAdminDashboardStats);
 router.get('/user-history', getUserHistory);
 router.get('/staff-history', getStaffHistory);
-router.get('/book-history', getBookDetails);
 
 
 export default router;

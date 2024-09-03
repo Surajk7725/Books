@@ -87,7 +87,6 @@ const All_Books = () => {
       <NavBar />
       <ToastContainer />
       <div className="container mx-auto px-4 py-6 relative">
-        {/* Search bar */}
         <div className="absolute top-4 right-4 flex items-center space-x-2">
           <input
             type="text"

@@ -62,6 +62,10 @@ import axiosInstance from './../axiosInstance';
     const handleEdit = (userName) => {
       navigate(`/admin/staff-edit/${userName}`);
     };
+
+    const handleView = (userName) => {
+      navigate(`/admin/staff-display/${userName}`);
+    };
   
     const handleDelete = async (key, userName) => {
       try {
@@ -177,7 +181,7 @@ import axiosInstance from './../axiosInstance';
         key: 'display',
         render: (_, record) => (
           <Space size="middle">
-            <Button type="default" style={{ backgroundColor: 'green', color: 'white' }} onClick={() => console.log(`Display user ${record.key}`)}>View</Button>
+            <Button type="default" style={{ backgroundColor: 'green', color: 'white' }} onClick={() => handleView(record.userName)}>View</Button>
           </Space>
         ),
       },

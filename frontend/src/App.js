@@ -34,7 +34,6 @@ import Staff_Profile from './components/staff/staffprofile.js';
 import UserContent from './components/staff/writtenDescription.js';
 import NovelData from './components/staff/novelData.js';
 import UserBooks from './components/staff/userbooks.js';
-import ManageUser from './components/staff/manageuser.js';
 import BookReview from './components/staff/bookreview.js';
 import ContactUsR from './components/staff/contact.js';
 import PageTitle from './components/pagetitle.js'; 
@@ -108,7 +107,6 @@ function App() {
         <Route path='/staff-writeinfo' element={<UserContent />} />
         <Route path='/novel-data' element={<NovelData />} />
         <Route path='/userbooks-data' element={<UserBooks />} />
-        <Route path='/manageuser-data' element={<ManageUser />} />
         <Route path='/staff-bookreview' element={<BookReview />} />
         <Route path='/staff-contact' element={<ContactUsR />} />
         </Route>
@@ -132,8 +130,8 @@ function App() {
           <Route path='staff-display' element={<StaffDisplay />} />
           <Route path='books' element={<Books />} />
           <Route path='books/view/:title' element={<ViewBook />} />
-          <Route path='user-display/view' element={<ViewUser />} />
-          <Route path='staff-display/view' element={<ViewStaff />} />
+          <Route path='user-display/:username' element={<ViewUser />} />
+          <Route path='staff-display/:username' element={<ViewStaff />} />
  
         </Route>
        </Route>

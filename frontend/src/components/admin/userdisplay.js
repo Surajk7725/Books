@@ -62,6 +62,10 @@ const UserDisplay = () => {
     navigate(`/admin/user-edit/${userName}`);
   };
 
+  const handleView = (userName) => {
+    navigate(`/admin/user-display/${userName}`);
+  };
+
   const handleDelete = async (key, userName) => {
     try {
       await axiosInstance.delete(`/user/delete/${userName}`);
@@ -170,7 +174,7 @@ const UserDisplay = () => {
       key: 'display',
       render: (_, record) => (
         <Space size="middle">
-          <Button type="default" style={{ backgroundColor: 'green', color: 'white' }} onClick={() => console.log(`Display user ${record.key}`)}>View</Button>
+          <Button type="default" style={{ backgroundColor: 'green', color: 'white' }} onClick={() => handleView(record.userName)}>View</Button>
         </Space>
       ),
     },

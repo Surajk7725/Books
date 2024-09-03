@@ -14,6 +14,7 @@ function BookForm() {
     const [coverImage, setCoverImage] = useState(null);
     const [bookFile, setBookFile] = useState(null);
     const [category, setCategory] = useState('');
+    const [language, setLanguage] = useState('');
 
     const addAuthorField = () => {
         setAuthors([...authors, '']);
@@ -156,6 +157,20 @@ function BookForm() {
                                 <option value="Popular">Popular</option>
                                 <option value="Academics">Academics</option>
                             </select>
+                        </div>
+                        <div className="mb-4">
+                            <label className="block text-gray-700 font-bold mb-2" htmlFor="language">
+                                Language <span className="text-red-500">*</span>
+                            </label>
+                            <input
+                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                id="language"
+                                type="text"
+                                placeholder="Enter language"
+                                value={language}
+                                onChange={(e) => setLanguage(e.target.value)}
+                                required
+                            />
                         </div>
                         <div className="mb-4">
                             <label className="block text-gray-700 font-bold mb-2" htmlFor="description">

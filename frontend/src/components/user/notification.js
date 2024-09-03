@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Card } from 'antd';
 import 'tailwindcss/tailwind.css';
 import { useNavigate } from 'react-router-dom';
-import axiosInstance from '../axiosInstance'; 
+import axiosInstance from '../axiosInstance';
 
 const Notifications = () => {
     const [notifications, setNotifications] = useState([]);
@@ -11,10 +11,16 @@ const Notifications = () => {
     useEffect(() => {
         const fetchNotifications = async () => {
             try {
-                const response = await axiosInstance.get('/notifications/notify'); 
-                setNotifications(response.data);
+                const response = await axiosInstance.get('/notifications/notify');
+
+                // Filter notifications for users
+                const userNotifications = response.data.filter(notification => 
+                    notification.message.startsWith('New Book Added')
+                );
+
+                setNotifications(userNotifications);
             } catch (error) {
-                console.error('Error fetching notifications:', error);
+                console.error('Error fetching notifications:', error.message);
             }
         };
 
@@ -22,13 +28,17 @@ const Notifications = () => {
     }, []);
 
     const handleNotificationClick = (link) => {
-        navigate(link);
+        if (link.startsWith('http')) {
+            window.location.href = link;
+        } else {
+            navigate(link);
+        }
     };
 
     return (
         <div className="p-4 flex justify-center">
             <Card
-                title="Notification"
+                title="User Notifications"
                 className="shadow-sm w-80"
                 bordered={false}
                 bodyStyle={{ maxHeight: '300px', overflowY: 'auto' }}

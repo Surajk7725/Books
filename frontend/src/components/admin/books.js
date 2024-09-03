@@ -48,7 +48,7 @@ const Books = () => {
   const paginate = pageNumber => setCurrentPage(pageNumber);
 
   const viewBook = (bookTitle) => {
-    const formattedTitle = bookTitle.replace(/\s+/g, '-').toLowerCase();
+    const formattedTitle = bookTitle.replace(/-/g, ' ');
     navigate(`/admin/books/view/${formattedTitle}`);
   };
 

@@ -10,6 +10,7 @@ import axiosInstance from '../axiosInstance';
 function Book_Description() {
   const [showMore, setShowMore] = useState(false);
   const [bookData, setBookData] = useState(null); 
+  const [averageRating, setAverageRating] = useState(0);
   const { title } = useParams(); 
   const navigate = useNavigate();
 
@@ -23,6 +24,21 @@ function Book_Description() {
       .catch(error => {
         console.error('There was an error fetching the book data:', error);
         toast.error('Failed to fetch book data.');
+      });
+
+      // Fetch average rating
+      axiosInstance.get(`/books/average-rating/${title}`)
+      .then(response => {
+        if (response.data && response.data.averageRating !== undefined) {
+          setAverageRating(response.data.averageRating);
+        } else {
+          console.error('Unexpected response format:', response.data);
+          toast.error('Unexpected response format for average rating.');
+        }
+      })
+      .catch(error => {
+        console.error('There was an error fetching the average rating:', error);
+        toast.error('Failed to fetch average rating.');
       });
   }, [title]); 
 
@@ -80,8 +96,7 @@ function Book_Description() {
               <p className="text-lg">Language: {bookData.language}</p> 
             </div>
             <div className="flex items-center mt-2">
-              <span className="bg-green-100 text-green-800 px-2 py-1 rounded-md mr-2">{bookData.rating} ⭐️</span> 
-              <span className="text-gray-600">({bookData.reviews} reviews)</span> 
+              <span className="bg-green-100 text-green-800 px-2 py-1 rounded-md mr-2">{averageRating} ⭐️</span> 
             </div>
             <div className="mt-4">
               <DocumentTextIcon className="h-5 w-5 text-gray-500 mr-2 inline" />

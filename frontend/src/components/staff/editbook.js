@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axiosInstance from '../axiosInstance';
+import { useParams } from 'react-router-dom';
 import { PlusCircleIcon } from '@heroicons/react/outline';
 import NavBar from '../staff/navbar';
 import Footer from './footer';
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
-
-function EditBook({ match }) {
+function EditBook() {
+    const { title: routeTitle } = useParams();
     const [authors, setAuthors] = useState(['']);
     const [title, setTitle] = useState('');
     const [genre, setGenre] = useState('');
@@ -15,39 +19,33 @@ function EditBook({ match }) {
     const [isbn, setIsbn] = useState('');
     const [publisher, setPublisher] = useState('');
     const [language, setLanguage] = useState('');
-    const [bookDescription, setBookDescription] = useState('');
+    const [description, setDescription] = useState('');
 
-    // useEffect(() => {
-    //     // Fetch the book data based on the ID from match.params.id
-    //     // and populate the state variables with the data
-    //     // This is just a placeholder, replace with actual fetch logic
-    //     const fetchBookData = async () => {
-    //         // Replace this with actual data fetching logic
-    //         const bookData = {
-    //             title: 'Sample Book',
-    //             authors: ['Author 1', 'Author 2'],
-    //             genre: 'Fantasy',
-    //             description: 'Short description',
-    //             coverImageUrl: 'http://example.com/cover.jpg',
-    //             isbn: '123456789',
-    //             publisher: 'Sample Publisher',
-    //             language: 'English',
-    //             bookDescription: 'Detailed book description',
-    //         };
+    const baseURL = 'http://localhost:5000/api/';
 
-    //         setTitle(bookData.title);
-    //         setAuthors(bookData.authors);
-    //         setGenre(bookData.genre);
-    //         setDescription(bookData.description);
-    //         setCoverImageUrl(bookData.coverImageUrl);
-    //         setIsbn(bookData.isbn);
-    //         setPublisher(bookData.publisher);
-    //         setLanguage(bookData.language);
-    //         setBookDescription(bookData.bookDescription);
-    //     };
+    useEffect(() => {
+        const fetchBookData = async () => {
+            try {
+                const response = await axiosInstance.get(`/books/display/${encodeURIComponent(routeTitle)}`);
+                const bookData = response.data;
 
-    //     fetchBookData();
-    // }, [match.params.id]);
+                setTitle(bookData.title);
+                setAuthors(bookData.authors);
+                setGenre(bookData.genre);
+                setCategory(bookData.category);
+                setCoverImageUrl(bookData.coverImageUrl);
+                setIsbn(bookData.isbn);
+                setPublisher(bookData.publisher);
+                setLanguage(bookData.language);
+                setDescription(bookData.description);
+            } catch (error) {
+                console.error('Error fetching book data:', error);
+            }
+        };
+
+        fetchBookData();
+    }, [routeTitle]);
+
 
     const addAuthorField = () => {
         setAuthors([...authors, '']);
@@ -61,18 +59,49 @@ function EditBook({ match }) {
 
     const handleImageUpload = (e) => {
         const file = e.target.files[0];
-        setCoverImage(file);
+        setCoverImage(file); 
+    };
+    
+    const handleBookFileUpload = (e) => {
+        const file = e.target.files[0];
+        setBookFile(file); 
     };
 
-    const handleFormSubmit = (e) => {
+    const handleFormSubmit = async (e) => {
         e.preventDefault();
-        // Handle form submission logic
-        console.log({ title, authors, genre, category,  coverImage, coverImageUrl, bookFile, isbn, publisher, language, bookDescription });
+    
+        const formData = new FormData();
+        formData.append('title', title);
+        formData.append('authors', JSON.stringify(authors));
+        formData.append('genre', genre);
+        formData.append('category', category);
+    
+        if (coverImage) formData.append('coverImage', coverImage);
+        formData.append('coverImageUrl', coverImageUrl); 
+        if (bookFile) formData.append('bookFile', bookFile);
+    
+        formData.append('isbn', isbn);
+        formData.append('publisher', publisher);
+        formData.append('language', language);
+        formData.append('description', description);
+    
+        try {
+            await axiosInstance.put(`/books/edit/${title}`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data', 
+                },
+            });
+            toast.success('Book updated successfully!');
+        } catch (error) {
+            toast.error('Error updating book.');
+            console.error('Error updating book:', error);
+        }
     };
-
+    
     return (
         <div className="min-h-screen bg-gray-100 flex flex-col">
             <NavBar />
+            <ToastContainer />
             <main className="flex-grow mt-8 mb-8">
                 <div className="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md">
                     <h2 className="text-2xl font-bold mb-6 text-gray-800">Edit Book</h2>
@@ -140,8 +169,8 @@ function EditBook({ match }) {
                         </div>
 
                         <div className="mb-4">
-                            <label className="block text-gray-700 font-bold mb-2" htmlFor="genre">
-                                Genre
+                            <label className="block text-gray-700 font-bold mb-2" htmlFor="category">
+                                Category
                             </label>
                             <select
                                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -150,16 +179,15 @@ function EditBook({ match }) {
                                 onChange={(e) => setCategory(e.target.value)}
                             >
                                 <option value="">Select a category</option>
-                                <option value="Fantasy">Kids</option>
-                                <option value="Romance">Popular</option>
-                                <option value="Biography">Academics</option>
+                                <option value="Kids">Kids</option>
+                                <option value="Popular">Popular</option>
+                                <option value="Academics">Academics</option>
                             </select>
                         </div>
 
-                        
                         <div className="mb-4">
                             <label className="block text-gray-700 font-bold mb-2" htmlFor="isbn">
-                                ISBN 
+                                ISBN
                             </label>
                             <input
                                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -174,7 +202,7 @@ function EditBook({ match }) {
 
                         <div className="mb-4">
                             <label className="block text-gray-700 font-bold mb-2" htmlFor="publisher">
-                                Publisher 
+                                Publisher
                             </label>
                             <input
                                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -189,7 +217,7 @@ function EditBook({ match }) {
 
                         <div className="mb-4">
                             <label className="block text-gray-700 font-bold mb-2" htmlFor="language">
-                                Language 
+                                Language
                             </label>
                             <input
                                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -203,63 +231,61 @@ function EditBook({ match }) {
                         </div>
 
                         <div className="mb-4">
-                            <label className="block text-gray-700 font-bold mb-2" htmlFor="bookDescription">
+                            <label className="block text-gray-700 font-bold mb-2" htmlFor="description">
                                 Book Description
                             </label>
                             <textarea
-                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                 id="bookDescription"
-                                rows="5"
-                                value={bookDescription}
-                                onChange={(e) => setBookDescription(e.target.value)}
-                                placeholder="Enter detailed book description"
-                            ></textarea>
+                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                placeholder="Enter book description"
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
+                            />
                         </div>
 
                         <div className="mb-4">
-                            <label className="block text-gray-700 font-bold mb-2" htmlFor="cover-image">
-                                Cover Image <span className="text-red-500">*</span>
-                            </label>
-                            <div className="flex items-center">
-                                <input
-                                    className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-2"
-                                    id="cover-image"
-                                    type="file"
-                                    accept="image/*"
-                                    onChange={handleImageUpload}
-                                />
-                                <span className="text-gray-500">or</span>
-                                <input
-                                    className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ml-2"
-                                    id="cover-image-url"
-                                    type="text"
-                                    value={coverImageUrl}
-                                    onChange={(e) => setCoverImageUrl(e.target.value)}
-                                    placeholder="Enter image URL"
-                                />
-                            </div>
-                        </div>
-                        <div className="mb-6">
-                            <label className="block text-gray-700 font-bold mb-2" htmlFor="book-file">
-                                Book File <span className="text-red-500">*</span>
+                            <label className="block text-gray-700 font-bold mb-2" htmlFor="coverImage">
+                                Cover Image
                             </label>
                             <input
-                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                id="book-file"
                                 type="file"
-                                onChange={(e) => setBookFile(e.target.files[0])}
-                                accept=".pdf,.doc,.docx"
-                                required
+                                id="coverImage"
+                                accept="image/*"
+                                onChange={handleImageUpload}
                             />
+                            {coverImage && (
+                                <p className="mt-2 text-gray-600">{coverImage}</p> 
+                            )}
+                            {coverImageUrl && (
+                                <img
+                                    src={coverImageUrl}
+                                    alt="Cover"
+                                    className="mt-2 w-32 h-32 object-cover"
+                                />
+                            )}
                         </div>
-                        <div className="flex items-center justify-between">
-                            <button
-                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                                type="submit"
-                            >
-                                Submit
-                            </button>
+
+                        <div className="mb-4">
+                            <label className="block text-gray-700 font-bold mb-2" htmlFor="bookFile">
+                                Book File
+                            </label>
+                            <input
+                                type="file"
+                                id="bookFile"
+                                accept=".pdf,.epub"
+                                onChange={handleBookFileUpload}  
+                            />
+                            {bookFile && (
+                                <p className="mt-2 text-gray-600">{bookFile}</p> 
+                            )}
                         </div>
+
+                        <button
+                            type="submit"
+                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                        >
+                            Update Book
+                        </button>
                     </form>
                 </div>
             </main>
