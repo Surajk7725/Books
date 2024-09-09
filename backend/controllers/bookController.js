@@ -369,57 +369,40 @@ const findNestedReply = (replies, replyId) => {
 export const addCommentReply = asyncHandler(async (request, response) => {
     const { title, author, commentId, replyToId, reply } = request.body;
 
-    try {
-        const book = await Book.findOne({ title, authors: author });
-        if (!book) {
-            return response.status(404).json({ message: 'Book not found' });
-        }
-
-        // Find the main comment by commentId
-        const comment = book.bookComments.id(commentId);
-        if (!comment) {
-            return response.status(404).json({ message: 'Comment not found' });
-        }
-
-        const userId = request.user._id; // Assuming the user ID is in the request object
-        const user = await User.findById(userId).select('username profilePic');
-        if (!user) {
-            return response.status(404).json({ message: 'User not found' });
-        }
-
-        const newReply = {
-            user: userId,
-            username: user.username,
-            profilePic: user.profilePic, 
-            comment: reply,
-            replies: [],
-            createdAt: new Date() 
-        };
-
-        let targetReply = comment;
-
-        if (replyToId) {
-            targetReply = findNestedReply(comment.replies, replyToId);
-            if (!targetReply) {
-                return response.status(404).json({ message: 'Reply to comment not found' });
-            }
-        }
-
-        // Add the new reply to the target comment or nested reply
-        targetReply.replies.push(newReply);
-
-        // Mark the nested replies as modified for Mongoose
-        book.markModified('bookComments');
-
-        // Ensure the modified nested path is explicitly marked
-        book.markModified(`bookComments.${commentId}.replies`);
-
-        await book.save();
-
-        response.status(201).json({ message: 'Reply added successfully' });
-    } catch (error) {
-        response.status(500).json({ message: 'Failed to add reply', error: error.message });
+    const book = await Book.findOne({ title, authors: author });
+    if (!book) {
+        return response.status(404).json({ message: 'Book not found' });
     }
+
+    // Find the main comment by commentId
+    const comment = book.bookComments.id(commentId);
+    if (!comment) {
+        return response.status(404).json({ message: 'Comment not found' });
+    }
+
+    const userId = request.user._id;
+    const user = await User.findById(userId).select('username');
+    if (!user) {
+        return response.status(404).json({ message: 'User not found' });
+    }
+
+    const newReply = { user: userId, username: user.username, comment: reply };
+
+    let targetReply = comment;
+
+    // If replyToId is provided, find the nested reply recursively
+    if (replyToId) {
+        targetReply = findNestedReply(comment.replies, replyToId);
+        if (!targetReply) {
+            return response.status(404).json({ message: 'Reply to comment not found' });
+        }
+    }
+
+    // Add the new reply to the target comment or nested reply
+    targetReply.replies.push(newReply);
+    await book.save();
+
+    response.status(201).json({ message: 'Reply added successfully' });
 });
 
 // Display Book Comments
