@@ -42,7 +42,7 @@ export default function CommentCard({ bookTitle, bookAuthor }) {
 
   const handleAddComment = async () => {
     if (!newComment.trim()) {
-      toast.error('Comment cannot be empty ❗');
+      toast.error('Comment cannot be empty');
       return;
     }
     try {
@@ -53,17 +53,17 @@ export default function CommentCard({ bookTitle, bookAuthor }) {
       });
       setComments([...comments, response.data]); 
       setNewComment("");
-      toast.success("Comment added successfully ✔️");
+      toast.success("Comment added successfully");
     } catch (error) {
       console.error("Error adding comment:", error);
-      toast.error('Failed to post comment ❗');
+      toast.error('Failed to post comment');
     }
   };
 
   // Handle adding a reply to a comment
   const handleAddReply = async (commentId) => {
     if (!reply.trim()) {
-      toast.error('Reply cannot be empty ❗');
+      toast.error('Reply cannot be empty');
       return;
     }
     try {
@@ -79,10 +79,10 @@ export default function CommentCard({ bookTitle, bookAuthor }) {
       // Re-fetch comments after submission
       const response = await axiosInstance.get(`/books/${title}/comments`);
       setComments(response.data);
-      toast.success("Reply added successfully ✔️");
+      toast.success("Reply added successfully");
     } catch (error) {
       console.error("Error adding reply:", error);
-      toast.error('Failed to add reply ❗');
+      toast.error('Failed to add reply');
     }
   };
 
@@ -191,14 +191,14 @@ export default function CommentCard({ bookTitle, bookAuthor }) {
                             <div key={reply._id} className="mb-4">
                               <div className="flex items-start space-x-4">
                                 <img
-                                  className="h-8 w-8 rounded-full border-2 border-gray-300 object-cover"
+                                  className="h-10 w-10 rounded-full border-2 border-gray-300 object-cover"
                                   src={reply.user.profilePic ? `${baseURL}${reply.user.profilePic.replace('\\', '/')}` : 'https://default-profile-pic-url.com/avatar.png'}
                                   alt="avatar"
                                 />
-                                <div>
+                                <div className="flex-1">
                                   <div className="flex justify-between items-center">
                                     <h5 className="text-sm font-medium text-gray-800">{reply.user.username}</h5>
-                                    <span className="text-xs text-gray-500">
+                                    <span className="text-sm text-gray-500">
                                       {new Date(reply.createdAt).toLocaleString()}
                                     </span>
                                   </div>
