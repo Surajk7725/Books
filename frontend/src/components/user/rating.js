@@ -1,19 +1,42 @@
-import React, { useState } from 'react';
-import { StarIcon } from '@heroicons/react/solid'; // Assuming a star icon is available
+import React, { useState, useEffect } from 'react';
+import { StarIcon } from '@heroicons/react/solid'; 
 import Footer from './footer';
 import NavBar from '../navbar';
+import { useParams } from 'react-router-dom';
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+import axiosInstance from '../axiosInstance';
+import { useAuth } from '../authcontext';
 
-// Define a sample book for demonstration
-const sampleBook = {
-  id: 1,
-  title: 'To Kill a Mockingbird',
-  author: 'Harper Lee',
-  imageUrl: 'https://images.gr-assets.com/books/1553383690l/2657.jpg'
-};
 
 const Rating = () => {
-  const [rating, setRating] = useState(0); // State to hold the numeric rating (0 means unrated)
-  const [review, setReview] = useState(''); // State to hold the review text
+  const [rating, setRating] = useState(0);
+  const [review, setReview] = useState('');
+  const [book, setBook] = useState(null);
+  const { title } = useParams();
+  const [username, setUsername] = useState('');
+
+  const baseURL = 'http://localhost:5000/api/';
+
+  const { user } = useAuth();
+
+    useEffect(() => {
+        if (user) {
+            setUsername(user.username);
+        }
+    }, [user]);
+
+  // Fetch book data on component mount
+  useEffect(() => {
+    axiosInstance.get(`/books/display/${title}`)
+      .then(response => {
+        setBook(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching book data:', error);
+        toast.error('Failed to fetch book data.');
+      });
+  }, [title]);
 
   const handleStarClick = (starRating) => {
     setRating(starRating);
@@ -23,73 +46,87 @@ const Rating = () => {
     setReview(event.target.value);
   };
 
-  const handleSave = () => {
-    setRating(0);
-    setReview('');
+  const handleSave = async () => {
+    const ratingData = {
+      title: book?.title,
+      rating,
+      review, 
+      username,
+    };
+
+    try {
+      const response = await axiosInstance.patch('/books/rating', ratingData);
+      toast.success('Rating saved successfully!');
+      setRating(0);
+      setReview('');
+    } catch (error) {
+      console.error('Error saving rating:', error.response?.data || error.message);
+      toast.error('Failed to save rating.');
+    }
   };
 
   return (
     <div>
       <NavBar />
       <div className="flex justify-center items-start mt-10 mx-4">
-        {/* Transparent Card Container */}
         <div className="bg-white shadow-lg rounded-lg overflow-hidden flex w-full md:w-4/5 mb-10">
-          {/* Book Image (left side, centered) */}
-          <div className="w-1/2 bg-gray-100 flex justify-center items-center">
-            <img
-              src={sampleBook.imageUrl}
-              alt={`Cover of ${sampleBook.title}`}
-              className="w-full rounded-lg shadow-lg"
-              style={{ maxWidth: '300px', maxHeight: '450px' }}
-            />
-          </div>
-          {/* Rating Form and Details (right side) */}
-          <div className="w-1/2 px-6 py-4">
-            <h2 className="text-2xl font-bold mb-4">{sampleBook.title}</h2>
-            <p className="text-lg mb-2">Author: {sampleBook.author}</p>
-            {/* Star Rating */}
-            <div className="flex items-center mb-4">
-              {[1, 2, 3, 4, 5].map((star) => (
-                <StarIcon
-                  key={star}
-                  className={`h-8 w-8 cursor-pointer ${star <= rating ? 'text-yellow-400' : 'text-gray-300'}`}
-                  onClick={() => handleStarClick(star)}
+          {book ? (
+            <>
+              <div className="w-1/2 bg-gray-100 flex justify-center items-center">
+                <img
+                  src={book.coverImage ? `${baseURL}${book.coverImage.replace(/\\/g, '/')}` : 'default-image-path.jpg'}
+                  alt="Book Cover"
+                  className="w-full h-auto md:h-full object-contain rounded-md"
+                  style={{ maxHeight: '500px' }}
                 />
-              ))}
-            </div>
-            {/* Rating Input */}
-            <div className="mb-4">
-              <label className="block text-lg font-medium mb-2">Rating (required):</label>
-              <input
-                type="number"
-                min="1"
-                max="5"
-                value={rating}
-                onChange={(e) => setRating(parseInt(e.target.value))}
-                className="border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
-              />
-            </div>
-            {/* Review Text */}
-            <div className="mb-4">
-              <label className="block text-lg font-medium mb-2">Review Text:</label>
-              <textarea
-                value={review}
-                onChange={handleReviewChange}
-                className="border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full h-40 resize-none"
-              />
-            </div>
-            {/* Save Button */}
-            <button
-              onClick={handleSave}
-              className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition-colors duration-300"
-            >
-              Save
-            </button>
-          </div>
+              </div>
+              <div className="w-1/2 px-6 py-4">
+                <h2 className="text-2xl font-bold mb-4">{book.title}</h2>
+                <p className="text-lg mb-2">Author: {book.author}</p>
+                <div className="flex items-center mb-4">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <StarIcon
+                      key={star}
+                      className={`h-8 w-8 cursor-pointer ${star <= rating ? 'text-yellow-400' : 'text-gray-300'}`}
+                      onClick={() => handleStarClick(star)}
+                    />
+                  ))}
+                </div>
+                <div className="mb-4">
+                  <label className="block text-lg font-medium mb-2">Rating (required):</label>
+                  <input
+                    type="number"
+                    min="1"
+                    max="5"
+                    value={rating}
+                    onChange={(e) => setRating(parseInt(e.target.value))}
+                    className="border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block text-lg font-medium mb-2">Review Text:</label>
+                  <textarea
+                    value={review}
+                    onChange={handleReviewChange}
+                    className="border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full h-40 resize-none"
+                  />
+                </div>
+                <button
+                  onClick={handleSave}
+                  className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition-colors duration-300"
+                >
+                  Save
+                </button>
+              </div>
+            </>
+          ) : (
+            <p>Loading book details...</p>
+          )}
         </div>
       </div>
       {/* Footer with margin top for space */}
       <Footer className="mt-14" />
+      <ToastContainer />
     </div>
   );
 };

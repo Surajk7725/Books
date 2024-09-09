@@ -7,6 +7,7 @@ const contentSchema = new mongoose.Schema({
     content: { type: String, required: true },
     username: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },  
     fullName: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    published: {type: Boolean,default: false},
     stars: { type: Number, default: 0 },
     comments: { type: String, default: '' },
     status: { type: Boolean, default: false }

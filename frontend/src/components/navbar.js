@@ -1,30 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Notifications from './user/notification';
-import {  Dropdown } from 'antd';
+import { Dropdown } from 'antd';
 import { BellOutlined } from '@ant-design/icons';
-import { useNavigate } from "react-router-dom";
 import { useAuth } from './authcontext';
-import { ChevronDownIcon, BookOpenIcon, PencilIcon, MailIcon, UserCircleIcon, CogIcon, QuestionMarkCircleIcon, LogoutIcon, StarIcon } from '@heroicons/react/outline'; 
+import { ChevronDownIcon, BookOpenIcon, PencilIcon, MailIcon, UserCircleIcon, CogIcon, QuestionMarkCircleIcon, LogoutIcon, StarIcon } from '@heroicons/react/outline';
 
 export default function NavBar() {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [booksDropdownOpen, setBooksDropdownOpen] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false); // State for mobile menu toggle
+    const [username, setUsername] = useState('');
+    const { user } = useAuth();
 
-    const navigate = useNavigate();
-    const { logout } = useAuth();
-    const handleSignOut = () => {
-        console.log("User signed out");
-        logout();
-        navigate("/login");
-    };
+    useEffect(() => {
+        if (user) {
+            setUsername(user.username);
+        }
+    }, [user]);
 
     const menu = (
         <div className="max-h-48">
-          <Notifications />
+            <Notifications />
         </div>
-      );
+    );
+
+    // Construct the image URL
+    const baseURL = 'http://localhost:5000/api/';
+    const profilePicURL = user.profilePic ? `${baseURL}${user.profilePic.replace('\\', '/')}` : '';
 
     return (
         <div className="bg-transparent-800 text-black rounded-lg shadow-md">
@@ -47,33 +50,37 @@ export default function NavBar() {
 
                 {/* Desktop navigation */}
                 <div className="hidden md:flex space-x-6">
+                    <Link to="/display-books" className="text-gray-700 hover:text-gray-300 transition duration-300 ease-in-out">
+                        <span className="flex items-center">
+                            <BookOpenIcon className="h-5 w-5" /> Books
+                        </span>
+                    </Link>
 
-                <Link to="/display-books" className="text-gray-700 hover:text-gray-300 transition duration-300 ease-in-out"><span className="flex items-center">
-                        <BookOpenIcon className="h-5 w-5" /> Books</span>
-                </Link>
-
-                <div className="relative mt-1.5">
-                    <button
-                        onClick={() => setBooksDropdownOpen(!booksDropdownOpen)}
-                        className="flex items-center text-white-700 hover:text-gray-300 transition duration-300 ease-in-out"
-                    >
-                        <ChevronDownIcon className="h-4 w-4 ml-[-1rem]" />
-                    </button>
+                    <div className="relative mt-1.5">
+                        <button
+                            onClick={() => setBooksDropdownOpen(!booksDropdownOpen)}
+                            className="flex items-center text-white-700 hover:text-gray-300 transition duration-300 ease-in-out"
+                        >
+                            <ChevronDownIcon className="h-4 w-4 ml-[-1rem]" />
+                        </button>
                         {booksDropdownOpen && (
                             <div className="absolute z-10 mt-2 w-48 bg-white text-black rounded-md shadow-lg">
-                                <Link to="/display-books/kids" className="block px-4 py-2 hover:bg-gray-100"> Kids</Link>
-                                <Link to="/display-books/popular" className="block px-4 py-2 hover:bg-gray-100">Popular</Link>
-                                <Link to="/display-books/academics" className="block px-4 py-2 hover:bg-gray-100">Academics</Link>
+                                <Link to="/display-books/Kids" className="block px-4 py-2 hover:bg-gray-100"> Kids</Link>
+                                <Link to="/display-books/Popular" className="block px-4 py-2 hover:bg-gray-100">Popular</Link>
+                                <Link to="/display-books/Academics" className="block px-4 py-2 hover:bg-gray-100">Academics</Link>
                             </div>
                         )}
-                </div>
+                    </div>
 
-                    
-                    <Link to="/write-book" className="text-gray-700 hover:text-gray-300 transition duration-300 ease-in-out"><span className="flex items-center">
-                        <PencilIcon className="h-5 w-5" /> Write A Note</span>
+                    <Link to="/write-book" className="text-gray-700 hover:text-gray-300 transition duration-300 ease-in-out">
+                        <span className="flex items-center">
+                            <PencilIcon className="h-5 w-5" /> Write A Note
+                        </span>
                     </Link>
-                    <Link to="/contactus" className="text-gray-700 hover:text-gray-300 transition duration-300 ease-in-out"><span className="flex items-center">
-                        <MailIcon className="h-5 w-5" /> Contact Us</span>
+                    <Link to="/contactus" className="text-gray-700 hover:text-gray-300 transition duration-300 ease-in-out">
+                        <span className="flex items-center">
+                            <MailIcon className="h-5 w-5" /> Contact Us
+                        </span>
                     </Link>
                 </div>
 
@@ -92,15 +99,15 @@ export default function NavBar() {
                             aria-haspopup="true"
                         >
                             <img
-                                src="https://wallpapers.com/images/hd/yuuichi-katagiri-anime-portrait-5xl430n009kmsg7l.jpg"
+                                src={profilePicURL}
                                 alt="Profile"
-                                className="h-8 w-8 rounded-full"
+                                className="h-10 w-10 rounded-full border-2 border-gray-300 object-cover"
                             />
                             <ChevronDownIcon className="h-4 w-4 ml-1" />
                         </button>
                         {dropdownOpen && (
                             <div className="absolute z-10 mt-2 w-48 bg-white text-black rounded-md shadow-lg right-0">
-                                <Link to="/profile" className="px-4 py-2 flex items-center hover:bg-gray-100">
+                                <Link to={`/profile/${username}`} className="px-4 py-2 flex items-center hover:bg-gray-100">
                                     <UserCircleIcon className="h-5 w-5 mr-2" /> My Profile
                                 </Link>
                                 <Link to="/my-wishlist" className="px-4 py-2 flex items-center hover:bg-gray-100">
@@ -115,7 +122,7 @@ export default function NavBar() {
                                 <Link to="/help-center" className="px-4 py-2 flex items-center hover:bg-gray-100">
                                     <QuestionMarkCircleIcon className="h-5 w-5 mr-2" /> Help
                                 </Link>
-                                <Link className="px-4 py-2 flex items-center hover:bg-gray-100" onClick={handleSignOut}>
+                                <Link to="/" className="px-4 py-2 flex items-center hover:bg-gray-100">
                                     <LogoutIcon className="h-5 w-5 mr-2" /> Logout
                                 </Link>
                             </div>
@@ -125,12 +132,13 @@ export default function NavBar() {
             </nav>
 
             {/* Mobile menu */}
-       {menuOpen && (
+            {menuOpen && (
                 <div className="md:hidden bg-transparent-800 text-black py-2 px-4">
-
-                <Link to="/display-books" className="text-gray-700 hover:text-gray-300 transition duration-300 ease-in-out"><span className="flex items-center">
-                        <BookOpenIcon className="h-5 w-5" /> Books</span>
-                </Link>
+                    <Link to="/display-books" className="text-gray-700 hover:text-gray-300 transition duration-300 ease-in-out">
+                        <span className="flex items-center">
+                            <BookOpenIcon className="h-5 w-5" /> Books
+                        </span>
+                    </Link>
                     <div className="relative mt-1.5">
                         <button
                             onClick={() => setBooksDropdownOpen(!booksDropdownOpen)}
@@ -140,17 +148,21 @@ export default function NavBar() {
                         </button>
                         {booksDropdownOpen && (
                             <div className="absolute left-0 mt-2 w-full bg-white text-black rounded-md shadow-lg">
-                                <Link to="/display-books/kids" className="block px-4 py-2 hover:bg-gray-100">Kids</Link>
-                                <Link to="/display-books/popular" className="block px-4 py-2 hover:bg-gray-100">Popular</Link>
-                                <Link to="/display-books/academics" className="block px-4 py-2 hover:bg-gray-100">Academics</Link>
+                                <Link to="/display-books/Kids" className="block px-4 py-2 hover:bg-gray-100">Kids</Link>
+                                <Link to="/display-books/Popular" className="block px-4 py-2 hover:bg-gray-100">Popular</Link>
+                                <Link to="/display-books/Academics" className="block px-4 py-2 hover:bg-gray-100">Academics</Link>
                             </div>
                         )}
                     </div>
-                    <Link to="/write-book" className="block py-2 bg-white text-black hover:text-gray-300"><span className="flex items-center">
-                        <PencilIcon className="h-5 w-5" /> Write A Note</span>
+                    <Link to="/write-book" className="block py-2 bg-white text-black hover:text-gray-300">
+                        <span className="flex items-center">
+                            <PencilIcon className="h-5 w-5" /> Write A Note
+                        </span>
                     </Link>
-                    <Link to="/contactus" className="block py-2 bg-white text-black hover:text-gray-300"><span className="flex items-center">
-                        <MailIcon className="h-5 w-5" /> Contact Us</span>
+                    <Link to="/contactus" className="block py-2 bg-white text-black hover:text-gray-300">
+                        <span className="flex items-center">
+                            <MailIcon className="h-5 w-5" /> Contact Us
+                        </span>
                     </Link>
                 </div>
             )}

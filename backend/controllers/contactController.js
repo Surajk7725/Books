@@ -17,7 +17,7 @@ export const createContact = asyncHandler(async (request, response) => {
 // Display all contacts
 export const getAllContacts = asyncHandler(async (request, response) => {
     try {
-        const allcontacts = await Contact.find();
+        const allcontacts = await Contact.find({});
         response.status(200).json(allcontacts);
     } catch (error) {
         response.status(400).json({ message: "Server Error", error: error.message });

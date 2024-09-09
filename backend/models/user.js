@@ -14,14 +14,14 @@ const userSchema = new mongoose.Schema({
     fullName: { type: String, required: true },
     username: { type: String, required: true, unique: true },
     email: { type: String, required: true, unique: true },
-    phonenumber: { type: String, required: true },
-    dob: { type: Date },
+    phoneNumber: { type: String },
+    dob: { type: String },
     address: { type: String },
     password: { type: String},
     profilePic: { type: String },
     bookmarks: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Book' }],  
     socialMediaLinks: {
-        insta: String,
+        instagram: String,
         twitter: String,
         youtube: String,
         linkedin: String
@@ -37,12 +37,7 @@ const userSchema = new mongoose.Schema({
             count: { type: Number, default: 0 }
         }
     ],
-    wishlistedBooks: [
-        { bookId: { type: mongoose.Schema.Types.ObjectId, ref: 'Book' } }
-    ],
     
-
-
 }, { timestamps: true });
 
 const User = mongoose.model('User', userSchema);

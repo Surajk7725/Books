@@ -8,77 +8,95 @@ import Staff from '../models/staff.js';
 import Book from '../models/books.js';
 
 // Adding a admin member
-export const addAdmin = asyncHandler(async (request,response) => {
+export const addAdmin = asyncHandler(async (request, response) => {
     uploadProfilePic(request, response, async (err) => {
         if (err) {
             return response.status(400).json({ message: 'Error uploading image', error: err });
         }
-    
-        const {fullName, username, email, password, phoneNumber, dob, address, socialMediaLinks} = request.body;
+
+        const { fullName, username, email, password, phoneNumber, address, role, permission } = request.body;
         const profilePic = request.file ? request.file.path : null;
 
         try {
-            const hashedPassword = await bcrypt.hash(password,12);
+            const hashedPassword = await bcrypt.hash(password, 12);
+            const parsedSocialMediaLinks = socialMediaLinks ? JSON.parse(socialMediaLinks) : {};
 
             const newAdmin = await Admin.create({
                 fullName,
                 username,
                 email,
-                password : hashedPassword,
+                password: hashedPassword,
                 phoneNumber,
-                dob,
                 address,
                 profilePic,
-                socialMediaLinks
+                socialMediaLinks: parsedSocialMediaLinks,
+                role,
+                permission,
             });
 
-            // Send email with username and password
             const emailSubject = 'Welcome to Our Service';
             const emailText = `Hello ${fullName},\n\nYour account has been created.\nUsername: ${username}\nPassword: ${password}\n\nPlease keep this information safe.`;
 
             await sendEmail(email, emailSubject, emailText);
 
-            response.status(201).json({message: "Admin Added Successfully", admin: newAdmin});
+            response.status(201).json({ message: 'Admin Added Successfully', admin: newAdmin });
         } catch (error) {
-            response.status(500).json({message:"Server error", error: error.message});
+            response.status(500).json({ message: 'Server error', error: error.message });
         }
-    });    
+    });
 });
 
-// Editing the admin member
-
-export const editAdmin = asyncHandler (async (request,response) => {
+// Edit a Admin
+export const editAdmin = asyncHandler(async (request, response) => {
     uploadProfilePic(request, response, async (err) => {
         if (err) {
             return response.status(400).json({ message: 'Error uploading image', error: err });
         }
-        
-        const { username } = request.params;
 
-        const {fullName, email, password, phoneNumber, dob, address, socialMediaLinks} = request.body;
+        const { username } = request.params;
+        const { fullName, email, phoneNumber, address, role, permission } = request.body;
         const profilePic = request.file ? request.file.path : null;
 
+        // Social Media Links handling
+        const socialMediaLinks = {
+            linkedin: request.body.linkedin,
+            instagram: request.body.instagram,
+            twitter: request.body.twitter,
+            youtube: request.body.youtube,
+        };
+
         try {
-            const updateData = { fullName, email, phoneNumber, dob, address, socialMediaLinks };
-            if (profilePic) 
-                updateData.profilePic = profilePic;
-            if (password) {
-                const hashedPassword = await bcrypt.hash(password, 12);
-                updateData.password = hashedPassword;
+            const existingUser = await Admin.findOne({ username });
+
+            if (!existingUser) {
+                return response.status(404).json({ message: 'User not found' });
             }
 
-            const updateAdmin = await Admin.findOneAndUpdate({ username }, updateData, {new : true});
+            const updateData = {
+                fullName: fullName || existingUser.fullName,
+                email: email || existingUser.email,
+                phoneNumber: phoneNumber || existingUser.phoneNumber,
+                role: role || existingUser.role,
+                permission: permission || existingUser.permission,
+                address: address || existingUser.address,
+                socialMediaLinks: {
+                    linkedin: socialMediaLinks.linkedin || existingUser.socialMediaLinks.linkedin,
+                    instagram: socialMediaLinks.instagram || existingUser.socialMediaLinks.instagram,
+                    twitter: socialMediaLinks.twitter || existingUser.socialMediaLinks.twitter,
+                    youtube: socialMediaLinks.youtube || existingUser.socialMediaLinks.youtube,
+                },
+                profilePic: profilePic || existingUser.profilePic,
+            };
 
-            if(!updateAdmin){
-                response.status(404).json({message:"Admin not found"});
-            }
+            const updatedAdmin = await Admin.findOneAndUpdate({ username }, updateData, { new: true });
 
-            response.status(200).json({message:"Admin updated successfully",admin:updateAdmin});
+            response.status(200).json({ message: 'Admin updated successfully', user: updatedAdmin });
         } catch (error) {
-            response.status(500).json({message:"Server Error", error:error.message});
+            response.status(500).json({ message: 'Server Error', error: error.message });
         }
     });
 });
+
 
 
 //Display All Admin
@@ -126,23 +144,43 @@ export const deleteAdmin = asyncHandler(async(request,response) => {
 
 // Update the Password
 export const updateAdminPassword = asyncHandler(async (request, response) => {
-    const { username, oldPassword, newPassword } = request.body;
-    const admin = await updatePassword(Admin, username, oldPassword, newPassword);
-    response.status(200).json({ message: 'Password updated successfully' });
+    try {
+        const { username } = request.params;
+        const { oldPassword, newPassword } = request.body;
+
+        const admin = await Admin.findOne({ username });
+
+        if (!admin) {
+            return response.status(404).json({ message: 'Admin not found' });
+        }
+
+        const isMatch = await bcrypt.compare(oldPassword, admin.password);
+        if (!isMatch) {
+            return response.status(400).json({ message: 'Incorrect old password' });
+        }
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        admin.password = hashedPassword;
+        await admin.save();
+
+        response.status(200).json({ message: 'Password updated successfully' });
+    } catch (error) {
+        response.status(500).json({ message: 'Server error', error });
+    }
 });
 
 // Controller to get the total counts of users, staffs, books, and admins
 export const getAdminDashboardStats = asyncHandler(async (request, response) => {
     try {
         
-        const totalUsers = await User.countDocuments(); // Get the total number of users        
-        const totalStaff = await Staff.countDocuments(); // Get the total number of staff        
-        const totalBooks = await Book.countDocuments(); // Get the total number of books        
-        const totalAdmins = await Admin.countDocuments(); // Get the total number of admins
+        const totalUsers = await User.countDocuments();       
+        const totalStaffs = await Staff.countDocuments();        
+        const totalBooks = await Book.countDocuments();       
+        const totalAdmins = await Admin.countDocuments(); 
         
         response.status(200).json({
             totalUsers,
-            totalStaff,
+            totalStaffs,
             totalBooks,
             totalAdmins
         });
@@ -258,63 +296,3 @@ export const getStaffHistory = asyncHandler(async (req, res) => {
     }
 });
 
-// Controller function to display book details, total views, bookmarks, downloads, and top readers
-export const getBookDetails = asyncHandler(async (request, response) => {
-    const { bookId } = request.params;
-
-    // Find the book by ID
-    const book = await Book.findById(bookId);
-
-    if (!book) {
-        return response.status(404).json({ message: 'Book not found' });
-    }
-
-    // Extract book details
-    const { title, authors, genre, bookDescription, coverImageUrl } = book;
-
-    // Count total views, bookmarks, and downloads
-    const totalViews = await User.countDocuments({ 'bookHistory.book': bookId });
-    const totalBookmarks = await User.countDocuments({ bookmarks: bookId });
-    const totalDownloads = await User.countDocuments({ 'downloadedBooks.book': bookId });
-
-    // Find the top three users who read this book the most (based on the readBooks count)
-    const topReaders = await User.aggregate([
-        { $match: { 'readBooks.bookId': mongoose.Types.ObjectId(bookId) } },
-        { $unwind: '$readBooks' },
-        { $match: { 'readBooks.bookId': mongoose.Types.ObjectId(bookId) } },
-        { $sort: { 'readBooks.count': -1 } },
-        { $limit: 3 },
-        {
-            $lookup: {
-                from: 'users',
-                localField: '_id',
-                foreignField: '_id',
-                as: 'userDetails'
-            }
-        },
-        {
-            $project: {
-                fullName: { $arrayElemAt: ['$userDetails.fullName', 0] },
-                username: { $arrayElemAt: ['$userDetails.username', 0] },
-                readCount: '$readBooks.count'
-            }
-        }
-    ]);
-
-    // Prepare the response data
-    const responseData = {
-        bookDetails: {
-            title,
-            authors,
-            genre,
-            description: bookDescription,
-            coverImageUrl
-        },
-        totalViews,
-        totalBookmarks,
-        totalDownloads,
-        topReaders
-    };
-
-    response.json(responseData);
-});

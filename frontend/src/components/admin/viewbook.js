@@ -1,14 +1,37 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import { Breadcrumb, Card } from 'antd';
 import { Line, Pie, Bar } from 'react-chartjs-2';
 import Book4 from '../images/book-4.jpg';
+import axiosInstance from '../axiosInstance';
 import { Chart as ChartJS, RadarController, RadialLinearScale, LineElement, CategoryScale, LinearScale, PointElement, Title, Tooltip, Legend } from 'chart.js';
 
 ChartJS.register(RadarController, RadialLinearScale, LineElement, CategoryScale, LinearScale, PointElement, Title, Tooltip, Legend);
 
 function ViewBook() {
   const [showMore, setShowMore] = useState(false);
+  const [bookData, setBookData] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const { title } = useParams(); 
+
+  const baseURL = 'http://localhost:5000/api/';
+
+  // Fetch Book Overview Data
+  useEffect(() => {
+    const fetchBookData = async () => {
+      try {
+        const response = await axiosInstance.get(`/books/display/${title}`); 
+        setBookData(response.data);
+        setLoading(false);
+      } catch (error) {
+        setError('Failed to fetch book data');
+        setLoading(false);
+      }
+    };
+
+    fetchBookData();
+  }, []);
 
   //Show More Logic
   const toggleDescription = () => {
@@ -160,34 +183,39 @@ function ViewBook() {
         </div>
       </div>
 
-      <div className="bg-white shadow rounded-lg p-6 mb-6">
-        <h1 className="text-2xl font-bold mb-6">Book Overview</h1>
-        <div className="flex flex-col md:flex-row">
-          <div className="flex-shrink-0 w-32 h-48 mx-auto md:mr-6 mb-4 md:mb-0">
-            <img
-              src={Book4}
-              alt="Book Cover"
-              className="w-full h-full object-cover rounded-lg"
-            />
-          </div>
-          <div className="flex-1">
-            <p className="text-lg mb-4 ml-4"><strong>Title:</strong> Classroom of the Elite</p>
-            <p className="text-lg mb-4 ml-4"><strong>Author:</strong> Shōgo Kinugasa</p>
-            <p className="text-lg mb-4 ml-4"><strong>Genre:</strong> School, Dark Psychology</p>
-            <p className="text-lg ml-4">
-              <strong>Description:</strong>
-              <p className={`mt-2 ${showMore ? '' : 'line-clamp-3'}`}>
-                The Japanese government has established the Tokyo Metropolitan Advanced Nurturing School, dedicated to instruct and foster the generation of people that will support the country in the future. The students are given a high degree of freedom in order to closely mimic real life.
-                The story follows the perspective of Kiyotaka Ayanokōji, a quiet and modest boy, who is bad at making friends and would rather keep his distance, but possesses unrivaled intelligence and incredible physical ability. He is a student of Class-D, which is where the school dumps its inferior students, widely considered "defective".
-                After meeting Suzune Horikita and Kikyō Kushida, two other students in his class, the situation begins to change, and he gets involved in many affairs and his thought of an ideal normal high school life begins to get scattered, taking a toll on his sanity.
+      {loading ? (
+        <p>Loading...</p>
+      ) : error ? (
+        <p className="text-red-500">{error}</p>
+      ) : (
+        <div className="bg-white shadow rounded-lg p-6 mb-6">
+          <h1 className="text-2xl font-bold mb-6">Book Overview</h1>
+          <div className="flex flex-col md:flex-row">
+            <div className="flex-shrink-0 w-32 h-48 mx-auto md:mr-6 mb-4 md:mb-0">
+              <img
+                src={bookData.coverImage ? `${baseURL}${bookData.coverImage.replace(/\\/g, '/')}` : 'default-image-path.jpg'}
+                alt="Book Cover"
+                className="w-full h-full object-cover rounded-lg"
+              />
+            </div>
+            <div className="flex-1">
+              <p className="text-lg mb-4 ml-4"><strong>Title:</strong> {bookData.title || 'Classroom of the Elite'}</p>
+              <p className="text-lg mb-4 ml-4"><strong>Author:</strong> {bookData.authors || 'Shōgo Kinugasa'}</p>
+              <p className="text-lg mb-4 ml-4"><strong>Genre:</strong> {bookData.genre || 'School, Dark Psychology'}</p>
+              <p className="text-lg ml-4">
+                <strong>Description:</strong>
+                <p className={`mt-2 ${showMore ? '' : 'line-clamp-3'}`}>
+                  {bookData.description || 'The Japanese government has established the Tokyo Metropolitan Advanced Nurturing School, dedicated to instruct and foster the generation of people that will support the country in the future. The students are given a high degree of freedom in order to closely resemble real life.'}
+                </p>
+                <button onClick={toggleDescription} className="text-blue-500 hover:underline">
+                  {showMore ? 'Show Less' : 'Show More'}
+                </button>
               </p>
-              <button onClick={() => setShowMore(!showMore)} className="text-blue-500 mt-2">
-                {showMore ? 'Show less' : 'Read more'}
-              </button>
-            </p>
+            </div>
           </div>
         </div>
-      </div>
+      )}
+
 
       <div className="bg-white shadow rounded-lg p-6 mb-6">
         <h2 className="text-2xl font-bold mb-4">Reading Statistics</h2>

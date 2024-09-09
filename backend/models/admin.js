@@ -5,16 +5,17 @@ const adminSchema = new mongoose.Schema({
     username: {type:String, required:true, unique:true},
     email: {type:String, required:true, unique:true},
     password: {type:String, required:true},
-    Phonenumber: {type:String},
-    dob: {type:Date},
-    profilepic: {type:String},
+    address:{type:String},
+    phoneNumber: { type: String },
+    profilePic: {type:String},
     socialMediaLinks: {
-        insta:String,
+        instagram:String,
         twitter:String,
         youtube:String,
         linkedin:String
-    }
-
+    },
+    role:{type:String},
+    permission: [{type: String}],
 }, {timestamps: true}); 
 
 const Admin = mongoose.model('Admin',adminSchema);

@@ -1,8 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Table, Button, Space, Breadcrumb } from 'antd';
 import { MailOutlined, PhoneOutlined, CheckOutlined } from '@ant-design/icons';
+import axiosInstance from '../axiosInstance';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
+// Function to format date
 const formatDate = (dateString) => {
   const date = new Date(dateString);
   return date.toLocaleString('en-GB', { 
@@ -15,40 +19,65 @@ const formatDate = (dateString) => {
 };
 
 const Contactresolve = () => {
-  const initialData = [
-    {
-      key: '1',
-      srNo: 1,
-      fullName: 'John Doe',
-      email: 'john.doe@example.com',
-      phoneNumber: '+1234567890',
-      message: 'Hello, I need assistance with my account.',
-      status: 'unsolved', // Initial status
-      date: new Date().toISOString(), 
-    },
-    {
-      key: '2',
-      srNo: 2,
-      fullName: 'Jane Smith',
-      email: 'jane.smith@example.com',
-      phoneNumber: '+0987654321',
-      message: 'Can you help me with my recent order?',
-      status: 'unsolved', // Initial status
-      date: new Date().toISOString(), 
-    },
-    // Add more data as needed
-  ];
+  const [dataSource, setDataSource] = useState([]);
 
-  const [dataSource, setDataSource] = useState(initialData);
+  useEffect(() => {
+    fetchIssuesData(); 
+  }, []);
 
-  const handleStatusChange = (key, status) => {
-    setDataSource((prevData) =>
-      prevData.map((item) =>
-        item.key === key ? { ...item, status } : item
-      )
-    );
+  const fetchIssuesData = async () => {
+    try {
+      const response = await axiosInstance.get('/contact/issues');
+      const issues = response.data.map((issue, index) => {
+        const createdAtTimestamp = issue.createdAt?.$date?.$numberLong 
+          ? new Date(parseInt(issue.createdAt.$date.$numberLong)) 
+          : new Date(issue.createdAt); 
+  
+        return {
+          key: issue._id, 
+          srNo: index + 1,
+          fullName: issue.fullName,
+          email: issue.email,
+          phoneNumber: issue.phoneNumber,
+          message: issue.message,
+          status: issue.resolvedIssue ? 'solved' : 'unsolved', 
+          date: createdAtTimestamp.toISOString(), 
+        };
+      });
+      setDataSource(issues);
+    } catch (error) {
+      console.error('Error fetching issues data:', error);
+      toast.error('Failed to fetch issues data. Please try again.');
+    }
   };
 
+  const handleStatusChange = async (key) => {
+    try {
+      const issue = dataSource.find((item) => item.key === key);
+
+      if (!issue || !issue.key) {
+        console.error('Issue or Issue ID not found:', issue);
+        toast.error('Issue or Issue ID not found.');
+        return;
+      }
+  
+      await axiosInstance.patch(`/contact/issues/${issue.key}`, {
+        resolvedIssue: true
+      });
+  
+      setDataSource((prevData) =>
+        prevData.map((item) =>
+          item.key === key ? { ...item, status: 'solved' } : item
+        )
+      );
+      toast.success('Issue marked as resolved!');
+    } catch (error) {
+      console.error('Error updating issue status:', error);
+      toast.error('Failed to update issue status. Please try again.');
+    }
+  };
+  
+  
   const columns = [
     {
       title: 'Sr.No',
@@ -61,7 +90,7 @@ const Contactresolve = () => {
       dataIndex: 'date',
       key: 'date',
       render: (text) => formatDate(text),
-      sorter: (a,b) => a.date - b.date,
+      sorter: (a, b) => new Date(a.date) - new Date(b.date),
     },
     {
       title: 'Full Name',
@@ -115,10 +144,12 @@ const Contactresolve = () => {
           >
             {record.status === 'solved' ? 'Solved Issue' : 'Unsolved Issue'}
           </span>
-          <Button
-            icon={<CheckOutlined />}
-            onClick={() => handleStatusChange(record.key, 'solved')}
-          />
+          {record.status === 'unsolved' && (
+            <Button
+              icon={<CheckOutlined />}
+              onClick={() => handleStatusChange(record.key)}
+            />
+          )}
         </Space>
       ),
     },
@@ -126,9 +157,9 @@ const Contactresolve = () => {
 
   return (
     <div className="justify-center items-center min-h-screen mb-2 ml-2 mt-4 md:ml-10">
-    <div className="text-start -mt-4 mb-8">
-      <div className="bg-white p-4 rounded-lg shadow-md mb-6 flex flex-col md:flex-row justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-800 ml-4 mb-4 md:mb-0">Resolve</h1>
+      <div className="text-start -mt-4 mb-8">
+        <div className="bg-white p-4 rounded-lg shadow-md mb-6 flex flex-col md:flex-row justify-between items-center">
+          <h1 className="text-2xl font-bold text-gray-800 ml-4 mb-4 md:mb-0">Resolve</h1>
           <Breadcrumb>
             <Breadcrumb.Item><Link to="/admin/home">Dashboard</Link></Breadcrumb.Item>
             <Breadcrumb.Item>Resolve</Breadcrumb.Item>
@@ -136,11 +167,11 @@ const Contactresolve = () => {
         </div>
       </div>
       <div className="overflow-x-auto bg-white rounded-lg shadow-md">
-      <Table dataSource={dataSource} columns={columns} />
+        <Table dataSource={dataSource} columns={columns} />
       </div>
+      <ToastContainer />
     </div>
   );
 };
 
 export default Contactresolve;
-

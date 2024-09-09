@@ -3,24 +3,57 @@ import Content from '../models/content.js';
 
 // Add Content
 export const createContent = asyncHandler(async (request, response) => {
-    const { title, content, username, fullName } = request.body;
+  const { id, title, content } = request.body; 
+  const { username, fullName } = request.user; 
 
-    const coverImage = request.files.coverImage ? `/uploads/${request.files.coverImage[0].filename}` : null;
-    const iconImage = request.files.iconImage ? `/uploads/${request.files.iconImage[0].filename}` : null;
+  const coverImage = request.files?.coverImage ? `/uploads/${request.files.coverImage[0].filename}` : null;
+  const iconImage = request.files?.iconImage ? `/uploads/${request.files.iconImage[0].filename}` : null;
 
-    const newContent = new Content({
-        title,
-        coverImage,
-        iconImage,
-        content,
-        username,
-        fullName
+  let savedContent;
+  if (id) {
+    savedContent = await Content.findById(id);
+
+    if (savedContent) {
+      savedContent.title = title;
+      savedContent.content = content;
+      if (coverImage) savedContent.coverImage = coverImage;
+      if (iconImage) savedContent.iconImage = iconImage;
+      savedContent = await savedContent.save();
+    } else {
+      response.status(404);
+      throw new Error('Content not found');
+    }
+  } else {
+    savedContent = new Content({
+      title,
+      coverImage,
+      iconImage,
+      content,
+      username,
+      fullName,
     });
 
-    const createdContent = await newContent.save();
-    response.status(201).json(createdContent);
+    savedContent = await savedContent.save();
+  }
+
+  response.status(201).json(savedContent);
 });
 
+// Publish Document Content
+export const publishContent = asyncHandler(async (request, response) => {
+    const { id } = request.body; 
+    const content = await Content.findById(id);
+  
+    if (content) {
+      content.published = true; 
+      await content.save();
+      response.json({ message: 'Content published successfully' });
+    } else {
+      response.status(404);
+      throw new Error('Content not found');
+    }
+});
+  
 
 // Display All Contents
 export const displayAllContents = asyncHandler(async (request, response) => {
@@ -29,7 +62,6 @@ export const displayAllContents = asyncHandler(async (request, response) => {
         .populate('fullName', 'fullName'); 
     response.json(contents);
 });
-
 
 // Display Particular Content
 export const displayParticularContent = asyncHandler(async (request, response) => {
@@ -63,16 +95,15 @@ export const updateFeedback = asyncHandler(async (request, response) => {
     }
 });
 
-
 // Delete Content
 export const deleteContent = asyncHandler(async (request, response) => {
     const content = await Content.findById(request.params.id);
-
+  
     if (content) {
-        await content.remove();
-        response.json({ message: 'Content removed' });
+      await content.remove();
+      response.json({ message: 'Content removed' });
     } else {
-        response.status(404);
-        throw new Error('Content not found');
+      response.status(404);
+      throw new Error('Content not found');
     }
 });

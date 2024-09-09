@@ -1,14 +1,50 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { MenuAlt1Icon, UserCircleIcon, LockClosedIcon, BookOpenIcon, DocumentTextIcon, GlobeAltIcon, DesktopComputerIcon, LogoutIcon } from '@heroicons/react/outline';
 import Footer from './footer';
+import { useNavigate } from "react-router-dom";
+import axiosInstance from '../axiosInstance';
 import { FaLinkedin, FaInstagram, FaTwitter, FaYoutube } from 'react-icons/fa';
 import { PlusOutlined } from '@ant-design/icons';
-import { Image, Upload, DatePicker, Table, Button } from 'antd';
-
+import { Image, Upload, DatePicker, Table, Spin } from 'antd';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useAuth } from '../authcontext';
 
 const Settings = () => {
+  const navigate = useNavigate();
+
+  // Sidebar options
   const [selectedSection, setSelectedSection] = useState('account');
 
+  const handleSectionClick = (section) => {
+    setSelectedSection(section);
+  };
+
+  const handleHome = () => {
+    navigate('/home');
+  };
+
+  const handleLogout = () => {
+    navigate('/');
+  };
+
+  // Fetching username from login page
+  const [username, setUserName] = useState('');
+  const [fullName, setFullName] = useState('');
+  const { user } = useAuth();
+
+  useEffect(() => {
+    if (user && user.username) {
+      setUserName(user.username);
+      setFullName(user.fullName);
+      setEmail(user.email);
+      setAddress(user.address);
+      setPhoneNumber(user.phoneNumber);
+    }
+  }, [user]);
+
+
+  // Security
   const [passwordDetails, setPasswordDetails] = useState({
     oldPassword: '',
     newPassword: '',
@@ -17,26 +53,38 @@ const Settings = () => {
 
   const handlePasswordChange = (e) => {
     const { name, value } = e.target;
-    setPasswordDetails((prevDetails) => ({ ...prevDetails, [name]: value }));
+    setPasswordDetails((prevDetails) => ({
+      ...prevDetails,
+      [name]: value,
+    }));
   };
 
-  const handleSectionClick = (section) => {
-    setSelectedSection(section);
-  };
 
-  const handleHome = () => {
-    window.location.href = '/home';
-  };
-
-  const handleLogout = () => {
-    console.log('Logging out...');
-    window.location.href = '/';
-  };
-
-  const handlePasswordSubmit = (e) => {
+  const handlePasswordSubmit = async (e) => {
     e.preventDefault();
-    console.log('Password details:', passwordDetails);
-    // Implement your password update logic here
+
+    if (passwordDetails.newPassword !== passwordDetails.confirmPassword) {
+      toast.error('New password and confirm password do not match.');
+      return;
+    }
+
+    try {
+      const response = await axiosInstance.put(`/user/update-password/${username}`, {
+        oldPassword: passwordDetails.oldPassword,
+        newPassword: passwordDetails.newPassword
+      }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      if (response.status === 200) {
+        toast.success('Password updated successfully');
+        navigate("/login");
+      }
+    } catch (error) {
+      console.error('Error updating password:', error);
+      toast.error('Failed to update password. Please try again.');
+    }
   };
 
   // For Subscription Cards
@@ -119,54 +167,63 @@ const Settings = () => {
     },
   ];
 
-
-  // For Frontend Book Click History
-  const tableData = [
-    { id: 1, bookName: 'The Hobbit', authorName: 'J.R.R. Tolkien', timestamp: '2024-07-07 10:00:00' },
-    { id: 2, bookName: '1984', authorName: 'George Orwell', timestamp: '2024-07-06 14:30:00' },
-    { id: 3, bookName: 'To Kill a Mockingbird', authorName: 'Harper Lee', timestamp: '2024-07-05 16:45:00' },
-    { id: 4, bookName: 'Pride and Prejudice', authorName: 'Jane Austen', timestamp: '2024-07-04 09:20:00' },
-    { id: 5, bookName: 'The Catcher in the Rye', authorName: 'J.D. Salinger', timestamp: '2024-07-03 11:10:00' },
-    { id: 6, bookName: 'The Great Gatsby', authorName: 'F. Scott Fitzgerald', timestamp: '2024-07-02 08:00:00' },
-    { id: 7, bookName: 'Moby-Dick', authorName: 'Herman Melville', timestamp: '2024-07-01 13:45:00' },
-    { id: 8, bookName: 'The Lord of the Rings', authorName: 'J.R.R. Tolkien', timestamp: '2024-06-30 15:30:00' },
-    { id: 9, bookName: 'Jane Eyre', authorName: 'Charlotte Brontë', timestamp: '2024-06-29 12:20:00' },
-    { id: 10, bookName: 'Brave New World', authorName: 'Aldous Huxley', timestamp: '2024-06-28 18:00:00' },
-    { id: 11, bookName: 'Frankenstein', authorName: 'Mary Shelley', timestamp: '2024-06-27 10:45:00' },
-    { id: 12, bookName: 'Alice\'s Adventures in Wonderland', authorName: 'Lewis Carroll', timestamp: '2024-06-26 14:15:00' },
-  ];
-
+  // Books History
+  const [bookHistory, setBookHistory] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(5);
+
+  useEffect(() => {
+    const fetchBookHistory = async () => {
+      if (username) {
+        try {
+          setLoading(true);
+          const response = await axiosInstance.get(`/user/books-history/${username}`);
+          if (response.data && Array.isArray(response.data)) {
+            setBookHistory(response.data);
+          } else {
+            console.error('Unexpected data format from the server.');
+          }
+        } catch (error) {
+          console.error('Error fetching book history:', error);
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchBookHistory();
+  }, [username]);
 
   const columns = [
     {
       title: 'Sr.No',
       dataIndex: 'id',
-      sorter: (a, b) => a.id - b.id,
       key: 'id',
+      sorter: (a, b) => a.id - b.id,
     },
     {
       title: 'Book Name',
       dataIndex: 'bookName',
-      sorter: (a, b) => a.bookName.localeCompare(b.bookName),
       key: 'bookName',
+      sorter: (a, b) => a.bookName.localeCompare(b.bookName),
     },
     {
       title: 'Author Name',
       dataIndex: 'authorName',
-      sorter: (a, b) => a.authorName.localeCompare(b.authorName),
       key: 'authorName',
+      sorter: (a, b) => a.authorName.localeCompare(b.authorName),
     },
     {
-      title: 'Timestamp',
-      dataIndex: 'timestamp',
-      sorter: (a, b) => new Date(a.timestamp) - new Date(b.timestamp),
-      key: 'timestamp',
+      title: 'Viewed At',
+      dataIndex: 'viewedAt',
+      key: 'viewedAt',
+      sorter: (a, b) => new Date(a.viewedAt) - new Date(b.viewedAt),
+      render: (text) => new Date(text).toLocaleString(),
     },
   ];
 
-  const handleTableChange = (pagination, filters, sorter) => {
+  const handleTableChange = (pagination) => {
     setCurrentPage(pagination.current);
     setPageSize(pagination.pageSize);
   };
@@ -181,22 +238,15 @@ const Settings = () => {
       reader.onerror = (error) => reject(error);
     });
 
-  const [dob, setDob] = useState(null);
-
-  const onChange = (date, dateString) => {
-    setDob(date);
-    console.log(date, dateString);
-  };
 
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const [fileList, setFileList] = useState([]);
   const [profileImage, setProfileImage] = useState(null);
-  const [fullName, setFullName] = useState('');
-  const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
+  const [dob, setDob] = useState(null);
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [houseAddress, setHouseAddress] = useState('');
+  const [address, setAddress] = useState('');
   const [socialLinks, setSocialLinks] = useState({
     youtube: '',
     instagram: '',
@@ -204,7 +254,14 @@ const Settings = () => {
     linkedin: ''
   });
 
+  const onChange = (date, dateString) => {
+    setDob(date);
+    console.log(date, dateString);
+  };
+
   const fileInputRef = useRef(null);
+
+  const [error, setError] = useState('');
 
   const handlePreview = async (file) => {
     if (!file.url && !file.preview) {
@@ -234,7 +291,53 @@ const Settings = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setSocialLinks((prev) => ({ ...prev, [name]: value }));
+    setSocialLinks({ ...socialLinks, [name]: value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append('fullName', fullName);
+    formData.append('username', username);
+    formData.append('email', email);
+    formData.append('phoneNumber', phoneNumber);
+    const formattedDob = dob ? dob.format('DD-MM-YYYY') : null;
+    formData.append('dob', formattedDob);
+    formData.append('address', address);
+
+    const filledSocialLinks = Object.fromEntries(
+      Object.entries(socialLinks).filter(([key, value]) => value)
+    );
+    if (Object.keys(filledSocialLinks).length > 0) {
+      formData.append('socialMediaLinks', JSON.stringify(filledSocialLinks));
+    }
+
+    if (fileList.length > 0) {
+      const file = fileList[0].originFileObj || fileList[0];
+      formData.append('profilePic', file);
+    }
+
+    try {
+      const response = await axiosInstance.put(
+        `/user/update/${username}`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        navigate("/login");
+      } else {
+        toast.error('Failed to update profile.');
+      }
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      toast.error('An error occurred while updating the profile.');
+    }
   };
 
   const uploadButton = (
@@ -256,6 +359,7 @@ const Settings = () => {
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
       <div className="flex flex-col lg:flex-row">
+        <ToastContainer />
         <div className="lg:w-64 bg-white text-black p-8">
           <h2 className="text-2xl font-bold mb-6">Settings</h2>
 
@@ -291,12 +395,6 @@ const Settings = () => {
                   onClick={() => handleSectionClick('readingHistory')}
                 >
                   <GlobeAltIcon className="h-6 w-6 inline-block mr-2" /> Reading History
-                </li>
-                <li
-                  className={`p-2 cursor-pointer rounded-lg ${selectedSection === 'offlineAccess' ? 'bg-transparent-700 border border-gray-300' : ''}`}
-                  onClick={() => handleSectionClick('offlineAccess')}
-                >
-                  <DesktopComputerIcon className="h-6 w-6 inline-block mr-2" /> Offline Access
                 </li>
                 <li
                   className={`p-2 cursor-pointer rounded-lg ${selectedSection === 'subscriptionPlans' ? 'bg-transparent-700 border border-gray-300' : ''}`}
@@ -346,7 +444,8 @@ const Settings = () => {
                   </div>
                 </div>
 
-                <form className="flex-1">
+                <form className="flex-1" onSubmit={handleSubmit}>
+                  {/* Input fields */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="col-span-1">
                       <label className="block text-gray-700">Full Name</label>
@@ -362,7 +461,8 @@ const Settings = () => {
                       <input
                         type="text"
                         className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
-                        value={userName}
+                        value={username}
+                        readOnly
                         onChange={(e) => setUserName(e.target.value)}
                       />
                     </div>
@@ -377,7 +477,12 @@ const Settings = () => {
                     </div>
                     <div className="col-span-1">
                       <label className="block text-gray-700">Date of Birth</label>
-                      <DatePicker onChange={onChange} value={dob} className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md" />
+                      <DatePicker
+                        onChange={onChange}
+                        value={dob}
+                        className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
+                        format="DD-MM-YYYY"
+                      />
                     </div>
                     <div className="col-span-1">
                       <label className="block text-gray-700">Phone Number</label>
@@ -388,76 +493,85 @@ const Settings = () => {
                         onChange={(e) => setPhoneNumber(e.target.value)}
                       />
                     </div>
-                    <div className="col-span-1">
+                    <div className="col-span-2">
                       <label className="block text-gray-700">House Address</label>
                       <input
                         type="text"
                         className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
-                        value={houseAddress}
-                        onChange={(e) => setHouseAddress(e.target.value)}
+                        value={address}
+                        onChange={(e) => setAddress(e.target.value)}
                       />
                     </div>
                   </div>
 
-                  <h3 className="text-xl font-bold mt-6 mb-2">Add Your Social Handles below</h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="flex items-center space-x-2">
-                      <FaYoutube className="text-red-600 h-6 w-6" />
-                      <input
-                        type="url"
-                        name="youtube"
-                        placeholder="YouTube"
-                        className="flex-1 px-4 py-2 bg-gray-100 border rounded-md"
-                        value={socialLinks.youtube}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <FaInstagram className="text-pink-600 h-6 w-6" />
-                      <input
-                        type="url"
-                        name="instagram"
-                        placeholder="Instagram"
-                        className="flex-1 px-4 py-2 bg-gray-100 border rounded-md"
-                        value={socialLinks.instagram}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <FaTwitter className="text-blue-400 h-6 w-6" />
-                      <input
-                        type="url"
-                        name="twitter"
-                        placeholder="Twitter"
-                        className="flex-1 px-4 py-2 bg-gray-100 border rounded-md"
-                        value={socialLinks.twitter}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <FaLinkedin className="text-blue-700 h-6 w-6" />
-                      <input
-                        type="url"
-                        name="linkedin"
-                        placeholder="LinkedIn"
-                        className="flex-1 px-4 py-2 bg-gray-100 border rounded-md"
-                        value={socialLinks.linkedin}
-                        onChange={handleInputChange}
-                      />
+                  {/* Social Media Links */}
+                  <div className="mt-6">
+                    <h3 className="text-lg font-bold">Social Media Links</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+                      <div className="col-span-1">
+                        <label className="flex items-center">
+                          <FaYoutube className="mr-2 text-red-500" /> YouTube
+                        </label>
+                        <input
+                          type="url"
+                          name="youtube"
+                          className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
+                          value={socialLinks.youtube}
+                          onChange={handleInputChange}
+                        />
+                      </div>
+                      <div className="col-span-1">
+                        <label className="flex items-center">
+                          <FaInstagram className="mr-2 text-pink-500" /> Instagram
+                        </label>
+                        <input
+                          type="url"
+                          name="instagram"
+                          className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
+                          value={socialLinks.instagram}
+                          onChange={handleInputChange}
+                        />
+                      </div>
+                      <div className="col-span-1">
+                        <label className="flex items-center">
+                          <FaTwitter className="mr-2 text-blue-500" /> Twitter
+                        </label>
+                        <input
+                          type="url"
+                          name="twitter"
+                          className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
+                          value={socialLinks.twitter}
+                          onChange={handleInputChange}
+                        />
+                      </div>
+                      <div className="col-span-1">
+                        <label className="flex items-center">
+                          <FaLinkedin className="mr-2 text-blue-700" /> LinkedIn
+                        </label>
+                        <input
+                          type="url"
+                          name="linkedin"
+                          className="mt-1 block w-full px-4 py-2 bg-gray-100 border rounded-md"
+                          value={socialLinks.linkedin}
+                          onChange={handleInputChange}
+                        />
+                      </div>
                     </div>
                   </div>
 
-                  <button
-                    type="submit"
-                    className="mt-6 w-full bg-blue-500 text-white py-2 rounded-md"
-                  >
-                    Update
-                  </button>
+                  {/* Submit Button */}
+                  <div className="mt-6">
+                    <button
+                      type="submit"
+                      className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                    >
+                      Save Changes
+                    </button>
+                  </div>
                 </form>
               </div>
             </div>
           )}
-
 
           {selectedSection === 'security' && (
             <form onSubmit={handlePasswordSubmit} className="bg-white rounded-lg shadow-md p-6 mb-8">
@@ -505,7 +619,6 @@ const Settings = () => {
               </div>
             </form>
           )}
-
 
           {selectedSection === 'bookCategories' && (
             <div className="bg-white rounded-lg shadow-md p-6 mb-6">
@@ -584,57 +697,21 @@ const Settings = () => {
             <main className="flex-grow mt-8 mb-8">
               <div className="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md">
                 <h3 className="text-2xl font-bold mb-6 text-gray-800">Reading History</h3>
-                <Table
-                  columns={columns}
-                  dataSource={tableData}
-                  pagination={{
-                    current: currentPage,
-                    pageSize: pageSize,
-                    total: tableData.length,
-                    showSizeChanger: true,
-                  }}
-                  onChange={handleTableChange}
-                  rowKey="id"
-                  className="bg-white shadow-md rounded my-6 overflow-x-auto"
-                />
-              </div>
-            </main>
-
-          )}
-
-          {selectedSection === 'offlineAccess' && (
-            <div className="flex flex-col">
-              <h2 className="text-2xl font-bold mb-[0.5cm]">Downloaded Books</h2>
-              <div className="flex flex-col md:flex-row">
-                <div className="w-full p-3">
-                  <div className="bg-white rounded-md shadow p-4 w-full">
-                    <div className="flex items-center mb-4">
-                      <img
-                        alt="A book cover showing a scenic landscape with mountains and a lake, the title reads 'Wanderlust: Exploring the Great Outdoors'"
-                        className="mr-4 object-cover rounded"
-                        height="200"
-                        src="https://placehold.co/150x200"
-                        width="150"
-                      />
-                      <div>
-                        <h3 className="text-lg font-bold">Wanderlust: Exploring the Great Outdoors</h3>
-                        <p className="text-gray-600">By John Doe</p>
-                        <div className="flex items-center mt-2">
-                          <span className="bg-green-100 text-green-800 px-2 py-1 rounded-md mr-2">4.5 ⭐</span>
-                          <span className="text-gray-600">(12,345 reviews)</span>
-                        </div>
-                      </div>
-                    </div>
-                    <p className="text-gray-700 mb-4">
-                      Embark on an adventure through breathtaking landscapes and discover the beauty of nature with this captivating book. Filled with stunning photography and inspiring stories, "Wanderlust" will ignite your desire to explore the great outdoors.
-                    </p>
-                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors">
-                      Read Now
-                    </button>
-                  </div>
+                <div>
+                  {loading ? (
+                    <Spin size="large" />
+                  ) : (
+                    <Table
+                      columns={columns}
+                      dataSource={bookHistory}
+                      pagination={{ current: currentPage, pageSize }}
+                      onChange={handleTableChange}
+                      rowKey="id"
+                    />
+                  )}
                 </div>
               </div>
-            </div>
+            </main>
           )}
 
         </div>
