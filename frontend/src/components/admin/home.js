@@ -11,37 +11,6 @@ import axiosInstance from '../axiosInstance';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement);
 
-const initialData = [
-  {
-    title: 'Total Users',
-    value: '69',
-    icon: <UserOutlined style={{ fontSize: '24px', color: '#1890ff' }} />,
-    change: '0.95%',
-    changeType: 'down',
-  },
-  {
-    title: 'Total Staffs',
-    value: '25',
-    icon: <TeamOutlined style={{ fontSize: '24px', color: '#1890ff' }} />,
-    change: '1.23%',
-    changeType: 'up',
-  },
-  {
-    title: 'Total Books',
-    value: '1000',
-    icon: <ReadOutlined style={{ fontSize: '24px', color: '#1890ff' }} />,
-    change: '2.56%',
-    changeType: 'up',
-  },
-  {
-    title: 'Total Admins',
-    value: '7',
-    icon: <CrownOutlined style={{ fontSize: '24px', color: '#1890ff' }} />,
-    change: '0.00%',
-    changeType: 'neutral',
-  },
-];
-
 const sampleBooks = [
   {
     key: '1',
@@ -219,7 +188,7 @@ const pieOptions = {
 function AdminHome() {
 
   const [books, setBooks] = useState(sampleBooks);
-  const [countsData, setCountsData] = useState(initialData);
+  const [countsData, setCountsData] = useState([]);
 
   useEffect(() => {
     const fetchCountsData = async () => {

@@ -6,7 +6,7 @@ import RelatedBooks from './relatedBooks';
 import { HeartIcon as HeartIconSolid } from '@heroicons/react/solid';
 import { HeartIcon, UserIcon, GlobeAltIcon, DocumentTextIcon } from '@heroicons/react/outline';
 import { Link, useParams } from 'react-router-dom'; 
-import Comments from './comments';
+import CommentCard from './comments';
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -45,9 +45,17 @@ function BookDescription() {
       });
   }, [title]); 
 
-  const toggleBookmark = () => {
-    setBookmarked(!bookmarked);
+  const toggleBookmark = async () => {
+    try {
+      setBookmarked(!bookmarked);
+      await axiosInstance.post(`/books/bookmark/${bookData._id}`, { bookmarked: !bookmarked });
+      toast.success(bookmarked ? "Book removed from bookmarks" : "Bookmarked successfully");
+    } catch (error) {
+      console.error("Error bookmarking the book:", error);
+      toast.error("Failed to bookmark the book");
+    }
   };
+  
 
   const shareBook = (bookTitle) => {
     const formattedTitle = bookTitle.replace(/-/g, ' ');
@@ -129,7 +137,7 @@ function BookDescription() {
               </div>
             </div>
             <div className="mb-8">
-              <Comments />
+              <CommentCard bookTitle={bookData.title} bookAuthor={bookData.authors} />
             </div>
             <div>
               <RelatedBooks category="All Books" />

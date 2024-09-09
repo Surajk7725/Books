@@ -9,10 +9,51 @@ export default function UpdatePassword() {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
+  const [passwordValidation, setPasswordValidation] = useState({
+    hasUpperCase: false,
+    hasLowerCase: false,
+    hasNumber: false,
+    hasSpecialChar: false,
+    lengthValid: false,
+  });
+
   const navigate = useNavigate();
+
+  const validateEmail = (email) => {
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailPattern.test(email);
+  };
+
+  const validatePassword = (password) => {
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasNumber = /\d/.test(password);
+    const hasSpecialChar = /[!@#$%^&*]/.test(password);
+    const lengthValid = password.length >= 7 && password.length <= 14;
+
+    setPasswordValidation({
+      hasUpperCase,
+      hasLowerCase,
+      hasNumber,
+      hasSpecialChar,
+      lengthValid,
+    });
+
+    return hasUpperCase && hasLowerCase && hasNumber && hasSpecialChar && lengthValid;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateEmail(email)) {
+      setError('Please enter a valid email address');
+      return;
+    }
+
+    if (!validatePassword(newPassword)) {
+      setError('Password does not meet the required criteria');
+      return;
+    }
 
     if (newPassword !== confirmPassword) {
       setError('Passwords do not match');
@@ -60,9 +101,29 @@ export default function UpdatePassword() {
               type="password"
               placeholder="Enter your new password"
               value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
+              onChange={(e) => {
+                setNewPassword(e.target.value);
+                validatePassword(e.target.value);
+              }}
               required
             />
+            <ul className="text-xs mt-1">
+              <li className={passwordValidation.hasUpperCase ? 'text-green-500' : 'text-red-500'}>
+                Must contain at least one uppercase letter (A-Z)
+              </li>
+              <li className={passwordValidation.hasLowerCase ? 'text-green-500' : 'text-red-500'}>
+                Must contain at least one lowercase letter (a-z)
+              </li>
+              <li className={passwordValidation.hasNumber ? 'text-green-500' : 'text-red-500'}>
+                Must contain at least one number (0-9)
+              </li>
+              <li className={passwordValidation.hasSpecialChar ? 'text-green-500' : 'text-red-500'}>
+                Must contain at least one special character (!@#$%^&*)
+              </li>
+              <li className={passwordValidation.lengthValid ? 'text-green-500' : 'text-red-500'}>
+                Must be between 7 and 14 characters long
+              </li>
+            </ul>
           </div>
           <div className="mb-4">
             <label className="block text-gray-700 font-bold mb-2" htmlFor="confirmPassword">Confirm Password
@@ -92,3 +153,4 @@ export default function UpdatePassword() {
     </div>
   );
 }
+

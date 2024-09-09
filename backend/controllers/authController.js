@@ -60,6 +60,18 @@ export const loginUser = async (req, res) => {
     }
 };
 
+// Fetch logged-in user's data
+export const getMe = async (request, response) => {
+    try {
+      const user = request.user;
+      const role = request.role;
+      response.status(200).json({ user, role });
+    } catch (error) {
+      console.error('Fetch user error:', error.message);
+      response.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
 
 // Forget password logic
 export const forgetPassword = async (req, res) => {

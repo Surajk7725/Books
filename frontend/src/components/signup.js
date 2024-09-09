@@ -13,12 +13,40 @@ export default function Signup() {
   });
 
   const [errors, setErrors] = useState({});
+  const [passwordValidation, setPasswordValidation] = useState({
+    hasUpperCase: false,
+    hasLowerCase: false,
+    hasNumber: false,
+    hasSpecialChar: false,
+    lengthValid: false
+  });
+
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.id]: e.target.value
+    });
+    
+    if (e.target.id === "password") {
+      validatePassword(e.target.value);
+    }
+  };
+
+  const validatePassword = (password) => {
+    const upperCase = /[A-Z]/.test(password);
+    const lowerCase = /[a-z]/.test(password);
+    const number = /[0-9]/.test(password);
+    const specialChar = /[!@#$%^&*]/.test(password);
+    const length = password.length >= 7 && password.length <= 14;
+
+    setPasswordValidation({
+      hasUpperCase: upperCase,
+      hasLowerCase: lowerCase,
+      hasNumber: number,
+      hasSpecialChar: specialChar,
+      lengthValid: length
     });
   };
 
@@ -110,6 +138,23 @@ export default function Signup() {
               onChange={handleChange}
             />
             {errors.password && <p className="text-red-500 text-xs italic">{errors.password}</p>}
+            <ul className="text-xs mt-1">
+              <li className={passwordValidation.hasUpperCase ? 'text-green-500' : 'text-red-500'}>
+                Must contain at least one uppercase letter (A-Z)
+              </li>
+              <li className={passwordValidation.hasLowerCase ? 'text-green-500' : 'text-red-500'}>
+                Must contain at least one lowercase letter (a-z)
+              </li>
+              <li className={passwordValidation.hasNumber ? 'text-green-500' : 'text-red-500'}>
+                Must contain at least one number (0-9)
+              </li>
+              <li className={passwordValidation.hasSpecialChar ? 'text-green-500' : 'text-red-500'}>
+                Must contain at least one special character (!@#$%^&*)
+              </li>
+              <li className={passwordValidation.lengthValid ? 'text-green-500' : 'text-red-500'}>
+                Must be between 7 and 14 characters long
+              </li>
+            </ul>
           </div>
           <div className="flex items-center justify-center">
             <button

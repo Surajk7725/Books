@@ -1,7 +1,7 @@
 import express from 'express';
 import {addBookByStaff,addBookByUser,editBook,deleteBook,markBookAsAddedByStaff, addBookmark, getBookAverageRating,
     displayAllBooks,displayParticularBook,displayBookmarkedBooks,displayUserAddedBooks, removeBookmark,
-    createBookRating,addBookComment, addCommentReply, displayBookComments,displayBooksByCategory
+    createBookRating,addBookComment,addCommentReply, displayBookComments,displayBooksByCategory
 } from '../controllers/bookController.js';
 import authMiddleware from '../middleware/authMiddleware.js';
 import { upload } from '../utils/pics.js';
