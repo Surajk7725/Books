@@ -101,7 +101,7 @@ function ViewStaff() {
     <div className="flex flex-col items-center w-full p-2">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 w-full">
             <Card className="bg-white shadow-lg rounded-lg w-full">
-                <h2 className="text-lg font-semibold mb-2 text-center">User Activity Trends</h2>
+                <h2 className="text-lg font-semibold mb-2 text-center">Staff Activity Trends</h2>
                 <div className="h-64 md:h-96">
                     <Line data={data} options={barOptions} />
                 </div>

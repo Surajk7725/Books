@@ -8,7 +8,6 @@ import Book from '../models/books.js';
 
 
 // Adding a Staff Member
-
 export const addStaff = asyncHandler(async (request, response) => {
     uploadProfilePic(request, response, async (err) => {
         if (err) {
@@ -24,6 +23,13 @@ export const addStaff = asyncHandler(async (request, response) => {
         try {
             const hashedPassword = await bcrypt.hash(password, 12);
 
+            // Parsing the JSON strings into objects
+            const parsedSocialMediaLinks = socialMediaLinks ? JSON.parse(socialMediaLinks) : {};
+            const parsedProfessionalDetails = professionalDetails ? JSON.parse(professionalDetails) : {};
+            const parsedQualifications = qualifications ? JSON.parse(qualifications) : {};
+            const parsedWorkExperience = workExperience ? JSON.parse(workExperience) : {};
+            const parsedSkills = skills ? JSON.parse(skills) : { languagesSpoken: [], computerSkills: [] };
+
             const newStaff = await Staff.create({
                 fullName,
                 username,
@@ -33,14 +39,13 @@ export const addStaff = asyncHandler(async (request, response) => {
                 dob,
                 address,
                 profilePic,
-                socialMediaLinks,
-                professionalDetails,
-                qualifications,
-                workExperience,
-                skills
+                socialMediaLinks: parsedSocialMediaLinks,
+                professionalDetails: parsedProfessionalDetails, 
+                qualifications: parsedQualifications, 
+                workExperience: parsedWorkExperience, 
+                skills: parsedSkills,
             });
 
-            // Send email with username and password
             const emailSubject = 'Welcome to Our BookHub';
             const emailText = `Hello ${fullName},\n\nYour account has been created.\nUsername: ${username}\nPassword: ${password}\n\nPlease keep this information safe.`;
 
@@ -59,46 +64,71 @@ export const addStaff = asyncHandler(async (request, response) => {
 });
 
 // Editing a Staff Member
-
 export const editStaff = asyncHandler(async (request, response) => {
     uploadProfilePic(request, response, async (err) => {
-        if (err) {
-            return response.status(400).json({ message: 'Error uploading image', error: err });
+      if (err) {
+        return response.status(400).json({ message: 'Error uploading image', error: err.message });
+      }
+  
+      const { username } = request.params;
+      const {
+        fullName,
+        email,
+        phoneNumber,
+        dob,
+        address,
+        socialMediaLinks,
+        professionalDetails,
+        qualifications,
+        workExperience,
+        skills,
+      } = request.body;
+  
+      const profilePic = request.file ? request.file.path : null;
+  
+      try {
+        const existingStaff = await Staff.findOne({ username });
+  
+        if (!existingStaff) {
+          return response.status(404).json({ message: 'Staff not found' });
         }
-
-        const { username } = request.params;
-        const { 
-            fullName, email, password, phoneNumber, dob, address, socialMediaLinks, 
-            professionalDetails, qualifications, workExperience, skills 
-        } = request.body;
-        const profilePic = request.file ? request.file.path : null;
-
-        try {
-            const updateData = { 
-                fullName, email, phoneNumber, dob, address, socialMediaLinks, 
-                professionalDetails, qualifications, workExperience, skills 
-            };
-
-            if (profilePic) 
-                updateData.profilePic = profilePic;
-
-            if (password) {
-                const hashedPassword = await bcrypt.hash(password, 12);
-                updateData.password = hashedPassword;
-            }
-
-            const updateStaff = await Staff.findOneAndUpdate({ username }, updateData, { new: true });
-
-            if (!updateStaff) {
-                return response.status(404).json({ message: "Staff not found" });
-            }
-
-            response.status(200).json({ message: "Staff updated successfully", staff: updateStaff });
-        } catch (error) {
-            response.status(500).json({ message: "Server Error", error: error.message });
-        }
+  
+        // Parsing JSON strings if they are provided in the request body
+        const parsedSocialMediaLinks = socialMediaLinks ? JSON.parse(socialMediaLinks) : existingStaff.socialMediaLinks;
+        const parsedProfessionalDetails = professionalDetails ? JSON.parse(professionalDetails) : existingStaff.professionalDetails;
+        const parsedQualifications = qualifications ? JSON.parse(qualifications) : existingStaff.qualifications;
+        const parsedWorkExperience = workExperience ? JSON.parse(workExperience) : existingStaff.workExperience;
+        const parsedSkills = skills ? JSON.parse(skills) : existingStaff.skills;
+  
+        // Update data only with provided fields, else retain the existing value
+        const updateData = {
+          ...(fullName && { fullName }),
+          ...(email && { email }),
+          ...(phoneNumber && { phoneNumber }),
+          ...(dob && { dob }),
+          ...(address && { address }),
+          ...(profilePic && { profilePic }),
+          socialMediaLinks: parsedSocialMediaLinks,
+          professionalDetails: parsedProfessionalDetails,
+          qualifications: parsedQualifications,
+          workExperience: parsedWorkExperience,
+          skills: parsedSkills,
+        };
+  
+        const updatedStaff = await Staff.findOneAndUpdate({ username }, updateData, { new: true });
+  
+        return response.status(200).json({
+          message: 'Staff updated successfully',
+          staff: updatedStaff,
+        });
+      } catch (error) {
+        console.error('Error updating staff:', error);
+        return response.status(500).json({ message: 'Server Error', error: error.message });
+      }
     });
-});
+  });
+  
+  
 
 // Display all Staff
 
@@ -145,9 +175,29 @@ export const deleteStaff = asyncHandler (async(request,response) => {
 
 // Update the Password
 export const updateStaffPassword = asyncHandler(async (request, response) => {
-    const { oldPassword, newPassword } = request.body;
-    const staff = await updatePassword(Staff, username,  oldPassword, newPassword);
-    response.status(200).json({ message: 'Password updated successfully' });
+    try {
+        const { username } = request.params;
+        const { oldPassword, newPassword } = request.body;
+
+        const staff = await Staff.findOne({ username });
+
+        if (!staff) {
+            return response.status(404).json({ message: 'Staff not found' });
+        }
+
+        const isMatch = bcrypt.compare(oldPassword, staff.password);
+        if (!isMatch) {
+            return response.status(400).json({ message: 'Incorrect old password' });
+        }
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        staff.password = hashedPassword;
+        await staff.save();
+
+        response.status(200).json({ message: 'Password updated successfully' });
+    } catch (error) {
+        response.status(500).json({ message: 'Server error', error });
+    }
 });
 
 // Display User's Full Book History

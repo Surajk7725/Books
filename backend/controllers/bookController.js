@@ -1,48 +1,19 @@
 import asyncHandler from 'express-async-handler';
 import Book from '../models/books.js';
 import User from '../models/user.js';
+import mongoose from 'mongoose';
 import sendNotification from '../utils/sendNotification.js';
-import { uploadProfilePic } from '../utils/pics.js';
 
 
 // Add Book by Staff
 export const addBookByStaff = asyncHandler(async (request, response) => {
-    uploadProfilePic(request, response, async (err) => {
-        if (err) {
-            return response.status(400).json({ message: 'Error uploading image', error: err });
-        }
-        const { authors, title, genre, category, isbn, publisher, language, bookDescription } = request.body;
-        const coverImage = request.file ? request.file.path : null;
-        const newBook = new Book({
-            authors,
-            title,
-            genre,
-            category,
-            coverImage,
-            isbn,
-            publisher,
-            language,
-            bookDescription,
-            addedByStaff: true
-        });
+    const { authors, title, genre, category, isbn, publisher, language, description, coverImageUrl } = request.body;
 
-        const createdBook = await newBook.save();
+    const coverImage = request.files?.coverImage ? request.files.coverImage[0].path : null;
+    const bookFile = request.files?.bookFile ? request.files.bookFile[0].path : null;
 
-        // Send notification (assuming this is a general notification system)
-        const notificationText = `Book Title: ${title}, Date: ${new Date().toLocaleDateString()}, Time: ${new Date().toLocaleTimeString()}`;
-        sendNotification(notificationText, `link_to_book/${createdBook._id}`);
-
-        response.status(201).json({ message: 'Book added successfully', book: createdBook });
-    });
-});
-
-// Add Book by User
-export const addBookByUser = asyncHandler(async (request, response) => {
-    const { authors, title, genre, category, isbn, publisher, language, bookDescription, username } = request.body;
-    const coverImage = request.file ? request.file.path : null;
-    const user = await User.findOne({ username });
-    if (!user) {
-        return response.status(404).json({ message: 'User not found' });
+    if (!title || !genre || !description) {
+        return response.status(400).json({ message: 'Title, genre, and description are required fields.' });
     }
 
     const newBook = new Book({
@@ -51,68 +22,155 @@ export const addBookByUser = asyncHandler(async (request, response) => {
         genre,
         category,
         coverImage,
+        coverImageUrl,
         isbn,
         publisher,
         language,
-        bookDescription,
-        createdBy: user._id,
+        bookFile,
+        description,
+        addedByStaff: true
+    });
+
+    try {
+        const createdBook = await newBook.save();
+        const notificationText = `New Book Added : ${title}`;
+        const formattedTitle = encodeURIComponent(title.replace(/-/g, ' '));
+        const link = `http://localhost:3000/display-books/${formattedTitle}/description`;
+
+        await sendNotification(notificationText, link);
+        response.status(201).json({ message: 'Book added successfully', book: createdBook });
+    } catch (error) {
+        console.error('Error adding book:', error.message);
+        response.status(400).json({ message: 'Error adding book.', error: error.message });
+    }
+});
+
+
+// Add Book by User
+export const addBookByUser = asyncHandler(async (request, response) => {
+    const { authors, title, genre, description, category, language } = request.body;
+
+    const coverImage = request.files?.coverImage ? request.files.coverImage[0].path : null;
+    const bookFile = request.files?.bookFile ? request.files.bookFile[0].path : null;
+
+    const user = await User.findById(request.user._id);
+
+    if (!user) {
+        response.status(404);
+        throw new Error('User not found');
+    }
+
+    const newBook = new Book({
+        authors,
+        title,
+        genre,
+        category,
+        language,
+        description,
+        coverImage,
+        bookFile,
+        user: request.user._id,
         addedByStaff: false
     });
 
     const createdBook = await newBook.save();
 
-    // Send notification
-    const notificationText = `Book Title: ${title}, Date: ${new Date().toLocaleDateString()}, Time: ${new Date().toLocaleTimeString()}`;
-    sendNotification(user._id, notificationText, `link_to_book/${createdBook._id}`);
+    const notificationText = `User Added Book Title: ${title}`;
+    const formattedTitle = encodeURIComponent(title.replace(/-/g, ' '));
+    const link = `http://localhost:3000/display-books/${formattedTitle}/description`;
+    await sendNotification(notificationText, link);
 
     response.status(201).json({ message: 'Book added successfully by user', book: createdBook });
+});
+
+// New function to update book as added by staff
+export const markBookAsAddedByStaff = asyncHandler(async (request, response) => {
+    const { bookId } = request.body;
+
+    const book = await Book.findById(bookId);
+
+    if (!book) {
+        response.status(404);
+        throw new Error('Book not found');
+    }
+
+    book.addedByStaff = true;
+    const updatedBook = await book.save();
+
+    response.status(200).json({ message: 'Book marked as added by staff', book: updatedBook });
 });
 
 
 // Edit Book
 export const editBook = asyncHandler(async (request, response) => {
-    uploadProfilePic(request, response, async (err) => {
-        if (err) {
-            return response.status(400).json({ message: 'Error uploading image', error: err });
+    const { title } = request.params;
+    const { authors, genre, category, isbn, publisher, language, description } = request.body;
+
+    const coverImage = request.files?.coverImage ? request.files.coverImage[0].path : null;
+    const bookFile = request.files?.bookFile ? request.files.bookFile[0].path : null;
+
+    const book = await Book.findOne({ title: title });
+
+    if (book) {
+        if (authors) {
+            try {
+                book.authors = JSON.parse(authors);
+            } catch (error) {
+                return response.status(400).json({ message: 'Invalid authors data' });
+            }
         }
-        const { bookTitle } = request.params; // Use bookTitle instead of id
-        const { authors, title, genre, category, isbn, publisher, language, bookDescription } = request.body;
-        const coverImage = request.file ? request.file.path : '';
 
-        // Find the book by title
-        const book = await Book.findOne({ title: bookTitle });
+        if (genre) book.genre = genre;
+        if (category) book.category = category;
+        if (isbn) book.isbn = isbn;
+        if (publisher) book.publisher = publisher;
+        if (language) book.language = language;
+        if (description) book.description = description;
+        if (coverImage) book.coverImage = coverImage;
+        if (bookFile) book.bookFile = bookFile;
 
-        if (book) {
-            // Update the book details
-            book.authors = authors || book.authors;
-            book.title = title || book.title;
-            book.genre = genre || book.genre;
-            book.category = category || book.category;
-            book.coverImage = coverImage || book.coverImage;
-            book.isbn = isbn || book.isbn;
-            book.publisher = publisher || book.publisher;
-            book.language = language || book.language;
-            book.bookDescription = bookDescription || book.bookDescription;
-
-            const updatedBook = await book.save();
-            response.json({ message: 'Book updated successfully', book: updatedBook });
-        } else {
-            response.status(404).json({ message: 'Book not found' });
-        }
-    });
+        const updatedBook = await book.save();
+        response.json({ message: 'Book updated successfully', book: updatedBook });
+    } else {
+        response.status(404).json({ message: 'Book not found' });
+    }
 });
+
 
 
 // Display All Books
 export const displayAllBooks = asyncHandler(async (request, response) => {
-    const books = await Book.find();
-    response.json(books);
+    try {
+        const books = await Book.find({ addedByStaff: true });
+        response.json(books);
+    } catch (error) {
+        response.status(500).json({ message: error.message });
+    }
+});
+
+
+// Controller to display books by category using route parameters
+export const displayBooksByCategory = asyncHandler(async (request, response) => {
+    const { category } = request.params;
+
+    const validCategories = ['Kids', 'Popular', 'Academics'];
+    if (!validCategories.includes(category)) {
+        return response.status(400).json({ message: 'Invalid category provided.' });
+    }
+
+    try {
+        const books = await Book.find({ 'category': category });
+        response.json(books);
+    } catch (error) {
+        response.status(500).json({ message: 'Error fetching books by category.', error: error.message });
+    }
 });
 
 
 // Display Particular Book
 export const displayParticularBook = asyncHandler(async (request, response) => {
     const { title } = request.params;
+
     const book = await Book.findOne({ title });
     if (book) {
         response.json(book);
@@ -125,12 +183,73 @@ export const displayParticularBook = asyncHandler(async (request, response) => {
 // Delete Book
 export const deleteBook = asyncHandler(async (request, response) => {
     const { id } = request.params;
-    const book = await Book.findById(id);
-    if (book) {
-        await book.remove();
+    if (!id) {
+        return response.status(400).json({ message: 'Book ID is required' });
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return response.status(400).json({ message: 'Invalid book ID' });
+    }
+
+    const result = await Book.findByIdAndDelete(id);
+
+    if (result) {
         response.json({ message: 'Book deleted successfully' });
     } else {
         response.status(404).json({ message: 'Book not found' });
+    }
+});
+
+
+// Add to bookmarks
+export const addBookmark = asyncHandler(async (req, res) => {
+    const { bookId } = req.body;
+    const username = req.user.username;
+
+    const user = await User.findOne({ username });
+    const book = await Book.findById(bookId);
+
+    if (!user || !book) {
+        return res.status(404).json({ message: 'User or Book not found' });
+    }
+
+    // Check if the book is already bookmarked
+    if (!user.bookmarks.includes(bookId)) {
+        user.bookmarks.push(bookId);
+        book.bookmarkedBy.push(user._id);
+
+        await user.save();
+        await book.save();
+
+        return res.status(200).json({ message: 'Book added to bookmarks' });
+    } else {
+        return res.status(400).json({ message: 'Book is already bookmarked' });
+    }
+});
+
+// Remove from bookmarks
+export const removeBookmark = asyncHandler(async (req, res) => {
+    const { bookId } = req.body;
+    const username = req.user.username;
+
+    const user = await User.findOne({ username });
+    const book = await Book.findById(bookId);
+
+    if (!user || !book) {
+        return res.status(404).json({ message: 'User or Book not found' });
+    }
+
+    // Check if the book is in the user's bookmarks
+    if (user.bookmarks.includes(bookId)) {
+        user.bookmarks.pull(bookId);
+        book.bookmarkedBy.pull(user._id);
+
+        await user.save();
+        await book.save();
+
+        return res.status(200).json({ message: 'Book removed from bookmarks' });
+    } else {
+        return res.status(400).json({ message: 'Book is not in the bookmarks' });
     }
 });
 
@@ -152,23 +271,27 @@ export const displayUserAddedBooks = asyncHandler(async (request, response) => {
     response.json(books);
 });
 
-
 // Create Book Rating
 export const createBookRating = asyncHandler(async (request, response) => {
-    const { title, author, rating, comment } = request.body;
+    const { title, rating, review, username } = request.body;
 
-    const book = await Book.findOne({ title, authors: author });
+    const book = await Book.findOne({ title });
     if (!book) {
         return response.status(404).json({ message: 'Book not found' });
     }
 
-    const userId = request.user._id; // Assuming the user ID is in the request object
+    const userId = request.user._id;
     const user = await User.findById(userId).select('username');
     if (!user) {
         return response.status(404).json({ message: 'User not found' });
     }
 
-    const newRating = { user: userId, username: user.username, rating, comment };
+    const newRating = {
+        user: userId,
+        username: user.username,
+        rating,
+        comment: review
+    };
 
     book.ratings.push(newRating);
     await book.save();
@@ -176,79 +299,143 @@ export const createBookRating = asyncHandler(async (request, response) => {
     response.status(201).json({ message: 'Rating added successfully' });
 });
 
-// Display Book Ratings
-export const displayBookRatings = asyncHandler(async (request, response) => {
-    const { title, author } = request.params;
+// Average Rating of a Book
+export const getBookAverageRating = asyncHandler(async (request, response) => {
+    const { title } = request.params;
 
-    const book = await Book.findOne({ title, authors: author }).populate('ratings.user', 'username');
+    const book = await Book.findOne({ title });
+
     if (!book) {
         return response.status(404).json({ message: 'Book not found' });
     }
 
-    response.status(200).json(book.ratings);
+    const ratings = book.ratings;
+
+    // Calculate the average rating
+    const averageRating = ratings.length > 0
+        ? (ratings.reduce((sum, rating) => sum + rating.rating, 0) / ratings.length).toFixed(2)
+        : 0;
+
+    response.status(200).json({ averageRating });
 });
 
 // Add Comment to Book
 export const addBookComment = asyncHandler(async (request, response) => {
     const { title, author, comment } = request.body;
+    const userId = request.user._id;
+    const username = request.user.username;
 
-    const book = await Book.findOne({ title, authors: author });
-    if (!book) {
-        return response.status(404).json({ message: 'Book not found' });
+    try {
+        const book = await Book.findOne({ title, authors: author });
+
+        if (!book) {
+            response.status(404);
+            throw new Error('Book not found');
+        }
+
+        const newComment = {
+            user: userId,
+            username: username,
+            comment: comment,
+            replies: []
+        };
+
+        book.bookComments.push(newComment);
+        await book.save();
+
+        response.status(201).json({ message: 'Comment added successfully', comment: newComment });
+    } catch (error) {
+        response.status(500);
+        throw new Error('Failed to add comment');
     }
-
-    const userId = request.user._id; // Assuming the user ID is in the request object
-    const user = await User.findById(userId).select('username');
-    if (!user) {
-        return response.status(404).json({ message: 'User not found' });
-    }
-
-    const newComment = { user: userId, username: user.username, comment };
-
-    book.bookComments.push(newComment);
-    await book.save();
-
-    response.status(201).json({ message: 'Comment added successfully' });
 });
+
+const findNestedReply = (replies, replyId) => {
+    for (let i = 0; i < replies.length; i++) {
+        if (replies[i]._id.equals(replyId)) {
+            return replies[i];
+        }
+        // Search deeper into nested replies
+        const nestedReply = findNestedReply(replies[i].replies, replyId);
+        if (nestedReply) {
+            return nestedReply;
+        }
+    }
+    return null;
+};
+
 
 // Add Reply to Comment
 export const addCommentReply = asyncHandler(async (request, response) => {
-    const { title, author, commentId, reply } = request.body;
+    const { title, author, commentId, replyToId, reply } = request.body;
 
-    const book = await Book.findOne({ title, authors: author });
-    if (!book) {
-        return response.status(404).json({ message: 'Book not found' });
+    try {
+        const book = await Book.findOne({ title, authors: author });
+        if (!book) {
+            return response.status(404).json({ message: 'Book not found' });
+        }
+
+        // Find the main comment by commentId
+        const comment = book.bookComments.id(commentId);
+        if (!comment) {
+            return response.status(404).json({ message: 'Comment not found' });
+        }
+
+        const userId = request.user._id; // Assuming the user ID is in the request object
+        const user = await User.findById(userId).select('username profilePic');
+        if (!user) {
+            return response.status(404).json({ message: 'User not found' });
+        }
+
+        const newReply = {
+            user: userId,
+            username: user.username,
+            profilePic: user.profilePic, 
+            comment: reply,
+            replies: [],
+            createdAt: new Date() 
+        };
+
+        let targetReply = comment;
+
+        if (replyToId) {
+            targetReply = findNestedReply(comment.replies, replyToId);
+            if (!targetReply) {
+                return response.status(404).json({ message: 'Reply to comment not found' });
+            }
+        }
+
+        // Add the new reply to the target comment or nested reply
+        targetReply.replies.push(newReply);
+
+        // Mark the nested replies as modified for Mongoose
+        book.markModified('bookComments');
+
+        // Ensure the modified nested path is explicitly marked
+        book.markModified(`bookComments.${commentId}.replies`);
+
+        await book.save();
+
+        response.status(201).json({ message: 'Reply added successfully' });
+    } catch (error) {
+        response.status(500).json({ message: 'Failed to add reply', error: error.message });
     }
-
-    const comment = book.bookComments.id(commentId);
-    if (!comment) {
-        return response.status(404).json({ message: 'Comment not found' });
-    }
-
-    const userId = request.user._id; // Assuming the user ID is in the request object
-    const user = await User.findById(userId).select('username');
-    if (!user) {
-        return response.status(404).json({ message: 'User not found' });
-    }
-
-    const newReply = { user: userId, username: user.username, comment: reply };
-
-    comment.replies.push(newReply);
-    await book.save();
-
-    response.status(201).json({ message: 'Reply added successfully' });
 });
 
 // Display Book Comments
 export const displayBookComments = asyncHandler(async (request, response) => {
-    const { title, author } = request.params;
+    const { title } = request.params;
 
-    const book = await Book.findOne({ title, authors: author })
-        .populate('bookComments.user', 'username')
-        .populate('bookComments.replies.user', 'username');
+    const book = await Book.findOne({ title })
+        .populate('bookComments.user', 'username profilePic')  // calling the fields that are present in the user model
+        .populate('bookComments.replies.user', 'username profilePic');
+
+
     if (!book) {
+        console.log("Book not found");
         return response.status(404).json({ message: 'Book not found' });
     }
 
     response.status(200).json(book.bookComments);
 });
+

@@ -1,18 +1,11 @@
-import React from 'react';
-import {
-  DownloadOutlined,
-  RotateLeftOutlined,
-  RotateRightOutlined,
-  SwapOutlined,
-  UndoOutlined,
-  ZoomInOutlined,
-  ZoomOutOutlined,
-} from '@ant-design/icons';
+import React, { useEffect, useState } from 'react';
+import { DownloadOutlined, RotateLeftOutlined, RotateRightOutlined, SwapOutlined, UndoOutlined, ZoomInOutlined, ZoomOutOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { Table, Button, Space, Image, Breadcrumb } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import axiosInstance from './../axiosInstance';
 
 const onDownload = (imgUrl) => {
   fetch(imgUrl)
@@ -31,15 +24,45 @@ const onDownload = (imgUrl) => {
 
 const AdminDisplay = () => {
   const navigate = useNavigate();
+  const [data, setData] = useState([]);
 
-  const handleEdit = (key) => {
-    navigate(`/admin/admin-edit/${key}`);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axiosInstance.get('/admin/display');
+        const baseURL = 'http://localhost:5000/api/';
+        const formattedData = response.data.map((admin, index) => ({
+          key: admin._id,
+          srNo: index + 1,
+          image: admin.profilePic ? `${baseURL}${admin.profilePic.replace(/\\/g, '/')}` : 'default-image-url.png',
+          fullName: admin.fullName,
+          userName: admin.username,
+          userRole: admin.role || 'N/A',
+          email: admin.email,
+          phoneNumber: admin.phoneNumber || 'N/A',
+        }));
+        setData(formattedData);
+      } catch (error) {
+        toast.error(`Error fetching admin data: ${error.response?.data?.message || 'Something went wrong'}`);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const handleEdit = (userName) => {
+    navigate(`/admin/admin-edit/${userName}`);
   };
-
-  const handleDelete = (key) => {
-    toast.success(`User with key ${key} deleted successfully`);
+  
+  const handleDelete = async (key, userName) => {
+    try {
+      await axiosInstance.delete(`/admin/delete/${userName}`);
+      toast.success(`Admin with username ${userName} deleted successfully`);
+      setData((prevData) => prevData.filter((item) => item.key !== key));
+    } catch (error) {
+      toast.error(`Error deleting admin: ${error.response?.data?.message || 'Something went wrong'}`);
+    }
   };
-
+  
   const onChange = (pagination, filters, sorter, extra) => {
     console.log('params', pagination, filters, sorter, extra);
   };
@@ -98,10 +121,10 @@ const AdminDisplay = () => {
       sorter: (a, b) => a.userName.localeCompare(b.userName),
     },
     {
-        title: 'Role',
-        dataIndex: 'userRole',
-        key: 'userRole',
-        sorter: (a, b) => a.userRole.localeCompare(b.userRole),
+      title: 'Role',
+      dataIndex: 'userRole',
+      key: 'userRole',
+      sorter: (a, b) => a.userRole.localeCompare(b.userRole),
     },
     {
       title: 'Email',
@@ -120,54 +143,11 @@ const AdminDisplay = () => {
       key: 'actions',
       render: (_, record) => (
         <Space size="middle">
-          <Button type="primary" onClick={() => handleEdit(record.key)}>Edit</Button>
-          <Button type="danger" onClick={() => handleDelete(record.key)}>Delete</Button>
+          <Button type="primary" onClick={() => handleEdit(record.userName)}>Edit</Button>
+          <Button type="danger" onClick={() => handleDelete(record.key, record.userName)}>Delete</Button>
         </Space>
       ),
     },
-  ];
-
-  const data = [
-    {
-        key: '1',
-        srNo: 1,
-        image: 'https://wallpapers.com/images/hd/yuuichi-katagiri-anime-portrait-5xl430n009kmsg7l.jpg',
-        fullName: 'John Brown',
-        userName: 'johnbrown',
-        userRole: 'Owner',
-        email: 'john.brown@example.com',
-        phoneNumber: '123-456-7890',
-      },
-      {
-        key: '2',
-        srNo: 2,
-        image: 'https://i.pinimg.com/originals/84/d3/fa/84d3fa68414aecbc3172909302cb5144.jpg',
-        fullName: 'Jim Green',
-        userName: 'jimgreen',
-        userRole: 'CFO',
-        email: 'jim.green@example.com',
-        phoneNumber: '123-456-7891',
-      },
-      {
-        key: '3',
-        srNo: 3,
-        image: 'https://i.pinimg.com/736x/b3/ec/2c/b3ec2c350eafdab61055934f47f05b02.jpg',
-        fullName: 'Joe Black',
-        userName: 'joeblack',
-        userRole: 'CEO',
-        email: 'joe.black@example.com',
-        phoneNumber: '123-456-7892',
-      },
-      {
-        key: '4',
-        srNo: 4,
-        image: 'https://dthezntil550i.cloudfront.net/ec/latest/ec2305160145567360024742816/1280_960/33c8e334-53bd-4beb-8ef4-8873b4468ce2.png',
-        fullName: 'Jim Red',
-        userName: 'jimred',
-        userRole: 'Assistant',
-        email: 'jim.red@example.com',
-        phoneNumber: '123-456-7893',
-      },
   ];
 
   return (
@@ -183,7 +163,7 @@ const AdminDisplay = () => {
         </div>
       </div>
       <div className="overflow-x-auto bg-white rounded-lg shadow-md">
-      <Table columns={columns} dataSource={data} onChange={onChange} pagination={{ pageSize: 5 }} />
+        <Table columns={columns} dataSource={data} onChange={onChange} pagination={{ pageSize: 5 }} />
       </div>
       <ToastContainer />
     </div>
@@ -191,4 +171,3 @@ const AdminDisplay = () => {
 };
 
 export default AdminDisplay;
-

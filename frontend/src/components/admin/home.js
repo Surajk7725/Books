@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState,useEffect} from 'react';
 import { Card,Table, Progress, Button } from 'antd';
 import { UserOutlined, TeamOutlined, ReadOutlined, CrownOutlined } from '@ant-design/icons';
 import { Bar, Pie } from 'react-chartjs-2';
@@ -7,39 +7,9 @@ import Book1 from '../images/book-1.jpg';
 import Book2 from '../images/book-2.jpg';
 import Book3 from '../images/book-3.jpg';
 import Book4 from '../images/book-4.jpg';
+import axiosInstance from '../axiosInstance';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement);
-
-const data = [
-  {
-    title: 'Total Users',
-    value: '69',
-    icon: <UserOutlined style={{ fontSize: '24px', color: '#1890ff' }} />,
-    change: '0.95%',
-    changeType: 'down',
-  },
-  {
-    title: 'Total Staffs',
-    value: '25',
-    icon: <TeamOutlined style={{ fontSize: '24px', color: '#1890ff' }} />,
-    change: '1.23%',
-    changeType: 'up',
-  },
-  {
-    title: 'Total Books',
-    value: '1000',
-    icon: <ReadOutlined style={{ fontSize: '24px', color: '#1890ff' }} />,
-    change: '2.56%',
-    changeType: 'up',
-  },
-  {
-    title: 'Total Admins',
-    value: '7',
-    icon: <CrownOutlined style={{ fontSize: '24px', color: '#1890ff' }} />,
-    change: '0.00%',
-    changeType: 'neutral',
-  },
-];
 
 const sampleBooks = [
   {
@@ -218,6 +188,51 @@ const pieOptions = {
 function AdminHome() {
 
   const [books, setBooks] = useState(sampleBooks);
+  const [countsData, setCountsData] = useState([]);
+
+  useEffect(() => {
+    const fetchCountsData = async () => {
+      try {
+        const response = await axiosInstance.get('/admin/counts');
+        const { totalUsers, totalStaffs, totalBooks, totalAdmins } = response.data;
+
+        setCountsData([
+          {
+            title: 'Total Users',
+            value: totalUsers,
+            icon: <UserOutlined style={{ fontSize: '24px', color: '#1890ff' }} />,
+            change: '95%',
+            changeType: 'up',
+          },
+          {
+            title: 'Total Staffs',
+            value: totalStaffs,
+            icon: <TeamOutlined style={{ fontSize: '24px', color: '#1890ff' }} />,
+            change: '37%',
+            changeType: 'up',
+          },
+          {
+            title: 'Total Books',
+            value: totalBooks,
+            icon: <ReadOutlined style={{ fontSize: '24px', color: '#1890ff' }} />,
+            change: '77%',
+            changeType: 'up',
+          },
+          {
+            title: 'Total Admins',
+            value: totalAdmins,
+            icon: <CrownOutlined style={{ fontSize: '24px', color: '#1890ff' }} />,
+            change: '7%',
+            changeType: 'up',
+          },
+        ]);
+      } catch (error) {
+        console.error('Failed to fetch counts data:', error);
+      }
+    };
+
+    fetchCountsData();
+  }, []);
 
   // Columns configuration for Ant Design Table
   const columns = [
@@ -278,8 +293,8 @@ function AdminHome() {
     <div className="flex flex-col justify-center items-center min-h-screen mb-2 px-4 overflow-x-hidden">
   <div className="container mx-auto">
     <div className="flex flex-col md:flex-row justify-between space-y-4 md:space-y-0 md:space-x-4 mb-8">
-      {data.map((item) => (
-        <Card key={item.title} className="w-full md:w-1/3 bg-white shadow-lg p-4">
+      {countsData.map((item,index) => (
+        <Card key={index} className="w-full md:w-1/3 bg-white shadow-lg p-4">
           <div className="flex flex-col">
             <div className="flex items-center justify-between">
               <div className="bg-gray-100 rounded-full p-3 w-fit">
@@ -351,10 +366,6 @@ function AdminHome() {
 
   </div>
 </div>
-
-
-
-
   );
 }
 

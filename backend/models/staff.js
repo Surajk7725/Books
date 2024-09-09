@@ -7,27 +7,26 @@ const staffSchema = new mongoose.Schema({
     password: {type: String, required: true},
     phoneNumber: {type: String},
     address: {type: String},
-    dob: {type: Date},
-    profilePic: {type: String},
+    dob: {type: String},
+    profilePic: { type: String },
     socialMediaLinks: {
-        insta: String,
+        instagram: String,
         twitter: String,
         youtube: String,
         linkedin: String
     },
     professionalDetails: {
-        jobTitle: {type: String},
-        startDate: {type: Date},
-        employeeID: {type: String}
+        jobTitle:  String,
+        employeeId:  String
     },
     qualifications: {
-        highestEducation: {type: String},
-        degrees: {type: String},
-        professionalAffiliations: {type: String}
+        highestEducation: String,
+        degrees: String,
+        professionalAffiliations:  String
     },
     workExperience: {
-        previousPosition: {type: String},
-        yearsExperience: {type: Number}
+        previousPosition:  String,
+        yearsExperience:  Number
     },
     skills: {
         languagesSpoken: [String],
