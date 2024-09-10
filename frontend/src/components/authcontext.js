@@ -37,7 +37,7 @@ export function AuthProvider({ children }) {
 
   const login = async (formData) => {
     try {
-      const response = await axios.post('/auth/login', formData);
+      const response = await axiosInstance.post('/auth/login', formData);
       const { token, role, user } = response.data;
 
       localStorage.setItem('token', token);
