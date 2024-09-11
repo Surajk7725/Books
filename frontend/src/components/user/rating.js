@@ -16,7 +16,7 @@ const Rating = () => {
   const { title } = useParams();
   const [username, setUsername] = useState('');
 
-  const baseURL = 'http://localhost:5000/api/';
+  const baseURL = process.env.REACT_APP_API_URL;
 
   const { user } = useAuth();
 

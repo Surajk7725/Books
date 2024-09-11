@@ -23,7 +23,7 @@ export default function NavBar() {
     }, [user]);
 
     // Construct the image URL
-    const baseURL = 'http://localhost:5000/api/';
+    const baseURL = process.env.REACT_APP_API_URL;
     const profilePicURL = user.profilePic ? `${baseURL}${user.profilePic.replace('\\', '/')}` : '';
 
 

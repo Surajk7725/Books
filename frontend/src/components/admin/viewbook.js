@@ -15,7 +15,7 @@ function ViewBook() {
   const [error, setError] = useState(null);
   const { title } = useParams(); 
 
-  const baseURL = 'http://localhost:5000/api/';
+  const baseURL = process.env.REACT_APP_API_URL;
 
   // Fetch Book Overview Data
   useEffect(() => {

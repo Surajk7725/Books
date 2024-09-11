@@ -30,7 +30,7 @@ const AdminDisplay = () => {
     const fetchData = async () => {
       try {
         const response = await axiosInstance.get('/admin/display');
-        const baseURL = 'http://localhost:5000/api/';
+        const baseURL = process.env.REACT_APP_API_URL;
         const formattedData = response.data.map((admin, index) => ({
           key: admin._id,
           srNo: index + 1,

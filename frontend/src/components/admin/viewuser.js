@@ -84,7 +84,7 @@ function ViewUser() {
   const { username } = useParams(); 
   const [bookmarkedBooks, setBookmarkedBooks] = useState([]);
 
-  const baseURL = 'http://localhost:5000/api/';
+  const baseURL = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
     const fetchBookmarkedBooks = async () => {

@@ -9,7 +9,7 @@ import axiosInstance from '../axiosInstance';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../authcontext';
 
-const baseURL = 'http://localhost:5000/api/';
+const baseURL = process.env.REACT_APP_API_URL;
 
 const MyWishlist = () => {
     const [bookmarkedBooks, setBookmarkedBooks] = useState([]);

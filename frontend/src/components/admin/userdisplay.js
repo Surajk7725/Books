@@ -40,7 +40,7 @@ const UserDisplay = () => {
     const fetchData = async () => {
       try {
         const response = await axiosInstance.get('/user/display');
-        const baseURL = 'http://localhost:5000/api/';
+        const baseURL = process.env.REACT_APP_API_URL;
         const formattedData = response.data.map((user, index) => ({
           key: user._id,
           srNo: index + 1,

@@ -7,7 +7,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
 
-const baseURL = 'http://localhost:5000/api/';
+const baseURL = process.env.REACT_APP_API_URL;
 
 const Books = () => {
   const [currentPage, setCurrentPage] = useState(1);

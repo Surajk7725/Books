@@ -24,7 +24,7 @@ const ProfilePage = () => {
               const response = await axiosInstance.get(`/admin/display/${username}`);
               const adminData = response.data;
 
-              const baseURL = 'http://localhost:5000/api/';
+              const baseURL = process.env.REACT_APP_API_URL;
               const profilePicURL = adminData.profilePic ? `${baseURL}${adminData.profilePic.replace('\\', '/')}` : '';
 
               setProfileImage(profilePicURL);

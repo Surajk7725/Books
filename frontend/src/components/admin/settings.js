@@ -35,7 +35,7 @@ const SettingsPage = () => {
     const navigate = useNavigate();
 
     const { username } = useParams();
-    const baseURL = 'http://localhost:5000/api/';
+    const baseURL = process.env.REACT_APP_API_URL;
 
     useEffect(() => {
         if (!username) {

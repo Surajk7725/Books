@@ -40,7 +40,7 @@ import axiosInstance from './../axiosInstance';
     const fetchData = async () => {
       try {
         const response = await axiosInstance.get('/staff/display');
-        const baseURL = 'http://localhost:5000/api/';
+        const baseURL = process.env.REACT_APP_API_URL;
         const formattedData = response.data.map((staff, index) => ({
           key: staff._id,
           srNo: index + 1,

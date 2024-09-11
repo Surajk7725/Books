@@ -11,7 +11,7 @@ const RelatedBooks = ({ category }) => {
   const [bookmarked, setBookmarked] = useState([]);
   const navigate = useNavigate();
 
-  const baseURL = 'http://localhost:5000/api/';
+  const baseURL = process.env.REACT_APP_API_URL;
 
   // Fetch books data from server on component mount
   useEffect(() => {
