@@ -1,4 +1,4 @@
-# Library Management System 📚
+# BookHub 📚
 
 A comprehensive library management system built with the **MERN (MongoDB, Express.js, React.js, Node.js)** stack. The platform allows users to explore, download, rate books, manage personal notes, and more, with features inspired by Notion.
 
